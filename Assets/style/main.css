@@ -66,8 +66,15 @@ body {
 }
 
 .signup-btn:hover {
-    background: #4F46E5;
+    background-color: #4F46E5; /* Đã đổi từ 'background' thành 'background-color' để đồng bộ */
     color: white;
+}
+
+.signup-btn:active {
+    background-color: #D1D5DB; /* Màu xám nhạt */
+    color: #374151; /* Màu chữ tối */
+    border-color: #D1D5DB; /* Chỉnh border cho khớp */
+    transform: translateY(0);
 }
 
 .login-btn {
@@ -86,10 +93,16 @@ body {
     background: #4338CA;
 }
 
+.login-btn:active {
+    background-color: #D1D5DB; /* Màu xám nhạt */
+    color: #374151; /* Màu chữ tối */
+    transform: translateY(0);
+}
+
 /* Hero Section */
 .hero {
     padding: 120px 0;
-    background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+    background: linear-gradient(135deg, #F0F4F8 0%, #E2E8F0 100%); /* Màu đậm hơn một chút */
     text-align: center;
 }
 
@@ -149,6 +162,13 @@ body {
     transform: translateY(-2px);
 }
 
+.btn-primary:active {
+    background-color: #D1D5DB; /* Màu xám nhạt */
+    color: #374151; /* Màu chữ tối để dễ đọc trên nền xám nhạt */
+    transform: translateY(0); /* Loại bỏ transform để chỉ thay đổi màu */
+}
+
+
 .btn-secondary {
     background: transparent;
     color: #4F46E5;
@@ -159,6 +179,13 @@ body {
     background: #4F46E5;
     color: white;
     transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+    background-color: #D1D5DB; /* Màu xám nhạt */
+    color: #374151; /* Màu chữ tối để dễ đọc trên nền xám nhạt */
+    border-color: #D1D5DB; /* Chỉnh border cho khớp */
+    transform: translateY(0);
 }
 
 /* Features Section */
@@ -255,18 +282,74 @@ body {
     line-height: 1.6;
 }
 
-/* Footer */
-.footer {
-    background: #F9FAFB;
-    padding: 48px 0;
-    border-top: 1px solid #E5E7EB;
+/* Call to Action Section Styles */
+.cta-section {
+    background-color: #1976D2; /* Màu xanh dương đậm hơn */
+    padding: 96px 0;
+    text-align: center;
 }
 
-.footer-content {
+.cta-content {
+    max-width: 700px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 24px;
+}
+
+.cta-title {
+    font-size: 35px;
+    font-weight: 700;
+    color: #FFFFFF; /* Màu chữ trắng */
+    margin-bottom: 8px;
+}
+
+.cta-description {
+    font-size: 16px;
+    color: #FFFFFF; /* Màu chữ trắng */
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.cta-btn {
+    padding: 16px 32px;
+    font-size: 18px;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: #4F46E5;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.cta-btn:hover {
+    background: #E5E7EB; /* Một màu xám nhạt hơn khi hover */
+    color: #4F46E5;
+    transform: translateY(-2px);
+}
+
+.cta-btn:active {
+    background-color: #D1D5DB; /* Màu xám nhạt */
+    color: #374151; /* Màu chữ tối */
+    transform: translateY(0);
+}
+
+
+/* Footer */
+.footer {
+    background-color: #1F2937; /* Nền đen bao phủ toàn bộ footer */
+    padding: 24px 0; /* Padding trên và dưới cho toàn bộ footer */
+    border-top: 1px solid #374151; /* Border nhẹ hơn cho nền đen */
+}
+
+/* Thẻ chứa logo và bản quyền, sử dụng Flexbox */
+.footer-main {
+    display: flex;
+    justify-content: space-between; /* Căn trái và căn phải */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    flex-wrap: wrap; /* Cho phép các mục xuống dòng trên màn hình nhỏ */
+    max-width: 1200px; /* Giới hạn chiều rộng cho nội dung bên trong */
+    margin: 0 auto; /* Căn giữa nội dung footer-main */
+    padding: 0 24px; /* Padding ngang để nội dung không dính vào mép */
 }
 
 .footer-logo {
@@ -275,18 +358,21 @@ body {
     gap: 12px;
     font-weight: 600;
     font-size: 20px;
-    color: #6B7280;
+    color: #E5E7EB; /* Màu chữ sáng hơn cho logo */
 }
 
-.footer-text {
-    color: #9CA3AF;
+.footer-copyright-text {
+    margin: 0; /* Loại bỏ margin mặc định của p */
     font-size: 14px;
+    color: #9CA3AF; /* Màu chữ cho bản quyền */
+    text-align: right; /* Đảm bảo căn phải trên màn hình lớn */
 }
+
 
 /* Responsive Design */
 @media (max-width: 1024px) {
     .features-grid {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 16px;
     }
     
@@ -300,6 +386,14 @@ body {
     
     .feature-description {
         font-size: 14px;
+    }
+
+    .cta-title {
+        font-size: 32px; /* Điều chỉnh kích thước font cho CTA trên màn hình nhỏ hơn */
+    }
+
+    .cta-description {
+        font-size: 14px; /* Điều chỉnh kích thước font cho CTA trên màn hình nhỏ hơn */
     }
 }
 
@@ -334,7 +428,7 @@ body {
     }
     
     .features-grid {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 12px;
         margin-top: 48px;
     }
@@ -355,6 +449,35 @@ body {
         width: 48px;
         height: 48px;
         margin-bottom: 16px;
+    }
+
+    .cta-section {
+        padding: 64px 0;
+    }
+
+    .cta-title {
+        font-size: 28px;
+    }
+
+    .cta-description {
+        font-size: 14px;
+    }
+
+    .cta-btn {
+        padding: 14px 28px;
+        font-size: 16px;
+    }
+
+    /* Footer Responsive */
+    .footer-main {
+        flex-direction: column; /* Xếp chồng lên nhau trên màn hình nhỏ */
+        align-items: center; /* Căn giữa theo chiều ngang */
+        text-align: center; /* Căn giữa văn bản */
+        gap: 16px; /* Khoảng cách giữa logo và bản quyền */
+    }
+
+    .footer-copyright-text {
+        text-align: center; /* Căn giữa trên màn hình nhỏ */
     }
 }
 
@@ -402,6 +525,14 @@ body {
     .features-description {
         font-size: 16px;
     }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-title {
+        font-size: 24px;
+    }
 }
 
 /* Animation for smooth scrolling */
@@ -412,20 +543,8 @@ html {
 /* Focus styles for accessibility */
 .btn:focus,
 .login-btn:focus,
-.signup-btn:focus {
+.signup-btn:focus,
+.cta-btn:focus {
     outline: 2px solid #4F46E5;
     outline-offset: 2px;
-}
-
-/* Loading animation for interactive elements */
-.btn:active {
-    transform: scale(0.98);
-}
-
-.login-btn:active {
-    transform: scale(0.98);
-}
-
-.signup-btn:active {
-    transform: scale(0.98);
 }
