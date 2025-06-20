@@ -1,0 +1,145 @@
+/* General Body & Container Styling (Giữ nguyên) */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.login-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+/* Heading Styling (Giữ nguyên) */
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+/* Form Group Styling (Giữ nguyên) */
+.form-group {
+    margin-bottom: 18px;
+}
+
+/* Label Styling (Giữ nguyên) */
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: bold;
+}
+
+/* Input with Icon Wrapper Styling */
+.input-icon-wrapper {
+    position: relative; /* Quan trọng: để icon có thể định vị tuyệt đối bên trong */
+    width: 100%;
+}
+
+.input-icon-wrapper .icon {
+    position: absolute;
+    left: 15px; /* Vị trí của icon từ bên trái */
+    top: 50%; /* Đặt icon ở giữa theo chiều dọc */
+    transform: translateY(-50%); /* Dịch chuyển icon lên trên 50% chiều cao của nó */
+    color: #999; /* Màu của icon */
+    font-size: 18px; /* Kích thước icon */
+    pointer-events: none; /* Đảm bảo icon không cản trở việc click vào input */
+}
+
+/* Input Field Styling (Chỉnh padding để chừa chỗ cho icon) */
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 12px 12px 45px; /* Tăng padding-left để chừa chỗ cho icon */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+/* Input Field Focus State (Giữ nguyên) */
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* Error Message Styling (Giữ nguyên) */
+.error-message {
+    color: #dc3545;
+    font-size: 0.875em;
+    display: block;
+    margin-top: 4px;
+}
+
+/* Submit Button Styling */
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 17px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px; /* Vẫn giữ khoảng cách này */
+    margin-bottom: 15px; /* Khoảng cách với link Đăng ký */
+}
+
+/* Submit Button Hover State (Giữ nguyên) */
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Register Link Styling (Giữ nguyên) */
+.register-link {
+    text-align: center;
+    margin-top: 10px; /* Khoảng cách từ nút Đăng nhập */
+    font-size: 0.95em;
+    color: #555;
+}
+
+.register-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Forgot Password Link Styling (Điều chỉnh margin-top) */
+.forgot-password-link {
+    text-align: right; /* Căn phải cho liên kết quên mật khẩu */
+    margin-top: -10px; /* Dịch lên một chút để gần input hơn */
+    margin-bottom: 5px; /* Khoảng cách với nút Đăng nhập */
+    font-size: 0.9em; /* Nhỏ hơn một chút so với link đăng ký */
+}
+
+.forgot-password-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: normal; /* Không in đậm */
+    transition: color 0.3s ease;
+}
+
+.forgot-password-link a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
