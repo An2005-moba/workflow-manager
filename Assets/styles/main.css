@@ -53,6 +53,7 @@ body {
     align-items: center;
 }
 
+/* Cập nhật selector cho nút signup-btn (giờ là thẻ a) */
 .signup-btn {
     background: transparent;
     color: #4F46E5;
@@ -63,20 +64,25 @@ body {
     font-size: 16px;
     cursor: pointer;
     transition: all 0.2s ease;
+    text-decoration: none; /* Rất quan trọng: loại bỏ gạch chân mặc định của thẻ a */
+    display: inline-flex; /* Để căn chỉnh tốt hơn nếu có biểu tượng bên trong */
+    align-items: center;
+    justify-content: center;
 }
 
 .signup-btn:hover {
-    background-color: #4F46E5; /* Đã đổi từ 'background' thành 'background-color' để đồng bộ */
+    background-color: #4F46E5;
     color: white;
 }
 
 .signup-btn:active {
-    background-color: #D1D5DB; /* Màu xám nhạt */
-    color: #374151; /* Màu chữ tối */
-    border-color: #D1D5DB; /* Chỉnh border cho khớp */
+    background-color: #D1D5DB;
+    color: #374151;
+    border-color: #D1D5DB;
     transform: translateY(0);
 }
 
+/* Cập nhật selector cho nút login-btn (giờ là thẻ a) */
 .login-btn {
     background: #4F46E5;
     color: white;
@@ -87,6 +93,10 @@ body {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    text-decoration: none; /* Rất quan trọng: loại bỏ gạch chân mặc định của thẻ a */
+    display: inline-flex; /* Để căn chỉnh tốt hơn nếu có biểu tượng bên trong */
+    align-items: center;
+    justify-content: center;
 }
 
 .login-btn:hover {
@@ -94,15 +104,15 @@ body {
 }
 
 .login-btn:active {
-    background-color: #D1D5DB; /* Màu xám nhạt */
-    color: #374151; /* Màu chữ tối */
+    background-color: #D1D5DB;
+    color: #374151;
     transform: translateY(0);
 }
 
 /* Hero Section */
 .hero {
     padding: 120px 0;
-    background: linear-gradient(135deg, #F0F4F8 0%, #E2E8F0 100%); /* Màu đậm hơn một chút */
+    background: linear-gradient(135deg, #F0F4F8 0%, #E2E8F0 100%);
     text-align: center;
 }
 
@@ -137,19 +147,20 @@ body {
     flex-wrap: wrap;
 }
 
-/* Button Styles */
+/* Button Styles (already apply to .btn, which is now on <a>) */
 .btn {
-    display: inline-flex;
+    display: inline-flex; /* Rất quan trọng: giúp thẻ a có hành vi giống button */
     align-items: center;
     gap: 8px;
     padding: 16px 32px;
     border-radius: 8px;
     font-weight: 500;
     font-size: 16px;
-    text-decoration: none;
+    text-decoration: none; /* Rất quan trọng: loại bỏ gạch chân mặc định của thẻ a */
     cursor: pointer;
     transition: all 0.2s ease;
     border: none;
+    justify-content: center; /* Đảm bảo căn giữa nội dung nút */
 }
 
 .btn-primary {
@@ -163,11 +174,10 @@ body {
 }
 
 .btn-primary:active {
-    background-color: #D1D5DB; /* Màu xám nhạt */
-    color: #374151; /* Màu chữ tối để dễ đọc trên nền xám nhạt */
-    transform: translateY(0); /* Loại bỏ transform để chỉ thay đổi màu */
+    background-color: #D1D5DB;
+    color: #374151;
+    transform: translateY(0);
 }
-
 
 .btn-secondary {
     background: transparent;
@@ -182,9 +192,9 @@ body {
 }
 
 .btn-secondary:active {
-    background-color: #D1D5DB; /* Màu xám nhạt */
-    color: #374151; /* Màu chữ tối để dễ đọc trên nền xám nhạt */
-    border-color: #D1D5DB; /* Chỉnh border cho khớp */
+    background-color: #D1D5DB;
+    color: #374151;
+    border-color: #D1D5DB;
     transform: translateY(0);
 }
 
@@ -284,7 +294,7 @@ body {
 
 /* Call to Action Section Styles */
 .cta-section {
-    background-color: #1976D2; /* Màu xanh dương đậm hơn */
+    background-color: #1976D2;
     padding: 96px 0;
     text-align: center;
 }
@@ -301,17 +311,18 @@ body {
 .cta-title {
     font-size: 35px;
     font-weight: 700;
-    color: #FFFFFF; /* Màu chữ trắng */
+    color: #FFFFFF;
     margin-bottom: 8px;
 }
 
 .cta-description {
     font-size: 16px;
-    color: #FFFFFF; /* Màu chữ trắng */
+    color: #FFFFFF;
     margin-bottom: 24px;
     line-height: 1.6;
 }
 
+/* .cta-btn (already styled by .btn and .btn-primary, no specific changes needed here beyond general .btn styles) */
 .cta-btn {
     padding: 16px 32px;
     font-size: 18px;
@@ -322,34 +333,32 @@ body {
 }
 
 .cta-btn:hover {
-    background: #E5E7EB; /* Một màu xám nhạt hơn khi hover */
+    background: #E5E7EB;
     color: #4F46E5;
     transform: translateY(-2px);
 }
 
 .cta-btn:active {
-    background-color: #D1D5DB; /* Màu xám nhạt */
-    color: #374151; /* Màu chữ tối */
+    background-color: #D1D5DB;
+    color: #374151;
     transform: translateY(0);
 }
 
-
 /* Footer */
 .footer {
-    background-color: #1F2937; /* Nền đen bao phủ toàn bộ footer */
-    padding: 24px 0; /* Padding trên và dưới cho toàn bộ footer */
-    border-top: 1px solid #374151; /* Border nhẹ hơn cho nền đen */
+    background-color: #1F2937;
+    padding: 24px 0;
+    border-top: 1px solid #374151;
 }
 
-/* Thẻ chứa logo và bản quyền, sử dụng Flexbox */
 .footer-main {
     display: flex;
-    justify-content: space-between; /* Căn trái và căn phải */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    flex-wrap: wrap; /* Cho phép các mục xuống dòng trên màn hình nhỏ */
-    max-width: 1200px; /* Giới hạn chiều rộng cho nội dung bên trong */
-    margin: 0 auto; /* Căn giữa nội dung footer-main */
-    padding: 0 24px; /* Padding ngang để nội dung không dính vào mép */
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
 }
 
 .footer-logo {
@@ -358,16 +367,15 @@ body {
     gap: 12px;
     font-weight: 600;
     font-size: 20px;
-    color: #E5E7EB; /* Màu chữ sáng hơn cho logo */
+    color: #E5E7EB;
 }
 
 .footer-copyright-text {
-    margin: 0; /* Loại bỏ margin mặc định của p */
+    margin: 0;
     font-size: 14px;
-    color: #9CA3AF; /* Màu chữ cho bản quyền */
-    text-align: right; /* Đảm bảo căn phải trên màn hình lớn */
+    color: #9CA3AF;
+    text-align: right;
 }
-
 
 /* Responsive Design */
 @media (max-width: 1024px) {
@@ -389,11 +397,11 @@ body {
     }
 
     .cta-title {
-        font-size: 32px; /* Điều chỉnh kích thước font cho CTA trên màn hình nhỏ hơn */
+        font-size: 32px;
     }
 
     .cta-description {
-        font-size: 14px; /* Điều chỉnh kích thước font cho CTA trên màn hình nhỏ hơn */
+        font-size: 14px;
     }
 }
 
@@ -468,16 +476,15 @@ body {
         font-size: 16px;
     }
 
-    /* Footer Responsive */
     .footer-main {
-        flex-direction: column; /* Xếp chồng lên nhau trên màn hình nhỏ */
-        align-items: center; /* Căn giữa theo chiều ngang */
-        text-align: center; /* Căn giữa văn bản */
-        gap: 16px; /* Khoảng cách giữa logo và bản quyền */
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
     }
 
     .footer-copyright-text {
-        text-align: center; /* Căn giữa trên màn hình nhỏ */
+        text-align: center;
     }
 }
 
@@ -541,6 +548,7 @@ html {
 }
 
 /* Focus styles for accessibility */
+/* Cập nhật selector để bao gồm thẻ a */
 .btn:focus,
 .login-btn:focus,
 .signup-btn:focus,
