@@ -10,8 +10,9 @@ error_reporting(E_ALL);
 // --- Kiểm tra trạng thái đăng nhập ---
 // Nếu người dùng chưa đăng nhập, chuyển hướng về trang đăng nhập
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_email']) || !isset($_SESSION['user_name'])) {
-    // Đường dẫn 'Features/Auth/login.html' là đúng nếu dashboard.php nằm ở thư mục gốc của Web_Project
-    header("Location: Features/Auth/login.html");
+    // Điều chỉnh đường dẫn nếu cần, dựa trên vị trí của dashboard.php so với login.html
+    // Nếu dashboard.php nằm ở thư mục gốc của Web_Project và login.html nằm ở Features/Auth/
+    header("Location: Features/Auth/login.html"); 
     exit();
 }
 
@@ -21,27 +22,30 @@ $user_email = htmlspecialchars($_SESSION['user_email']);
 $user_full_name = htmlspecialchars($_SESSION['user_name']); // Tên đầy đủ từ database
 $user_role = htmlspecialchars($_SESSION['user_role'] ?? 'user'); // Mặc định là 'user' nếu không có
 
-// --- Xử lý tên người dùng để hiển thị (ví dụ: "Nguyễn Kiên Định" -> "Định Nguyễn") ---
+// --- Xử lý tên người dùng để hiển thị và tạo initials cho avatar ---
 $display_user_name = $user_full_name; // Mặc định là tên đầy đủ
-
-// Chia tên thành các phần
-$name_parts = explode(' ', $user_full_name);
-if (count($name_parts) > 1) {
-    $last_name = array_pop($name_parts); // Lấy phần tử cuối cùng (tên)
-    $first_names = implode(' ', $name_parts); // Các phần còn lại (họ và tên đệm)
-    $display_user_name = $last_name . ' ' . $first_names; // Hoán đổi vị trí
-}
-// Nếu bạn muốn avatar chỉ hiển thị 2 ký tự đầu tiên của Tên và Họ
 $avatar_initials = '';
-if (!empty($name_parts)) {
-    $avatar_initials .= strtoupper(substr($name_parts[0], 0, 1)); // Ký tự đầu tiên của họ
+
+$name_parts = explode(' ', $user_full_name);
+
+if (count($name_parts) >= 2) {
+    $last_name_for_display = array_pop($name_parts); // Lấy phần tử cuối cùng (tên chính)
+    $first_and_middle_names = implode(' ', $name_parts); // Các phần còn lại (họ và tên đệm)
+
+    // Xử lý tên để hiển thị theo định dạng "Tên Họ Đệm"
+    $display_user_name = $last_name_for_display . ' ' . $first_and_middle_names;
+
+    // Lấy ký tự đầu cho avatar: ký tự đầu của Họ và ký tự đầu của Tên chính
+    $avatar_initials .= strtoupper(mb_substr($first_and_middle_names, 0, 1, 'UTF-8')); // Ký tự đầu tiên của Họ/Tên đệm
+    $avatar_initials .= strtoupper(mb_substr($last_name_for_display, 0, 1, 'UTF-8')); // Ký tự đầu tiên của Tên chính
+} elseif (count($name_parts) == 1 && !empty($name_parts[0])) {
+    // Trường hợp chỉ có một từ trong tên
+    $avatar_initials = strtoupper(mb_substr($user_full_name, 0, 2, 'UTF-8')); // Lấy 2 ký tự đầu của tên đó
 }
-if (isset($last_name) && !empty($last_name)) {
-    $avatar_initials .= strtoupper(substr($last_name, 0, 1)); // Ký tự đầu tiên của tên
-} else {
-    // Nếu chỉ có 1 từ trong tên, lấy 2 ký tự đầu của từ đó
-    $avatar_initials = strtoupper(substr($user_full_name, 0, 2));
-}
+// Nếu $user_full_name rỗng hoặc không hợp lệ, $avatar_initials sẽ vẫn rỗng
+
+// Sử dụng mb_substr và 'UTF-8' để đảm bảo xử lý đúng các ký tự tiếng Việt
+// Nơi để debug: echo "Full Name: {$user_full_name}, Display Name: {$display_user_name}, Initials: {$avatar_initials}";
 
 ?>
 <!DOCTYPE html>
