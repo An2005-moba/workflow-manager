@@ -1,74 +1,81 @@
-/* General Body & Container Styling (Giữ nguyên) */
+/* General Body & Container Styling */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Inter', Arial, sans-serif; /* Ưu tiên Inter nếu đã import */
+    background-color: #f0f2f5; /* Nền nhẹ nhàng hơn */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
     box-sizing: border-box;
+    color: #333; /* Màu chữ mặc định */
+    font-size: 16px;
 }
-
+    
 .login-container {
     background-color: #fff;
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px; /* Bo góc mềm mại hơn */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Bóng đổ rõ hơn */
     width: 100%;
-    max-width: 400px;
+    max-width: 420px; /* Rộng hơn một chút để chứa nội dung tốt hơn */
     box-sizing: border-box;
+    overflow: hidden; /* Đảm bảo mọi thứ nằm trong container */
 }
 
-/* Heading Styling (Giữ nguyên) */
+/* Heading Styling */
 h2 {
     text-align: center;
-    color: #333;
-    margin-bottom: 25px;
+    color: #2c3e50; /* Màu chữ đậm hơn */
+    margin-bottom: 28px;
+    font-size: 2em; /* Kích thước tiêu đề lớn hơn */
+    font-weight: 700; /* Đậm hơn */
 }
 
-/* Form Group Styling (Giữ nguyên) */
+/* Form Group Styling */
 .form-group {
-    margin-bottom: 18px;
+    margin-bottom: 20px; /* Khoảng cách giữa các nhóm form */
 }
 
-/* Label Styling (Giữ nguyên) */
+/* Label Styling */
 label {
     display: block;
     margin-bottom: 8px;
     color: #555;
-    font-weight: bold;
+    font-weight: 600; /* Đậm hơn một chút */
+    font-size: 0.95em;
 }
 
 /* Input with Icon Wrapper Styling */
 .input-icon-wrapper {
-    position: relative; /* Quan trọng: để icon có thể định vị tuyệt đối bên trong */
+    position: relative;
     width: 100%;
 }
 
 .input-icon-wrapper .icon {
     position: absolute;
-    left: 15px; /* Vị trí của icon từ bên trái */
-    top: 50%; /* Đặt icon ở giữa theo chiều dọc */
-    transform: translateY(-50%); /* Dịch chuyển icon lên trên 50% chiều cao của nó */
-    color: #999; /* Màu của icon */
-    font-size: 18px; /* Kích thước icon */
-    pointer-events: none; /* Đảm bảo icon không cản trở việc click vào input */
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #95a5a6; /* Màu xám nhẹ hơn cho icon */
+    font-size: 17px;
+    pointer-events: none;
+    transition: color 0.2s ease; /* Hiệu ứng chuyển màu cho icon */
 }
 
-/* Input Field Styling (Chỉnh padding để chừa chỗ cho icon) */
+/* Input Field Styling */
 input[type="email"],
 input[type="password"] {
     width: 100%;
-    padding: 12px 12px 12px 45px; /* Tăng padding-left để chừa chỗ cho icon */
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 13px 15px 13px 48px; /* Tăng padding-left để chừa chỗ cho icon */
+    border: 1px solid #e0e0e0; /* Viền nhẹ nhàng hơn */
+    border-radius: 8px; /* Bo góc cho input */
     box-sizing: border-box;
     font-size: 16px;
-    margin-bottom: 5px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Input Field Focus State (Giữ nguyên) */
+/* Input Field Focus State */
 input[type="email"]:focus,
 input[type="password"]:focus {
     border-color: #007bff;
@@ -76,38 +83,50 @@ input[type="password"]:focus {
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
-/* Error Message Styling (Giữ nguyên) */
+/* Change icon color on input focus */
+.form-group:focus-within .icon {
+    color: #007bff; /* Thay đổi màu icon khi input được focus */
+}
+
+
+/* --- Error Message Styling for individual fields AND general API message --- */
+/* GỘP HAI ĐỊNH NGHĨA CỦA .error-message VÀO ĐÂY */
 .error-message {
-    color: #dc3545;
-    font-size: 0.875em;
-    display: block;
-    margin-top: 4px;
+    color: #e74c3c; /* Đỏ mạnh hơn cho lỗi */
+    font-size: 0.85em;
+    display: block; /* Đảm bảo hiển thị trên một dòng mới */
+    margin-top: 6px; /* Khoảng cách dưới input */
+    text-align: left;
+    min-height: 1.2em; /* Để tránh layout bị nhảy khi thông báo xuất hiện/biến mất */
+    /* Các style này áp dụng cho cả emailError, passwordError và apiMessage (khi nó là lỗi) */
 }
 
 /* Submit Button Styling */
 button[type="submit"] {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
-    font-size: 17px;
+    border-radius: 8px; /* Bo góc cho nút */
+    font-size: 18px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 20px; /* Vẫn giữ khoảng cách này */
-    margin-bottom: 15px; /* Khoảng cách với link Đăng ký */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 25px; /* Khoảng cách từ form group cuối cùng */
+    margin-bottom: 20px; /* Khoảng cách với link đăng ký */
 }
 
-/* Submit Button Hover State (Giữ nguyên) */
+/* Submit Button Hover State */
 button[type="submit"]:hover {
     background-color: #0056b3;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
 }
 
-/* Register Link Styling (Giữ nguyên) */
+/* Register Link Styling */
 .register-link {
     text-align: center;
-    margin-top: 10px; /* Khoảng cách từ nút Đăng nhập */
+    margin-top: 15px; /* Điều chỉnh khoảng cách */
     font-size: 0.95em;
     color: #555;
 }
@@ -115,7 +134,7 @@ button[type="submit"]:hover {
 .register-link a {
     color: #007bff;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600; /* Đậm hơn */
     transition: color 0.3s ease;
 }
 
@@ -124,22 +143,48 @@ button[type="submit"]:hover {
     text-decoration: underline;
 }
 
-/* Forgot Password Link Styling (Điều chỉnh margin-top) */
+/* Forgot Password Link Styling */
 .forgot-password-link {
-    text-align: right; /* Căn phải cho liên kết quên mật khẩu */
+    text-align: right;
     margin-top: -10px; /* Dịch lên một chút để gần input hơn */
-    margin-bottom: 5px; /* Khoảng cách với nút Đăng nhập */
-    font-size: 0.9em; /* Nhỏ hơn một chút so với link đăng ký */
+    margin-bottom: 15px; /* Khoảng cách với nút Đăng nhập */
+    font-size: 0.9em;
 }
 
 .forgot-password-link a {
     color: #007bff;
     text-decoration: none;
-    font-weight: normal; /* Không in đậm */
+    font-weight: 500; /* Trung bình */
     transition: color 0.3s ease;
 }
 
 .forgot-password-link a:hover {
     color: #0056b3;
     text-decoration: underline;
+}
+
+
+/* --- CSS for API message (success/error) --- */
+/* Các style riêng cho apiMessage (ưu tiên hơn .error-message khi có class success-message) */
+#apiMessage {
+    text-align: center;
+    margin-top: 15px; /* Khoảng cách từ nút submit */
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-weight: 600;
+    line-height: 1.4;
+    transition: all 0.3s ease; /* Hiệu ứng mượt mà khi xuất hiện */
+    /* display: block; đã được định nghĩa trong .error-message */
+}
+
+#apiMessage.success-message {
+    background-color: #d4edda; /* Nền xanh lá nhạt */
+    color: #155724; /* Chữ xanh lá đậm */
+    border: 1px solid #c3e6cb;
+}
+
+#apiMessage.error-message { /* Vẫn cần định nghĩa lại để đảm bảo nền và border riêng cho API error */
+    background-color: #f8d7da; /* Nền đỏ nhạt */
+    color: #721c24; /* Chữ đỏ đậm */
+    border: 1px solid #f5c6cb;
 }
