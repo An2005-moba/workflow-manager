@@ -12,7 +12,7 @@ error_reporting(E_ALL);
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_email']) || !isset($_SESSION['user_name'])) {
     // Điều chỉnh đường dẫn nếu cần, dựa trên vị trí của dashboard.php so với login.html
     // Nếu dashboard.php nằm ở thư mục gốc của Web_Project và login.html nằm ở Features/Auth/
-    header("Location: Features/Auth/login.html"); 
+    header("Location: Features/Auth/login.html");
     exit();
 }
 
@@ -53,7 +53,7 @@ if (count($name_parts) >= 2) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkFlow - Dashboard</title>
-    <link rel="stylesheet" href="Assets/styles/main.css"> 
+    <link rel="stylesheet" href="Assets/styles/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -72,7 +72,7 @@ if (count($name_parts) >= 2) {
                         </svg>
                         <span class="dashboard-logo-text">WorkFlow</span>
                     </div>
-                    
+
                     <nav class="dashboard-nav">
                         <a href="#" class="dashboard-nav-item active">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -110,39 +110,40 @@ if (count($name_parts) >= 2) {
                         </svg>
                         <input type="text" placeholder="Tìm kiếm...">
                     </div>
-                    
+
                     <button class="dashboard-notification-btn">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
-                    
-                    <div class="dashboard-user">
+
+                    <button id="userDropdownToggle" class="dashboard-user" aria-haspopup="true" aria-expanded="false">
                         <div class="dashboard-user-avatar"><?php echo $avatar_initials; ?></div>
                         <span class="dashboard-user-name"><?php echo $display_user_name; ?></span>
-                        <button class="dashboard-user-dropdown-btn" id="userDropdownToggle"> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <svg class="dashboard-user-dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="dashboard-user-dropdown" id="userDropdownMenu">
+                        <a href="#" class="dashboard-dropdown-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
                             </svg>
-                        </button>
-                        <div class="dashboard-user-dropdown" id="userDropdownMenu"> <a href="#" class="dashboard-dropdown-item">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
-                                </svg>
-                                Thông tin cá nhân
-                            </a>
-                            <div class="dashboard-dropdown-divider"></div>
-                            <a href="Features/Auth/logout_api.php" class="dashboard-dropdown-item dashboard-logout-item"> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M17 17L22 12L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M22 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                Đăng xuất
-                            </a>
-                        </div>
+                            Thông tin cá nhân
+                        </a>
+                        <div class="dashboard-dropdown-divider"></div>
+                        <a href="Features/Auth/logout_api.php" class="dashboard-dropdown-item dashboard-logout-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M17 17L22 12L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M22 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Đăng xuất
+                        </a>
                     </div>
-                </div>
+                    </div>
             </div>
         </div>
     </header>
@@ -162,5 +163,6 @@ if (count($name_parts) >= 2) {
         </div>
     </main>
 
-    <script src="Assets/js/main.js"></script> </body>
+    <script src="Assets/js/main.js"></script>
+</body>
 </html>

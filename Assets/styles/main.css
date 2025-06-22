@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
     color: #1F2937;
     background-color: #FFFFFF;
@@ -506,18 +506,40 @@ body {
     background: rgba(255, 255, 255, 0.1);
 }
 
-.dashboard-user {
+/* START: UPDATED STYLES FOR .dashboard-user (now a button) */
+button#userDropdownToggle.dashboard-user { /* Apply these styles to the button with id userDropdownToggle and class dashboard-user */
     display: flex;
     align-items: center;
     gap: 12px;
-    position: relative;
+    padding: 8px 0px 8px 12px; /* Adjusted padding for a better clickable area */
+    background: none; /* Remove default button background */
+    border: none; /* Remove default button border */
+    cursor: pointer; /* Change cursor to pointer for the whole button */
+    font: inherit; /* Inherit font styles from body */
+    color: #FFFFFF; /* Default text color for the button content */
+    user-select: none; /* Prevent text selection on quick clicks */
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 8px; /* Slightly rounded corners for the hover/active state */
+    position: relative; /* Crucial for positioning the dropdown menu below it */
+    z-index: 20; /* Ensures the button is above the dropdown menu when open */
+}
+
+button#userDropdownToggle.dashboard-user:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Lighter gray background on hover */
+    /* Removed transform/box-shadow from here to avoid conflicting with button's own transition */
+}
+
+button#userDropdownToggle.dashboard-user:active {
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly darker gray on active */
+    transform: translateY(0); /* Ensure no jump on active */
+    box-shadow: none; /* No shadow on active */
 }
 
 .dashboard-user-avatar {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: #4F46E5;
+    background: #4F46E5; /* Keep original background for avatar initials */
     color: #FFFFFF;
     display: flex;
     align-items: center;
@@ -527,52 +549,41 @@ body {
 }
 
 .dashboard-user-name {
-    color: #FFFFFF;
+    color: #FFFFFF; /* Keep text color white for the name */
     font-weight: 500;
     font-size: 14px;
 }
 
-.dashboard-user-dropdown-btn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 4px;
-    color: #9CA3AF;
-    transition: all 0.2s ease;
-    display: flex;
+/* Renamed from .dashboard-user-dropdown-btn to .dashboard-user-dropdown-icon */
+.dashboard-user-dropdown-icon {
+    /* These styles were moved from .dashboard-user-dropdown-btn */
+    color: rgba(255, 255, 255, 0.8); /* Match default color of nav items */
+    transition: transform 0.2s ease, color 0.2s ease; /* Add color transition */
+    display: flex; /* Ensure SVG is properly centered if needed */
     align-items: center;
     justify-content: center;
+    /* No padding/border/background as it's now part of the parent button */
 }
 
-.dashboard-user-dropdown-btn:hover {
-    color: #FFFFFF;
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.dashboard-user-dropdown-btn svg {
-    transition: transform 0.2s ease;
-}
-
-.dashboard-user-dropdown-btn.active svg {
+.dashboard-user-dropdown-icon.active {
     transform: rotate(180deg);
+    color: #FFFFFF; /* Keep white when active */
 }
 
 .dashboard-user-dropdown {
     position: absolute;
-    top: 100%;
-    right: 0;
+    top: calc(100% + 8px); /* Position it 8px below the button */
+    right: 32px;
     background: #FFFFFF;
-    border: 1px solid #374151;
+    border: 1px solid #E5E7EB; /* Changed border color to lighter grey */
     border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Slightly adjusted shadow */
     min-width: 200px;
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
-    transition: all 0.2s ease;
-    margin-top: 8px;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease; /* Simplified transition */
     padding: 8px 0;
 }
 
@@ -591,30 +602,43 @@ body {
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; /* More specific transitions */
     margin: 0;
     border-radius: 0;
 }
 
 .dashboard-dropdown-item:hover {
-    background-color: #374151;
-    color: #FFFFFF;
-}
-
-.dashboard-dropdown-item svg {
+    background-color: #F3F4F6;
     color: #1F2937;
-    flex-shrink: 0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.dashboard-dropdown-item:hover svg {
-    color: #E5E7EB;
+.dashboard-dropdown-item:active {
+    background-color: #E5E7EB;
+    color: #1F2937;
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Điều chỉnh màu SVG trong dropdown items trên hover/active */
+.dashboard-dropdown-item svg {
+    color: #6B7280; /* Default color for icons in dropdown */
+    transition: color 0.2s ease;
+}
+
+.dashboard-dropdown-item:hover svg,
+.dashboard-dropdown-item:active svg {
+    color: #1F2937; /* Change icon color to match text on hover/active */
 }
 
 .dashboard-dropdown-divider {
     height: 1px;
-    background-color: #374151;
+    background-color: #E5E7EB; /* Changed divider color to match border */
     margin: 8px 0;
 }
+/* END: UPDATED STYLES FOR .dashboard-user */
+
 
 .dashboard-main {
     padding: 48px 0;
@@ -671,15 +695,15 @@ body {
         grid-template-columns: repeat(3, 1fr);
         gap: 16px;
     }
-    
+
     .feature-card {
         padding: 20px 12px;
     }
-    
+
     .feature-title {
         font-size: 18px;
     }
-    
+
     .feature-description {
         font-size: 14px;
     }
@@ -705,50 +729,50 @@ body {
     .container {
         padding: 0 16px;
     }
-    
+
     .hero {
         padding: 80px 0;
     }
-    
+
     .hero-title {
         font-size: 40px;
     }
-    
+
     .hero-description {
         font-size: 18px;
     }
-    
+
     .hero-actions {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .features {
         padding: 80px 0;
     }
-    
+
     .features-title {
         font-size: 36px;
     }
-    
+
     .features-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
         margin-top: 48px;
     }
-    
+
     .feature-card {
         padding: 16px 8px;
     }
-    
+
     .feature-title {
         font-size: 16px;
     }
-    
+
     .feature-description {
         font-size: 12px;
     }
-    
+
     .feature-icon {
         width: 48px;
         height: 48px;
@@ -803,8 +827,9 @@ body {
         display: none;
     }
 
-    .dashboard-dropdown-menu {
-        right: -16px;
+    /* Important: Adjusted for the new button structure */
+    .dashboard-user-dropdown {
+        right: 0px; /* Aligned with the button, not with a fixed margin */
         min-width: 180px;
     }
 }
@@ -813,35 +838,35 @@ body {
     .header-content {
         height: 64px;
     }
-    
+
     .logo {
         font-size: 20px;
     }
-    
+
     .header-actions {
         gap: 12px;
     }
-    
+
     .hero {
         padding: 60px 0;
     }
-    
+
     .hero-title {
         font-size: 32px;
     }
-    
+
     .hero-description {
         font-size: 16px;
     }
-    
+
     .features {
         padding: 60px 0;
     }
-    
+
     .features-title {
         font-size: 28px;
     }
-    
+
     .features-grid {
         grid-template-columns: 1fr;
         gap: 16px;

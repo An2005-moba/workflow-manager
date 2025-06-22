@@ -1,19 +1,18 @@
 // Dashboard JavaScript functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Get dropdown elements
-    const dropdownToggle = document.getElementById('userDropdownToggle'); // Lấy nút bằng ID mới
-    const dropdownMenu = document.getElementById('userDropdownMenu');     // Lấy menu bằng ID mới
+    const dashboardUserContainer = document.querySelector('.dashboard-user'); // Lấy toàn bộ container
+    const dropdownToggle = document.getElementById('userDropdownToggle'); 
+    const dropdownMenu = document.getElementById('userDropdownMenu'); 
     
-    if (!dropdownToggle || !dropdownMenu) {
-        console.warn('Dropdown elements not found. Make sure IDs "userDropdownToggle" and "userDropdownMenu" exist.');
+    if (!dashboardUserContainer || !dropdownToggle || !dropdownMenu) {
+        console.warn('One or more dropdown elements not found. Make sure class "dashboard-user" and IDs "userDropdownToggle", "userDropdownMenu" exist.');
         return;
     }
 
     // Toggle dropdown function
-    function toggleDropdown(event) {
-        event.preventDefault();
-        event.stopPropagation(); // Ngăn chặn event nổi bọt ra ngoài
-        
+    // Chúng ta không cần 'event.preventDefault()' ở đây vì nó sẽ được xử lý ở event listener
+    function toggleDropdown() {
         const isOpen = dropdownMenu.classList.contains('show');
         
         if (isOpen) {
@@ -26,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Open dropdown function
     function openDropdown() {
         dropdownMenu.classList.add('show');
-        dropdownToggle.classList.add('active');
+        dropdownToggle.classList.add('active'); // Đảm bảo mũi tên xoay
         
         // Add event listener to close dropdown when clicking outside
         // Sử dụng setTimeout 0ms để đảm bảo event listener được thêm vào sau khi click hiện tại kết thúc
@@ -38,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close dropdown function
     function closeDropdown() {
         dropdownMenu.classList.remove('show');
-        dropdownToggle.classList.remove('active');
+        dropdownToggle.classList.remove('active'); // Đảm bảo mũi tên trở lại trạng thái ban đầu
         
         // Remove event listener
         document.removeEventListener('click', handleOutsideClick);
@@ -46,10 +45,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle clicks outside dropdown
     function handleOutsideClick(event) {
-        const isClickInsideDropdown = dropdownToggle.contains(event.target) || 
-                                     dropdownMenu.contains(event.target);
+        // Kiểm tra xem click có nằm trong container tổng (.dashboard-user)
+        // hoặc nằm trong menu dropdown (.dashboard-user-dropdown)
+        const isClickInsideDropdownArea = dashboardUserContainer.contains(event.target);
         
-        if (!isClickInsideDropdown) {
+        if (!isClickInsideDropdownArea) {
             closeDropdown();
         }
     }
@@ -61,28 +61,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Add event listeners
-    dropdownToggle.addEventListener('click', toggleDropdown);
+    // --- Thay đổi lớn ở đây: Lắng nghe sự kiện click trên toàn bộ dashboardUserContainer ---
+    dashboardUserContainer.addEventListener('click', function(event) {
+        event.stopPropagation(); // Ngăn chặn sự kiện nổi bọt lên document ngay lập tức
+        toggleDropdown(); // Gọi hàm toggle chung để mở/đóng
+    });
+
+    // Các event listener khác đã có:
     document.addEventListener('keydown', handleEscapeKey);
 
     // Handle dropdown item clicks
     const dropdownItems = dropdownMenu.querySelectorAll('.dashboard-dropdown-item');
     dropdownItems.forEach(item => {
         item.addEventListener('click', function(event) {
+            // Ngăn chặn event nổi bọt từ item lên container và document
+            event.stopPropagation(); 
+
             // If it's the logout item, show confirmation
-            if (this.classList.contains('dashboard-logout-item')) { // Sử dụng class mới dashboard-logout-item
+            if (this.classList.contains('dashboard-logout-item')) {
                 event.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ a (chuyển trang ngay lập tức)
                 
                 const confirmLogout = confirm('Bạn có chắc chắn muốn đăng xuất không?');
                 if (confirmLogout) {
-                    // Redirect to logout
                     window.location.href = this.getAttribute('href');
                 }
             }
             // For other items, close dropdown and let default action happen
             else {
                 closeDropdown();
-                // Add your custom logic here for other menu items
                 console.log('Menu item clicked:', this.textContent.trim());
             }
         });
@@ -109,7 +115,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const notificationBtn = document.querySelector('.dashboard-notification-btn');
     if (notificationBtn) {
         notificationBtn.addEventListener('click', function() {
-            // Add notification functionality here
             console.log('Notification button clicked');
         });
     }
@@ -120,7 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
         searchInput.addEventListener('input', function() {
             const query = this.value.trim();
             if (query.length > 2) {
-                // Add search functionality here
                 console.log('Searching for:', query);
             }
         });
@@ -129,7 +133,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (event.key === 'Enter') {
                 const query = this.value.trim();
                 if (query.length > 0) {
-                    // Handle search submission
                     console.log('Search submitted:', query);
                 }
             }
@@ -140,7 +143,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const createBtn = document.querySelector('.dashboard-create-btn');
     if (createBtn) {
         createBtn.addEventListener('click', function() {
-            // Add create project functionality here
             console.log('Create project button clicked');
         });
     }
@@ -155,6 +157,7 @@ window.DashboardDropdown = {
         if (dropdownMenu && dropdownToggle) {
             dropdownMenu.classList.remove('show');
             dropdownToggle.classList.remove('active');
+            document.removeEventListener('click', handleOutsideClick); // Đảm bảo gỡ bỏ listener
         }
     },
     
@@ -165,6 +168,9 @@ window.DashboardDropdown = {
         if (dropdownMenu && dropdownToggle) {
             dropdownMenu.classList.add('show');
             dropdownToggle.classList.add('active');
+            setTimeout(() => {
+                document.addEventListener('click', handleOutsideClick);
+            }, 0);
         }
     },
     
