@@ -29,23 +29,22 @@ $avatar_initials = '';
 $name_parts = explode(' ', $user_full_name);
 
 if (count($name_parts) >= 2) {
-    $last_name_for_display = array_pop($name_parts); // Lấy phần tử cuối cùng (tên chính)
-    $first_and_middle_names = implode(' ', $name_parts); // Các phần còn lại (họ và tên đệm)
+    // Để avatar initials theo format HọTên (ví dụ: NĐ cho Nguyễn Đình)
+    // Và tên hiển thị là Tên Họ (ví dụ: Đình Nguyễn)
+    $last_name_part = array_pop($name_parts); // Lấy phần cuối cùng (tên chính)
+    $first_and_middle_parts = implode(' ', $name_parts); // Phần còn lại (họ và tên đệm)
 
-    // Xử lý tên để hiển thị theo định dạng "Tên Họ Đệm"
-    $display_user_name = $last_name_for_display . ' ' . $first_and_middle_names;
+    // Tạo initials
+    $avatar_initials .= strtoupper(mb_substr($first_and_middle_parts, 0, 1, 'UTF-8')); // Ký tự đầu của họ
+    $avatar_initials .= strtoupper(mb_substr($last_name_part, 0, 1, 'UTF-8')); // Ký tự đầu của tên chính
 
-    // Lấy ký tự đầu cho avatar: ký tự đầu của Họ và ký tự đầu của Tên chính
-    $avatar_initials .= strtoupper(mb_substr($first_and_middle_names, 0, 1, 'UTF-8')); // Ký tự đầu tiên của Họ/Tên đệm
-    $avatar_initials .= strtoupper(mb_substr($last_name_for_display, 0, 1, 'UTF-8')); // Ký tự đầu tiên của Tên chính
+    // Format tên hiển thị: "Tên Họ Đệm"
+    $display_user_name = $last_name_part . ' ' . $first_and_middle_parts;
 } elseif (count($name_parts) == 1 && !empty($name_parts[0])) {
     // Trường hợp chỉ có một từ trong tên
     $avatar_initials = strtoupper(mb_substr($user_full_name, 0, 2, 'UTF-8')); // Lấy 2 ký tự đầu của tên đó
 }
 // Nếu $user_full_name rỗng hoặc không hợp lệ, $avatar_initials sẽ vẫn rỗng
-
-// Sử dụng mb_substr và 'UTF-8' để đảm bảo xử lý đúng các ký tự tiếng Việt
-// Nơi để debug: echo "Full Name: {$user_full_name}, Display Name: {$display_user_name}, Initials: {$avatar_initials}";
 
 ?>
 <!DOCTYPE html>
@@ -122,15 +121,26 @@ if (count($name_parts) >= 2) {
                     <div class="dashboard-user">
                         <div class="dashboard-user-avatar"><?php echo $avatar_initials; ?></div>
                         <span class="dashboard-user-name"><?php echo $display_user_name; ?></span>
-                        <?php /* Đã xóa nút đăng xuất theo yêu cầu của bạn
-                        <a href="Features/Auth/logout_api.php" class="dashboard-logout-btn" title="Đăng Xuất">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M17 17L22 12L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M22 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <button class="dashboard-user-dropdown-btn" id="userDropdownToggle"> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                        </a>
-                        */ ?>
+                        </button>
+                        <div class="dashboard-user-dropdown" id="userDropdownMenu"> <a href="#" class="dashboard-dropdown-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                Thông tin cá nhân
+                            </a>
+                            <div class="dashboard-dropdown-divider"></div>
+                            <a href="Features/Auth/logout_api.php" class="dashboard-dropdown-item dashboard-logout-item"> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M17 17L22 12L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M22 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Đăng xuất
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -151,5 +161,6 @@ if (count($name_parts) >= 2) {
             </div>
         </div>
     </main>
-</body>
+
+    <script src="Assets/js/main.js"></script> </body>
 </html>
