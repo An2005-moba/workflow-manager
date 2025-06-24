@@ -31,11 +31,12 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // SQL để tạo bảng users
+    // CHÚ Ý: Cột 'password_hashed' ĐÃ ĐƯỢC THAY THẾ BẰNG 'password'
     $sql_create_table = "
         CREATE TABLE IF NOT EXISTS `users` (
             `id` INT AUTO_INCREMENT PRIMARY KEY,
             `username` VARCHAR(255) NOT NULL UNIQUE,
-            `password_hashed` VARCHAR(255) NOT NULL,
+            `password` VARCHAR(255) NOT NULL,
             `email` VARCHAR(255) NOT NULL UNIQUE,
             `name` VARCHAR(255) NOT NULL,
             `role` VARCHAR(50) DEFAULT 'user',

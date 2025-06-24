@@ -16,7 +16,6 @@ error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 // Include lớp UserManager
-// Đảm bảo bạn đã đổi tên file UserManager_temp.php thành UserManager.php
 require_once __DIR__ . '/../../Modules/Auth/UserManager.php';
 
 // Lấy dữ liệu từ body của request (khi gửi bằng fetch API hoặc Axios với JSON)
@@ -53,6 +52,7 @@ if (strlen($password) < 6) { // Ví dụ: yêu cầu mật khẩu ít nhất 6 k
 }
 
 // --- Gọi hàm đăng ký từ UserManager ---
+// Hàm registerUser đã được sửa đổi để lưu mật khẩu plaintext
 $result = $userManager->registerUser($name, $email, $password);
 
 // --- Trả về phản hồi cho frontend ---

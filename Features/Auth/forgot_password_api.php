@@ -46,20 +46,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 2. Tạo mật khẩu mới ngẫu nhiên
     $new_password = HelperFunctions::generateRandomPassword(12);
-    $hashed_new_password = password_hash($new_password, PASSWORD_DEFAULT);
+    // DÒNG DƯỚI ĐÂY ĐÃ BỊ XÓA (không còn băm mật khẩu mới)
+    // $hashed_new_password = password_hash($new_password, PASSWORD_DEFAULT); 
 
     // 3. Cập nhật mật khẩu mới vào database
-    $update_success = $userManager->updatePasswordByEmail($email, $hashed_new_password);
+    // CHÚ Ý: Hàm updatePasswordByEmail bây giờ nhận mật khẩu plaintext
+    $update_success = $userManager->updatePasswordByEmail($email, $new_password); // Đã đổi biến
 
     if ($update_success) {
         // 4. Gửi mật khẩu mới qua email
         $mailer = new Mailer();
         $subject = 'Mật khẩu mới của bạn từ WorkFlow';
         $body    = "Chào bạn,<br><br>"
-                   . "Mật khẩu mới của bạn cho tài khoản WorkFlow là: <strong>" . htmlspecialchars($new_password) . "</strong><br>"
-                   . "Vui lòng đăng nhập bằng mật khẩu này và đổi mật khẩu ngay lập tức để bảo mật.<br><br>"
-                   . "Trân trọng,<br>"
-                   . "WorkFlow Team";
+                    . "Mật khẩu mới của bạn cho tài khoản WorkFlow là: <strong>" . htmlspecialchars($new_password) . "</strong><br>"
+                    . "Vui lòng đăng nhập bằng mật khẩu này và đổi mật khẩu ngay lập tức để bảo mật.<br><br>"
+                    . "Trân trọng,<br>"
+                    . "WorkFlow Team";
         $altBody = "Mật khẩu mới của bạn cho tài khoản WorkFlow là: " . $new_password . ". Vui lòng đăng nhập bằng mật khẩu này và đổi mật khẩu ngay lập tức để bảo mật.";
 
         $email_sent = $mailer->sendEmail($email, $subject, $body, $altBody);
@@ -70,8 +72,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             // Lỗi khi gửi email
             $response['status'] = 'error';
-            $response['message'] = "Mật khẩu đã được cập nhật thành công, nhưng có lỗi khi gửi email. Vui lòng kiểm tra lại cấu hình email hoặc liên hệ hỗ trợ. Chi tiết: " . $mailer->getErrorMessage(); // SỬA TẠI ĐÂY
-            error_log("Failed to send email for password reset to " . $email . ". PHPMailer Error: " . $mailer->getErrorMessage()); // SỬA TẠI ĐÂY
+            // SỬA TẠI ĐÂY: Lấy lỗi từ thuộc tính ErrorInfo của PHPMailer
+            $response['message'] = "Mật khẩu đã được cập nhật thành công, nhưng có lỗi khi gửi email. Vui lòng kiểm tra lại cấu hình email hoặc liên hệ hỗ trợ. Chi tiết: " . $mailer->ErrorInfo; 
+            error_log("Failed to send email for password reset to " . $email . ". PHPMailer Error: " . $mailer->ErrorInfo);
         }
     } else {
         // Lỗi khi cập nhật mật khẩu trong database
