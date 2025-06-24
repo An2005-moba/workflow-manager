@@ -1,4 +1,6 @@
 <?php
+// C:/xampp/htdocs/Web_Project/Modules/Auth/UserManager.php
+
 // Include file kết nối database
 // Sử dụng realpath để đảm bảo đường dẫn tuyệt đối được giải quyết đúng
 require_once realpath(__DIR__ . '/../../Context/db_connection.php'); 
@@ -93,7 +95,6 @@ class UserManager {
         }
     }
 
-
     /**
      * Kiểm tra xem một email đã được sử dụng bởi người dùng khác chưa.
      *
@@ -111,6 +112,46 @@ class UserManager {
         } catch (PDOException $e) {
             error_log("Check Email Taken Error: " . $e->getMessage());
             return true; // Để an toàn, nếu có lỗi thì coi như email đã bị dùng
+        }
+    }
+
+    /**
+     * Cập nhật mật khẩu mới cho người dùng dựa trên email.
+     *
+     * @param string $email Địa chỉ email của người dùng cần cập nhật.
+     * @param string $newHashedPassword Mật khẩu mới đã được mã hóa.
+     * @return bool True nếu cập nhật thành công, False nếu có lỗi.
+     */
+    public function updatePasswordByEmail($email, $newHashedPassword) {
+        $sql = "UPDATE users SET password_hashed = :password_hashed WHERE email = :email";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':password_hashed', $newHashedPassword);
+            $stmt->bindParam(':email', $email);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Update Password Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Lấy thông tin người dùng dựa trên email.
+     *
+     * @param string $email Địa chỉ email của người dùng.
+     * @return array|null Mảng chứa thông tin người dùng nếu tìm thấy, ngược lại là null.
+     */
+    public function getUserByEmail($email) {
+        $sql = "SELECT id, name, email, password_hashed, role FROM users WHERE email = :email";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $user;
+        } catch (PDOException $e) {
+            error_log("Get User By Email Error: " . $e->getMessage());
+            return null;
         }
     }
 
