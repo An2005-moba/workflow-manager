@@ -2,7 +2,6 @@
 // C:/xampp/htdocs/Web_Project/Modules/Auth/UserManager.php
 
 // Include file kết nối database
-// Sử dụng realpath để đảm bảo đường dẫn tuyệt đối được giải quyết đúng
 require_once realpath(__DIR__ . '/../../Context/db_connection.php'); 
 
 class UserManager {
@@ -14,6 +13,7 @@ class UserManager {
 
     /**
      * Đăng ký một người dùng mới vào hệ thống.
+     * Mật khẩu sẽ được mã hóa bằng password_hash().
      *
      * @param string $name Tên đầy đủ của người dùng.
      * @param string $email Địa chỉ email của người dùng (dùng làm username).
@@ -31,28 +31,23 @@ class UserManager {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         // 3. Chuẩn bị câu lệnh SQL để chèn dữ liệu
-        // Chúng ta sẽ dùng email cho cả username và email như đã thống nhất
-        $sql = "INSERT INTO users (name, email, username, password_hashed, role) VALUES (:name, :email, :username, :password_hashed, :role)";
+        $sql = "INSERT INTO users (name, email, username, password_hashed, role) VALUES (:name, :email, :username, :password_hashed, :role)"; 
 
         try {
-            // Chuẩn bị prepared statement để ngăn chặn SQL Injection
             $stmt = $this->conn->prepare($sql);
 
-            // Gán giá trị cho các tham số
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':username', $email); // Email cũng là username
-            $stmt->bindParam(':password_hashed', $hashed_password);
+            $stmt->bindParam(':password_hashed', $hashed_password); 
             $stmt->bindParam(':role', $role);
 
-            // Thực thi câu lệnh
             if ($stmt->execute()) {
                 return ['status' => 'success', 'message' => 'Đăng ký thành công!'];
             } else {
                 return ['status' => 'error', 'message' => 'Có lỗi xảy ra khi đăng ký người dùng.'];
             }
         } catch (PDOException $e) {
-            // Ghi log lỗi để dễ dàng debug
             error_log("Register User Error: " . $e->getMessage());
             return ['status' => 'error', 'message' => 'Lỗi hệ thống, vui lòng thử lại sau.'];
         }
@@ -66,7 +61,7 @@ class UserManager {
      * @return array Mảng chứa trạng thái (success/error), thông báo và thông tin người dùng nếu thành công.
      */
     public function loginUser($email, $password) {
-        $sql = "SELECT id, name, email, password_hashed, role FROM users WHERE email = :email";
+        $sql = "SELECT id, name, email, password_hashed, role FROM users WHERE email = :email"; 
 
         try {
             $stmt = $this->conn->prepare($sql);
@@ -74,16 +69,11 @@ class UserManager {
             $stmt->execute();
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Kiểm tra xem người dùng có tồn tại không
             if (!$user) {
                 return ['status' => 'error', 'message' => 'Email hoặc mật khẩu không đúng.'];
             }
 
-            // Kiểm tra mật khẩu
-            // password_verify() sẽ so sánh mật khẩu thô với mật khẩu đã hash
-            if (password_verify($password, $user['password_hashed'])) {
-                // Đăng nhập thành công
-                // Loại bỏ mật khẩu đã hash trước khi trả về để bảo mật thông tin
+            if (password_verify($password, $user['password_hashed'])) { 
                 unset($user['password_hashed']); 
                 return ['status' => 'success', 'message' => 'Đăng nhập thành công!', 'user' => $user];
             } else {
@@ -107,7 +97,6 @@ class UserManager {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':email', $email);
             $stmt->execute();
-            // Lấy số lượng bản ghi có email này
             return $stmt->fetchColumn() > 0;
         } catch (PDOException $e) {
             error_log("Check Email Taken Error: " . $e->getMessage());
@@ -117,16 +106,17 @@ class UserManager {
 
     /**
      * Cập nhật mật khẩu mới cho người dùng dựa trên email.
+     * Mật khẩu mới sẽ được lưu trữ dưới dạng Băm.
      *
      * @param string $email Địa chỉ email của người dùng cần cập nhật.
      * @param string $newHashedPassword Mật khẩu mới đã được mã hóa.
      * @return bool True nếu cập nhật thành công, False nếu có lỗi.
      */
     public function updatePasswordByEmail($email, $newHashedPassword) {
-        $sql = "UPDATE users SET password_hashed = :password_hashed WHERE email = :email";
+        $sql = "UPDATE users SET password_hashed = :password_hashed WHERE email = :email"; 
         try {
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':password_hashed', $newHashedPassword);
+            $stmt->bindParam(':password_hashed', $newHashedPassword); 
             $stmt->bindParam(':email', $email);
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -137,12 +127,14 @@ class UserManager {
 
     /**
      * Lấy thông tin người dùng dựa trên email.
+     * KHÔNG trả về mật khẩu đã băm.
      *
      * @param string $email Địa chỉ email của người dùng.
      * @return array|null Mảng chứa thông tin người dùng nếu tìm thấy, ngược lại là null.
      */
     public function getUserByEmail($email) {
-        $sql = "SELECT id, name, email, password_hashed, role FROM users WHERE email = :email";
+        // Không lấy password_hashed trừ khi thật sự cần để password_verify (như trong loginUser)
+        $sql = "SELECT id, name, email, role FROM users WHERE email = :email"; 
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':email', $email);
@@ -155,8 +147,101 @@ class UserManager {
         }
     }
 
-    // Các hàm khác như getUser, updateProfile có thể được thêm vào đây sau
-    // public function getUserById($userId) { ... }
-    // public function updateProfile($userId, $data) { ... }
+    /**
+     * Lấy thông tin người dùng dựa trên ID.
+     * KHÔNG trả về mật khẩu.
+     *
+     * @param int $userId ID của người dùng.
+     * @return array|null Mảng chứa thông tin người dùng (id, name, email, role) nếu tìm thấy, ngược lại là null.
+     */
+    public function getUserById($userId) {
+        // Chỉ chọn các trường cần thiết, KHÔNG bao gồm mật khẩu.
+        $sql = "SELECT id, name, email, role FROM users WHERE id = :id";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $user;
+        } catch (PDOException $e) {
+            error_log("Get User By ID Error: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Cập nhật thông tin hồ sơ của người dùng (tên, email).
+     *
+     * @param int $userId ID của người dùng cần cập nhật.
+     * @param array $data Mảng chứa các trường cần cập nhật (ví dụ: ['name' => 'Tên mới', 'email' => 'email_moi@example.com']).
+     * @return array Mảng chứa trạng thái (success/error) và thông báo.
+     */
+    public function updateUserProfile($userId, array $data) {
+        $setClauses = [];
+        $params = [':id' => $userId];
+
+        if (isset($data['name'])) {
+            $setClauses[] = 'name = :name';
+            $params[':name'] = $data['name'];
+        }
+
+        if (isset($data['email'])) {
+            // Kiểm tra xem email mới có bị trùng với email của người dùng khác không
+            // trừ trường hợp email đó là của chính người dùng đang cập nhật
+            if ($this->isEmailTakenByOtherUser($data['email'], $userId)) {
+                return ['status' => 'error', 'message' => 'Email mới đã được sử dụng bởi tài khoản khác.'];
+            }
+            $setClauses[] = 'email = :email';
+            $params[':email'] = $data['email'];
+            // Nếu bạn dùng username là email, cũng cần cập nhật username
+            $setClauses[] = 'username = :username';
+            $params[':username'] = $data['email'];
+        }
+
+        if (empty($setClauses)) {
+            return ['status' => 'error', 'message' => 'Không có dữ liệu nào để cập nhật.'];
+        }
+
+        $sql = "UPDATE users SET " . implode(', ', $setClauses) . " WHERE id = :id";
+
+        try {
+            $stmt = $this->conn->prepare($sql);
+            foreach ($params as $key => &$val) {
+                $stmt->bindParam($key, $val);
+            }
+
+            if ($stmt->execute()) {
+                return ['status' => 'success', 'message' => 'Cập nhật thông tin thành công!'];
+            } else {
+                $errorInfo = $stmt->errorInfo();
+                error_log("Update User Profile Error: " . $errorInfo[2]);
+                return ['status' => 'error', 'message' => 'Có lỗi xảy ra khi cập nhật thông tin.'];
+            }
+        } catch (PDOException $e) {
+            error_log("Update User Profile PDO Exception: " . $e->getMessage());
+            return ['status' => 'error', 'message' => 'Lỗi hệ thống, vui lòng thử lại sau.'];
+        }
+    }
+
+    /**
+     * Kiểm tra xem một email đã được sử dụng bởi người dùng khác chưa (loại trừ chính người dùng đó).
+     * Hữu ích khi người dùng cập nhật email của họ.
+     *
+     * @param string $email Địa chỉ email cần kiểm tra.
+     * @param int $currentUserId ID của người dùng hiện tại (để loại trừ khi kiểm tra).
+     * @return bool True nếu email đã tồn tại bởi người dùng khác, False nếu chưa.
+     */
+    private function isEmailTakenByOtherUser($email, $currentUserId) {
+        $sql = "SELECT COUNT(*) FROM users WHERE email = :email AND id != :id";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':id', $currentUserId, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            error_log("Check Email Taken By Other User Error: " . $e->getMessage());
+            return true; // Để an toàn, nếu có lỗi thì coi như email đã bị dùng
+        }
+    }
 }
-?>

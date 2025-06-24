@@ -15,6 +15,7 @@ error_reporting(E_ALL);
 // header('Content-Type: application/json'); // <-- COMMENT HOẶC XÓA DÒNG NÀY
 
 require_once __DIR__ . '/../../Modules/Auth/UserManager.php';
+require_once __DIR__ . '/../../Modules/Auth/SessionManager.php'; // <-- Đảm bảo dòng này TỒN TẠI
 
 $input_data = json_decode(file_get_contents("php://input"), true);
 
@@ -32,17 +33,10 @@ $result = $userManager->loginUser($email, $password);
 
 // --- ĐOẠN CODE CẦN CHỈNH SỬA TẠI ĐÂY ---
 if ($result['status'] === 'success') {
-    // Đăng nhập thành công, lưu thông tin người dùng vào session
-    $_SESSION['user_id'] = $result['user']['id'];
-    $_SESSION['user_email'] = $result['user']['email'];
-    $_SESSION['user_name'] = $result['user']['name'];
-    $_SESSION['user_role'] = $result['user']['role']; // Đảm bảo có cột 'role' trong bảng users
+    $sessionManager = new SessionManager(); // <-- THÊM DÒNG NÀY
+    $sessionManager->login($result['user']); // <-- THAY THẾ CÁC GÁN $_SESSION BẰNG DÒNG NÀY
 
     // Chuyển hướng trình duyệt sang dashboard.php
-    // Đường dẫn này cần CHÍNH XÁC từ thư mục hiện tại của login_api.php
-    // login_api.php nằm trong Web_Project/Features/Auth/
-    // dashboard.php nằm trong Web_Project/
-    // Vậy đường dẫn là ../../dashboard.php
     header('Location: ../../dashboard.php'); 
     exit(); // RẤT QUAN TRỌNG: Dừng script sau khi chuyển hướng
 } else {

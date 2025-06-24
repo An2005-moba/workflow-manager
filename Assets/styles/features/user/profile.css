@@ -1,0 +1,171 @@
+/* General Body & Container Styling for User Profile */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #f4f7f6; /* Light background */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to start, not center vertically, for better flow */
+    min-height: 100vh;
+    margin: 0;
+    box-sizing: border-box;
+    color: #333;
+    padding-top: 50px; /* Add some space from the top */
+    padding-bottom: 50px;
+}
+
+.profile-container {
+    background-color: #ffffff;
+    padding: 35px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px; /* Wider container for profile details */
+    box-sizing: border-box;
+    text-align: center; /* Center main heading */
+}
+
+/* Heading Styling */
+h2 {
+    color: #1a202c; /* Darker heading color */
+    margin-bottom: 30px;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Profile Info Section */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between info items */
+    margin-bottom: 30px;
+    text-align: left; /* Align info labels and values to the left */
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background-color: #f8fbfd; /* Slightly different background for each item */
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.info-item strong {
+    color: #4a5568; /* Label color */
+    font-weight: 600;
+    margin-right: 15px; /* Space between label and value */
+    min-width: 100px; /* Ensure labels have a consistent width */
+}
+
+.info-item span {
+    color: #2d3748; /* Value color */
+    font-size: 16px;
+    word-break: break-word; /* Break long words */
+}
+
+/* Message Display Styling (for success/error messages from JS/API) */
+.message-display {
+    margin-top: 25px;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 15px;
+    text-align: center;
+    visibility: hidden; /* Hidden by default, shown by JS */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s linear;
+}
+
+.message-display.success {
+    background-color: #e6ffed; /* Light green */
+    color: #2d7a46; /* Dark green text */
+    border: 1px solid #a3d9b4;
+    visibility: visible;
+    opacity: 1;
+}
+
+.message-display.error {
+    background-color: #ffe6e6; /* Light red */
+    color: #b33939; /* Dark red text */
+    border: 1px solid #e0b4b4;
+    visibility: visible;
+    opacity: 1;
+}
+
+.message-display.info {
+    background-color: #e0f2fe; /* Light blue for info */
+    color: #0c4a6e;
+    border: 1px solid #90cdf4;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Link for actions (e.g., Change Password, Edit Profile - if added later) */
+.profile-actions {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.profile-actions a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4c51bf;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.profile-actions a:hover {
+    background-color: #4338CA;
+    transform: translateY(-2px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 25px 20px;
+        margin: 0 15px;
+    }
+
+    h2 {
+        font-size: 28px;
+    }
+
+    .info-item {
+        flex-direction: column; /* Stack label and value on small screens */
+        align-items: flex-start;
+    }
+
+    .info-item strong {
+        margin-right: 0;
+        margin-bottom: 5px; /* Space between stacked label and value */
+        min-width: unset; /* Remove min-width to allow wrapping */
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-container {
+        padding: 20px 15px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    .info-item {
+        padding: 10px;
+    }
+
+    .info-item span {
+        font-size: 15px;
+    }
+
+    .profile-actions a {
+        padding: 8px 15px;
+        font-size: 15px;
+    }
+}
+
