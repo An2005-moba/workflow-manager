@@ -14,45 +14,59 @@ class UserManager {
     /**
      * Đăng ký một người dùng mới vào hệ thống.
      * Mật khẩu sẽ được lưu dưới dạng plaintext.
+     * Đã mở rộng để bao gồm phone_number, date_of_birth, address.
      *
      * @param string $name Tên đầy đủ của người dùng.
      * @param string $email Địa chỉ email của người dùng (dùng làm username).
      * @param string $password Mật khẩu thô (plaintext).
+     * @param string|null $phone_number Số điện thoại của người dùng (tùy chọn).
+     * @param string|null $date_of_birth Ngày sinh của người dùng (tùy chọn, định dạng ISO 8601-MM-DD).
+     * @param string|null $address Địa chỉ của người dùng (tùy chọn).
      * @param string $role Vai trò của người dùng (mặc định là 'user').
      * @return array Mảng chứa trạng thái (success/error) và thông báo.
      */
-    public function registerUser($name, $email, $password, $role = 'user') {
-        // 1. Kiểm tra xem email đã tồn tại chưa
+    public function registerUser($name, $email, $password, $phone_number = null, $date_of_birth = null, $address = null, $role = 'user') {
+        // Kiểm tra xem email đã tồn tại hay chưa
         if ($this->isEmailTaken($email)) {
             return ['status' => 'error', 'message' => 'Email đã được đăng ký. Vui lòng sử dụng email khác.'];
         }
 
-        // Mật khẩu sẽ được lưu dưới dạng plaintext, KHÔNG CẦN BĂM
-        // $hashed_password = password_hash($password, PASSWORD_DEFAULT); // Dòng này ĐÃ BỊ XÓA
-
-        // 2. Chuẩn bị câu lệnh SQL để chèn dữ liệu
-        // Cột 'password_hashed' ĐÃ ĐƯỢC THAY THẾ BẰNG 'password'
-        $sql = "INSERT INTO users (name, email, username, password, role) VALUES (:name, :email, :username, :password, :role)"; 
+        $sql = "INSERT INTO users (name, email, username, password, phone_number, date_of_birth, address, role) 
+                VALUES (:name, :email, :username, :password, :phone_number, :date_of_birth, :address, :role)"; 
 
         try {
             $stmt = $this->conn->prepare($sql);
 
-            // Gán giá trị cho các tham số
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':username', $email); // Email cũng là username
-            $stmt->bindParam(':password', $password); // Mật khẩu plaintext
+            $stmt->bindParam(':username', $email); // Username thường được đặt trùng với email
+            $stmt->bindParam(':password', $password); // Mật khẩu chưa mã hóa (cần hash trong môi trường thực tế)
+            
+            // --- Logic bind cho phone_number, date_of_birth, address ---
+            // Đối với phone_number và address: lưu chuỗi rỗng '' nếu giá trị là null hoặc rỗng, phù hợp với VARCHAR NOT NULL DEFAULT ''
+            $phone_number_to_bind = ($phone_number === null || $phone_number === '') ? '' : $phone_number;
+            $stmt->bindParam(':phone_number', $phone_number_to_bind, PDO::PARAM_STR);
+
+            // Đối với date_of_birth: lưu NULL nếu giá trị là null hoặc rỗng, phù hợp với kiểu DATE NULL
+            $date_of_birth_to_bind = ($date_of_birth === null || $date_of_birth === '') ? null : $date_of_birth;
+            $stmt->bindParam(':date_of_birth', $date_of_birth_to_bind, ($date_of_birth_to_bind === null) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
+            // Đối với address: lưu chuỗi rỗng '' nếu giá trị là null hoặc rỗng, phù hợp với VARCHAR NOT NULL DEFAULT ''
+            $address_to_bind = ($address === null || $address === '') ? '' : $address;
+            $stmt->bindParam(':address', $address_to_bind, PDO::PARAM_STR);
+            // --- Kết thúc phần logic bind ---
+            
             $stmt->bindParam(':role', $role);
 
-            // Thực thi câu lệnh
             if ($stmt->execute()) {
                 return ['status' => 'success', 'message' => 'Đăng ký thành công!'];
             } else {
+                $errorInfo = $stmt->errorInfo();
+                error_log("Register User SQL Error: " . $errorInfo[2]);
                 return ['status' => 'error', 'message' => 'Có lỗi xảy ra khi đăng ký người dùng.'];
             }
         } catch (PDOException $e) {
-            // Ghi log lỗi để dễ dàng debug
-            error_log("Register User Error: " . $e->getMessage());
+            error_log("Register User PDO Exception: " . $e->getMessage());
             return ['status' => 'error', 'message' => 'Lỗi hệ thống, vui lòng thử lại sau.'];
         }
     }
@@ -66,7 +80,6 @@ class UserManager {
      * @return array Mảng chứa trạng thái (success/error), thông báo và thông tin người dùng nếu thành công.
      */
     public function loginUser($email, $password) {
-        // Cột 'password_hashed' ĐÃ ĐƯỢC THAY THẾ BẰNG 'password'
         $sql = "SELECT id, name, email, password, role FROM users WHERE email = :email"; 
 
         try {
@@ -75,17 +88,14 @@ class UserManager {
             $stmt->execute();
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Kiểm tra xem người dùng có tồn tại không
             if (!$user) {
                 return ['status' => 'error', 'message' => 'Email hoặc mật khẩu không đúng.'];
             }
 
-            // Kiểm tra mật khẩu
-            // password_verify() ĐÃ BỊ THAY THẾ BẰNG SO SÁNH TRỰC TIẾP
-            if ($password === $user['password']) { // So sánh mật khẩu plaintext
-                // Đăng nhập thành công
-                // Không cần unset 'password' vì nó không phải là hash để loại bỏ
-                // unset($user['password_hashed']); // Dòng này ĐÃ BỊ XÓA
+            // So sánh mật khẩu plaintext (trong môi trường thực tế, bạn cần sử dụng password_verify)
+            if ($password === $user['password']) {
+                // Đảm bảo không trả về mật khẩu cho frontend
+                unset($user['password']); 
                 return ['status' => 'success', 'message' => 'Đăng nhập thành công!', 'user' => $user];
             } else {
                 return ['status' => 'error', 'message' => 'Email hoặc mật khẩu không đúng.'];
@@ -97,10 +107,10 @@ class UserManager {
     }
 
     /**
-     * Kiểm tra xem một email đã được sử dụng bởi người dùng khác chưa.
+     * Kiểm tra xem một email đã được sử dụng hay chưa.
      *
      * @param string $email Địa chỉ email cần kiểm tra.
-     * @return bool True nếu email đã tồn tại, False nếu chưa.
+     * @return bool True nếu email đã được sử dụng, False nếu chưa hoặc có lỗi hệ thống.
      */
     private function isEmailTaken($email) {
         $sql = "SELECT COUNT(*) FROM users WHERE email = :email";
@@ -108,28 +118,27 @@ class UserManager {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':email', $email);
             $stmt->execute();
-            // Lấy số lượng bản ghi có email này
             return $stmt->fetchColumn() > 0;
         } catch (PDOException $e) {
             error_log("Check Email Taken Error: " . $e->getMessage());
-            return true; // Để an toàn, nếu có lỗi thì coi như email đã bị dùng
+            // QUAN TRỌNG: Nếu có lỗi database, giả định email KHÔNG bị trùng để không chặn đăng ký.
+            // Lỗi thực tế sẽ được ghi vào log.
+            return false; // ĐÃ SỬA: Thay đổi từ 'true' sang 'false'
         }
     }
 
     /**
-     * Cập nhật mật khẩu mới cho người dùng dựa trên email.
-     * Mật khẩu mới sẽ được lưu dưới dạng plaintext.
+     * Cập nhật mật khẩu của người dùng dựa trên email.
      *
-     * @param string $email Địa chỉ email của người dùng cần cập nhật.
+     * @param string $email Địa chỉ email của người dùng.
      * @param string $newPassword Mật khẩu mới (plaintext).
-     * @return bool True nếu cập nhật thành công, False nếu có lỗi.
+     * @return bool True nếu cập nhật thành công, False nếu thất bại.
      */
-    public function updatePasswordByEmail($email, $newPassword) { // Tham số đã đổi tên
-        // Cột 'password_hashed' ĐÃ ĐƯỢC THAY THẾ BẰNG 'password'
+    public function updatePasswordByEmail($email, $newPassword) { 
         $sql = "UPDATE users SET password = :password WHERE email = :email"; 
         try {
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':password', $newPassword); // Gán mật khẩu plaintext
+            $stmt->bindParam(':password', $newPassword);
             $stmt->bindParam(':email', $email);
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -139,15 +148,13 @@ class UserManager {
     }
 
     /**
-     * Lấy thông tin người dùng dựa trên email.
-     * KHÔNG trả về mật khẩu.
+     * Lấy thông tin người dùng bằng địa chỉ email.
      *
      * @param string $email Địa chỉ email của người dùng.
-     * @return array|null Mảng chứa thông tin người dùng nếu tìm thấy, ngược lại là null.
+     * @return array|null Mảng thông tin người dùng nếu tìm thấy, ngược lại là null.
      */
     public function getUserByEmail($email) {
-        // Chỉ chọn các trường cần thiết, KHÔNG BAO GỒM CỘT MẬT KHẨU
-        $sql = "SELECT id, name, email, role FROM users WHERE email = :email"; 
+        $sql = "SELECT id, name, email, role, phone_number, date_of_birth, address FROM users WHERE email = :email"; 
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':email', $email);
@@ -161,15 +168,13 @@ class UserManager {
     }
 
     /**
-     * Lấy thông tin người dùng dựa trên ID.
-     * KHÔNG trả về mật khẩu.
+     * Lấy thông tin người dùng bằng ID.
      *
      * @param int $userId ID của người dùng.
-     * @return array|null Mảng chứa thông tin người dùng (id, name, email, role) nếu tìm thấy, ngược lại là null.
+     * @return array|null Mảng thông tin người dùng nếu tìm thấy, ngược lại là null.
      */
     public function getUserById($userId) {
-        // Chỉ chọn các trường cần thiết, KHÔNG bao gồm mật khẩu.
-        $sql = "SELECT id, name, email, role FROM users WHERE id = :id";
+        $sql = "SELECT id, name, email, role, phone_number, date_of_birth, address FROM users WHERE id = :id";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
@@ -183,10 +188,10 @@ class UserManager {
     }
 
     /**
-     * Cập nhật thông tin hồ sơ của người dùng (tên, email).
+     * Cập nhật thông tin hồ sơ của người dùng (tên, email, phone_number, date_of_birth, address).
      *
      * @param int $userId ID của người dùng cần cập nhật.
-     * @param array $data Mảng chứa các trường cần cập nhật (ví dụ: ['name' => 'Tên mới', 'email' => 'email_moi@example.com']).
+     * @param array $data Mảng chứa các trường cần cập nhật (chỉ những trường có thay đổi).
      * @return array Mảng chứa trạng thái (success/error) và thông báo.
      */
     public function updateUserProfile($userId, array $data) {
@@ -199,17 +204,33 @@ class UserManager {
         }
 
         if (isset($data['email'])) {
-            // Kiểm tra xem email mới có bị trùng với email của người dùng khác không
-            // trừ trường hợp email đó là của chính người dùng đang cập nhật
             if ($this->isEmailTakenByOtherUser($data['email'], $userId)) {
                 return ['status' => 'error', 'message' => 'Email mới đã được sử dụng bởi tài khoản khác.'];
             }
             $setClauses[] = 'email = :email';
             $params[':email'] = $data['email'];
-            // Nếu bạn dùng username là email, cũng cần cập nhật username
-            $setClauses[] = 'username = :username';
+            $setClauses[] = 'username = :username'; // Cập nhật username theo email mới
             $params[':username'] = $data['email'];
         }
+
+        // --- Logic bind cho phone_number, date_of_birth, address khi cập nhật ---
+        // Đối với phone_number và address: lưu chuỗi rỗng '' nếu giá trị là null hoặc chuỗi rỗng
+        if (array_key_exists('phone_number', $data)) {
+            $setClauses[] = 'phone_number = :phone_number';
+            $params[':phone_number'] = ($data['phone_number'] === null || $data['phone_number'] === '') ? '' : $data['phone_number'];
+        }
+
+        // Đối với date_of_birth: lưu NULL nếu giá trị là null hoặc chuỗi rỗng
+        if (array_key_exists('date_of_birth', $data)) {
+            $setClauses[] = 'date_of_birth = :date_of_birth';
+            $params[':date_of_birth'] = ($data['date_of_birth'] === null || $data['date_of_birth'] === '') ? null : $data['date_of_birth'];
+        }
+
+        if (array_key_exists('address', $data)) {
+            $setClauses[] = 'address = :address';
+            $params[':address'] = ($data['address'] === null || $data['address'] === '') ? '' : $data['address'];
+        }
+        // --- Kết thúc phần logic bind ---
 
         if (empty($setClauses)) {
             return ['status' => 'error', 'message' => 'Không có dữ liệu nào để cập nhật.'];
@@ -220,14 +241,19 @@ class UserManager {
         try {
             $stmt = $this->conn->prepare($sql);
             foreach ($params as $key => &$val) {
-                $stmt->bindParam($key, $val);
+                // Kiểm tra riêng cho date_of_birth để bind PDO::PARAM_NULL nếu giá trị là null
+                if ($key === ':date_of_birth' && $val === null) {
+                    $stmt->bindParam($key, $val, PDO::PARAM_NULL);
+                } else {
+                    $stmt->bindParam($key, $val); // Mặc định bind là PARAM_STR cho các giá trị khác
+                }
             }
             
             if ($stmt->execute()) {
                 return ['status' => 'success', 'message' => 'Cập nhật thông tin thành công!'];
             } else {
                 $errorInfo = $stmt->errorInfo();
-                error_log("Update User Profile Error: " . $errorInfo[2]);
+                error_log("Update User Profile SQL Error: " . $errorInfo[2]);
                 return ['status' => 'error', 'message' => 'Có lỗi xảy ra khi cập nhật thông tin.'];
             }
         } catch (PDOException $e) {
@@ -237,12 +263,11 @@ class UserManager {
     }
 
     /**
-     * Kiểm tra xem một email đã được sử dụng bởi người dùng khác chưa (loại trừ chính người dùng đó).
-     * Hữu ích khi người dùng cập nhật email của họ.
+     * Kiểm tra xem một email đã được sử dụng bởi người dùng khác ngoài người dùng hiện tại hay không.
      *
      * @param string $email Địa chỉ email cần kiểm tra.
-     * @param int $currentUserId ID của người dùng hiện tại (để loại trừ khi kiểm tra).
-     * @return bool True nếu email đã tồn tại bởi người dùng khác, False nếu chưa.
+     * @param int $currentUserId ID của người dùng hiện tại.
+     * @return bool True nếu email đã được sử dụng bởi người dùng khác, False nếu chưa hoặc có lỗi hệ thống.
      */
     private function isEmailTakenByOtherUser($email, $currentUserId) {
         $sql = "SELECT COUNT(*) FROM users WHERE email = :email AND id != :id";
@@ -254,7 +279,9 @@ class UserManager {
             return $stmt->fetchColumn() > 0;
         } catch (PDOException $e) {
             error_log("Check Email Taken By Other User Error: " . $e->getMessage());
-            return true; // Để an toàn, nếu có lỗi thì coi như email đã bị dùng
+            // QUAN TRỌNG: Nếu có lỗi database, giả định email KHÔNG bị trùng bởi người khác.
+            // Lỗi thực tế sẽ được ghi vào log.
+            return false; // ĐÃ SỬA: Thay đổi từ 'true' sang 'false'
         }
     }
 }

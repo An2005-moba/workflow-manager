@@ -1,4 +1,6 @@
 <?php
+// C:/xampp/htdocs/Web_Project/Install/setup_database.php
+
 // Bật báo lỗi để dễ dàng debug trong quá trình phát triển
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -31,7 +33,9 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // SQL để tạo bảng users
-    // CHÚ Ý: Cột 'password_hashed' ĐÃ ĐƯỢC THAY THẾ BẰNG 'password'
+    // Đã thêm các cột `phone_number`, `date_of_birth`, `address`
+    // ĐẶC BIỆT: 'phone_number' và 'address' có DEFAULT '' để lưu chuỗi rỗng thay vì NULL
+    // 'date_of_birth' giữ nguyên DEFAULT NULL vì input type="date" xử lý NULL tốt hơn chuỗi rỗng
     $sql_create_table = "
         CREATE TABLE IF NOT EXISTS `users` (
             `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,6 +43,9 @@ try {
             `password` VARCHAR(255) NOT NULL,
             `email` VARCHAR(255) NOT NULL UNIQUE,
             `name` VARCHAR(255) NOT NULL,
+            `phone_number` VARCHAR(20) DEFAULT '',    -- ĐÃ THAY ĐỔI: DEFAULT ''
+            `date_of_birth` DATE DEFAULT NULL,        -- GIỮ NGUYÊN: DEFAULT NULL
+            `address` VARCHAR(512) DEFAULT '',        -- ĐÃ THAY ĐỔI: DEFAULT ''
             `role` VARCHAR(50) DEFAULT 'user',
             `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

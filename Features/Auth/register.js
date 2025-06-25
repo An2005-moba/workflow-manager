@@ -1,38 +1,51 @@
-// register.js
+// C:/xampp/htdocs/Web_Project/public/js/register.js
+
 $(document).ready(function() {
     const registrationForm = $('#registrationForm');
-    const messageDiv = $('#registrationMessage'); // Thêm một div/p để hiển thị thông báo tổng thể từ BE
+    const messageDiv = $('#registrationMessage'); // Div/p để hiển thị thông báo tổng thể từ BE
 
     // Hàm để hiển thị thông báo lỗi cục bộ cho từng trường
     function showError(elementId, message) {
-        $('#' + elementId).text(message).css('color', 'red'); // Đặt màu đỏ cho lỗi
+        const errorSpan = $('#' + elementId);
+        errorSpan.text(message).css('color', 'red').show(); // Hiển thị lỗi và đặt màu đỏ
+        // Thêm class 'is-invalid' vào input tương ứng để hiển thị viền đỏ (nếu dùng Bootstrap)
+        // const inputId = elementId.replace('Error', '');
+        // $('#' + inputId).addClass('is-invalid'); 
     }
 
     // Hàm để xóa thông báo lỗi cục bộ
     function clearError(elementId) {
-        $('#' + elementId).text('');
+        const errorSpan = $('#' + elementId);
+        errorSpan.text('').hide(); // Ẩn thông báo lỗi
+        // Xóa class 'is-invalid' khỏi input tương ứng
+        // const inputId = elementId.replace('Error', '');
+        // $('#' + inputId).removeClass('is-invalid');
     }
 
     // Lắng nghe sự kiện submit của form bằng jQuery
-    registrationForm.on('submit', async function(event) { // Thêm 'async' để dùng await
+    registrationForm.on('submit', async function(event) {
         event.preventDefault(); // Ngăn chặn hành vi gửi form mặc định của trình duyệt
 
-        // Xóa tất cả các thông báo lỗi cũ và thông báo tổng thể
+        // Xóa tất cả các thông báo lỗi cũ và thông báo tổng thể trước mỗi lần submit mới
         clearError('fullNameError');
         clearError('emailError');
         clearError('phoneError');
         clearError('passwordError');
         clearError('confirmPasswordError');
-        if (messageDiv && messageDiv.length) { // Kiểm tra sự tồn tại của messageDiv
-            messageDiv.text(''); // Xóa thông báo tổng thể
+        // clearError('dateOfBirthError'); // Nếu có
+        // clearError('addressError'); // Nếu có
+        if (messageDiv && messageDiv.length) {
+            messageDiv.text('').hide(); // Ẩn thông báo tổng thể
         }
 
-        // Lấy giá trị từ các trường nhập liệu bằng jQuery
+        // Lấy giá trị từ các trường nhập liệu bằng jQuery và loại bỏ khoảng trắng thừa
         const fullName = $('#fullName').val().trim();
         const email = $('#email').val().trim();
         const phone = $('#phone').val().trim();
-        const password = $('#password').val();
-        const confirmPassword = $('#confirmPassword').val();
+        const password = $('#password').val(); // Không trim password
+        const confirmPassword = $('#confirmPassword').val(); // Không trim confirmPassword
+        // const dateOfBirth = $('#date_of_birth').val(); // Lấy giá trị ngày sinh (có thể rỗng)
+        // const address = $('#address').val().trim(); // Lấy giá trị địa chỉ (có thể rỗng)
 
         let isValid = true; // Biến cờ để kiểm tra xem form có hợp lệ không
 
@@ -41,7 +54,7 @@ $(document).ready(function() {
         if (fullName === '') {
             showError('fullNameError', 'Tên không được để trống.');
             isValid = false;
-        } else if (fullName.length < 5) { // <<< THÊM ĐIỀU KIỆN ĐỘ DÀI TẠI ĐÂY
+        } else if (fullName.length < 5) {
             showError('fullNameError', 'Họ tên phải có ít nhất 5 ký tự.');
             isValid = false;
         }
@@ -54,6 +67,7 @@ $(document).ready(function() {
             isValid = false;
         }
 
+        // Phone là trường bắt buộc (theo logic hiện tại của bạn)
         if (phone === '') {
             showError('phoneError', 'Số điện thoại bắt buộc phải nhập.');
             isValid = false;
@@ -78,18 +92,44 @@ $(document).ready(function() {
             isValid = false;
         }
 
+        // // Validation cho ngày sinh (nếu cần)
+        // if (dateOfBirth && !/^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth)) {
+        //     showError('dateOfBirthError', 'Ngày sinh không hợp lệ (YYYY-MM-DD).');
+        //     isValid = false;
+        // } else if (dateOfBirth) {
+        //     const today = new Date();
+        //     const dob = new Date(dateOfBirth);
+        //     if (dob > today) {
+        //         showError('dateOfBirthError', 'Ngày sinh không thể ở tương lai.');
+        //         isValid = false;
+        //     }
+        // }
+
+        // // Validation cho địa chỉ (nếu cần)
+        // if (address && address.length > 512) { // Giới hạn ký tự giống DB
+        //     showError('addressError', 'Địa chỉ quá dài (tối đa 512 ký tự).');
+        //     isValid = false;
+        // }
+
+
         // --- Xử lý khi form hợp lệ hoặc không hợp lệ ---
         if (isValid) {
             // Dữ liệu sẽ gửi đi đến backend
             const postData = {
                 name: fullName,
                 email: email,
-                phone: phone, // Đã thêm phone vào đây để gửi đi
+                phone_number: phone, // ĐÃ SỬA TÊN TRƯỜNG TẠI ĐÂY để khớp với backend
                 password: password,
-                confirm_password: confirmPassword 
+                confirm_password: confirmPassword,
+                // date_of_birth: dateOfBirth === '' ? null : dateOfBirth, // Gửi null nếu rỗng
+                // address: address === '' ? '' : address // Gửi chuỗi rỗng nếu rỗng
             };
 
+            // CONSOLE.LOG ĐỂ KIỂM TRA DỮ LIỆU TRƯỚC KHI GỬI
+            console.log('Dữ liệu gửi đi từ frontend:', postData);
+
             try {
+                // Sử dụng jQuery AJAX cho tính nhất quán
                 const response = await $.ajax({
                     url: '/Web_Project/Features/Auth/register_api.php',
                     method: 'POST',
@@ -98,7 +138,7 @@ $(document).ready(function() {
                 });
 
                 if (messageDiv && messageDiv.length) {
-                    messageDiv.text(response.message);
+                    messageDiv.text(response.message).show(); // Hiển thị thông báo
                     if (response.status === 'success') {
                         messageDiv.css('color', 'green');
                         registrationForm[0].reset(); // Xóa dữ liệu form
@@ -130,22 +170,32 @@ $(document).ready(function() {
                 }
 
                 if (messageDiv && messageDiv.length) {
-                    messageDiv.text(errorMessage);
-                    messageDiv.css('color', 'red');
+                    messageDiv.text(errorMessage).css('color', 'red').show();
                 }
             }
         } else {
             console.log('Đăng ký thất bại: Vui lòng kiểm tra lại thông tin.');
             if (messageDiv && messageDiv.length) {
-                messageDiv.text('Đăng ký thất bại: Vui lòng kiểm tra lại các trường bị lỗi.');
-                messageDiv.css('color', 'red');
+                messageDiv.text('Đăng ký thất bại: Vui lòng kiểm tra lại các trường bị lỗi.').css('color', 'red').show();
             }
         }
     });
 
     // Bonus: Xóa thông báo lỗi ngay khi người dùng bắt đầu nhập vào ô
     $('#registrationForm input').on('input', function() {
-        const errorSpanId = $(this).attr('id') + 'Error';
+        const inputId = $(this).attr('id');
+        const errorSpanId = inputId + 'Error';
+        clearError(errorSpanId);
+        // Ẩn thông báo tổng thể khi người dùng bắt đầu tương tác với form
+        if (messageDiv && messageDiv.length) {
+            messageDiv.text('').hide();
+        }
+    });
+
+    // Xóa thông báo lỗi khi focus vào ô input
+    $('#registrationForm input').on('focus', function() {
+        const inputId = $(this).attr('id');
+        const errorSpanId = inputId + 'Error';
         clearError(errorSpanId);
     });
 });

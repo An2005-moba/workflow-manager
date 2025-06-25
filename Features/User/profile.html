@@ -6,29 +6,59 @@
     <title>Thông tin cá nhân - WorkFlow</title>
     <link rel="stylesheet" href="../../Assets/styles/Features/User/profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        /* Có thể thêm các style cụ thể hoặc ghi đè ở đây nếu cần */
-    </style>
-</head>
+    </head>
 <body>
     <div class="profile-container">
         <h2>Thông tin cá nhân</h2>
 
         <div class="profile-info">
-            <div class="info-item">
+            <div class="form-group info-item">
                 <strong>Họ tên:</strong>
-                <span id="userName">Đang tải...</span>
+                <div class="input-wrapper">
+                    <i class="fas fa-user icon"></i>
+                    <input type="text" id="userName" name="name" readonly spellcheck="false">
+                </div>
             </div>
-            <div class="info-item">
+            <div class="form-group info-item">
                 <strong>Email:</strong>
-                <span id="userEmail">Đang tải...</span>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope icon"></i>
+                    <input type="email" id="userEmail" name="email" readonly spellcheck="false">
+                </div>
             </div>
+            <div class="form-group info-item">
+                <strong>Số điện thoại:</strong>
+                <div class="input-wrapper">
+                    <i class="fas fa-phone icon"></i>
+                    <input type="text" id="userPhone" name="phone_number" placeholder="Chưa cập nhật" readonly spellcheck="false">
+                </div>
+                <span class="error-message" id="phoneError"></span>
             </div>
+            <div class="form-group info-item">
+                <strong>Ngày sinh:</strong>
+                <div class="input-wrapper">
+                    <i class="fas fa-calendar-alt icon"></i>
+                    <input type="date" id="userDOB" name="date_of_birth" readonly>
+                </div>
+                <span class="error-message" id="dobError"></span>
+            </div>
+            <div class="form-group info-item">
+                <strong>Địa chỉ:</strong>
+                <div class="input-wrapper">
+                    <i class="fas fa-map-marker-alt icon"></i>
+                    <input type="text" id="userAddress" name="address" placeholder="Chưa cập nhật" readonly spellcheck="false">
+                </div>
+                <span class="error-message" id="addressError"></span>
+            </div>
+        </div>
 
         <div id="messageDisplay" class="message-display"></div>
 
         <div class="profile-actions">
-            </div>
+            <button id="editProfileBtn" class="edit-btn">Chỉnh sửa</button>
+            <button id="saveProfileBtn" class="save-btn hidden">Lưu</button>
+            <button id="cancelEditBtn" class="cancel-btn hidden">Hủy</button>
+        </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
