@@ -157,7 +157,7 @@ if (count($name_parts) >= 2) {
                         Bạn chưa có dự án nào. Hãy tạo dự án đầu tiên để bắt<br>
                         đầu quản lý công việc của mình.
                     </p>
-                    <button class="dashboard-create-btn">Tạo dự án mới</button>
+                  <a href="./Features/projects/create_project.html" class="dashboard-create-btn">Tạo dự án mới</a>
                 </div>
             </div>
         </div>
