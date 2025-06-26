@@ -1,10 +1,9 @@
 <?php
 // C:/xampp/htdocs/Web_Project/Features/User/update_profile_api.php
-session_start(); // Bắt đầu session để truy cập thông tin người dùng
 
 // Đảm bảo chỉ cho phép truy cập qua phương thức POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405); // Method Not Allowed
+    http_response_code(405);
     echo json_encode(['status' => 'error', 'message' => 'Phương thức không hợp lệ.']);
     exit();
 }
@@ -18,26 +17,27 @@ error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 // Bao gồm các file cần thiết
-require_once __DIR__ . '/../../Modules/Auth/UserManager.php';
-require_once __DIR__ . '/../../Modules/Auth/SessionManager.php'; // Để kiểm tra session
+require_once realpath(__DIR__ . '/../../Modules/Auth/SessionManager.php');
+require_once realpath(__DIR__ . '/../../Modules/User/ProfileManager.php');
 
 $response = ['status' => 'error', 'message' => ''];
 
-$sessionManager = new SessionManager();
+$sessionManager = new SessionManager(); // Session sẽ được tự động bắt đầu trong constructor của SessionManager
+$profileManager = new ProfileManager();
 
 // Kiểm tra xem người dùng đã đăng nhập chưa
 if (!$sessionManager->isLoggedIn()) {
-    http_response_code(401); // Unauthorized
+    http_response_code(401);
     $response['message'] = 'Bạn chưa đăng nhập. Vui lòng đăng nhập để cập nhật thông tin.';
     echo json_encode($response);
     exit();
 }
 
 // Lấy user ID từ session
-$userId = $_SESSION['user_id'] ?? null;
+$userId = $sessionManager->getUserId();
 
 if (!$userId) {
-    http_response_code(400); // Bad Request
+    http_response_code(400);
     $response['message'] = 'Không tìm thấy ID người dùng trong phiên đăng nhập.';
     $sessionManager->logout(); 
     echo json_encode($response);
@@ -47,37 +47,43 @@ if (!$userId) {
 // Lấy dữ liệu từ body của request (JSON)
 $input_data = json_decode(file_get_contents("php://input"), true);
 
-// Khởi tạo UserManager
-$userManager = new UserManager();
+// Kiểm tra nếu dữ liệu JSON không hợp lệ
+if (json_last_error() !== JSON_ERROR_NONE) {
+    http_response_code(400);
+    $response['message'] = 'Dữ liệu gửi lên không hợp lệ (không phải JSON).';
+    echo json_encode($response);
+    exit();
+}
 
 // --- Lấy và xác thực dữ liệu từ input_data ---
 $updatedData = [];
 
-// Name (có thể cập nhật nhưng thường ít thay đổi qua API này)
-if (isset($input_data['name']) && $input_data['name'] !== '') {
-    $updatedData['name'] = trim($input_data['name']);
-    if (strlen($updatedData['name']) > 255) {
+// Name
+if (isset($input_data['name'])) {
+    $name = trim($input_data['name']);
+    if (strlen($name) > 255) {
         $response['message'] = 'Tên không được quá 255 ký tự.';
         echo json_encode($response);
         exit();
     }
+    $updatedData['name'] = $name;
 }
 
-// Email (có thể cập nhật nhưng cần kiểm tra trùng lặp và định dạng)
-if (isset($input_data['email']) && $input_data['email'] !== '') {
-    $updatedData['email'] = trim($input_data['email']);
-    if (!filter_var($updatedData['email'], FILTER_VALIDATE_EMAIL)) {
+// Email
+if (isset($input_data['email'])) {
+    $email = trim($input_data['email']);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $response['message'] = 'Địa chỉ email không hợp lệ.';
         echo json_encode($response);
         exit();
     }
-    // UserManager đã có logic kiểm tra email trùng lặp của người khác, nên không cần check ở đây nữa
+    $updatedData['email'] = $email;
 }
 
-// Phone Number (kiểm tra định dạng, có thể để trống)
-if (array_key_exists('phone_number', $input_data)) { // Use array_key_exists to allow empty string
+// Phone Number
+if (array_key_exists('phone_number', $input_data)) {
     $phone_number = trim($input_data['phone_number']);
-    if (!empty($phone_number) && !preg_match('/^\d{10,11}$/', $phone_number)) { // Kiểm tra 10 hoặc 11 chữ số
+    if (!empty($phone_number) && !preg_match('/^\d{10,11}$/', $phone_number)) {
         $response['message'] = 'Số điện thoại không hợp lệ (chỉ chấp nhận 10 hoặc 11 chữ số).';
         echo json_encode($response);
         exit();
@@ -85,16 +91,17 @@ if (array_key_exists('phone_number', $input_data)) { // Use array_key_exists to 
     $updatedData['phone_number'] = $phone_number;
 }
 
-// Date of Birth (kiểm tra định dạng, có thể để trống)
+// Date of Birth
 if (array_key_exists('date_of_birth', $input_data)) {
     $date_of_birth = trim($input_data['date_of_birth']);
     if (!empty($date_of_birth)) {
-        // Simple date validation: check if it's a valid date format YYYY-MM-DD
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_birth) || !strtotime($date_of_birth)) {
-            $response['message'] = 'Ngày sinh không hợp lệ (định dạng YYYY-MM-DD).';
-            echo json_encode($response);
-            exit();
+        $date_parts = explode('-', $date_of_birth);
+        if (count($date_parts) !== 3 || !checkdate($date_parts[1], $date_parts[2], $date_parts[0])) {
+             $response['message'] = 'Ngày sinh không hợp lệ (định dạng YYYY-MM-DD và phải là ngày có thật).';
+             echo json_encode($response);
+             exit();
         }
+
         $today = new DateTime();
         $birthDate = new DateTime($date_of_birth);
         if ($birthDate > $today) {
@@ -106,10 +113,10 @@ if (array_key_exists('date_of_birth', $input_data)) {
     $updatedData['date_of_birth'] = $date_of_birth;
 }
 
-// Address (có thể để trống)
+// Address
 if (array_key_exists('address', $input_data)) {
     $address = trim($input_data['address']);
-    if (strlen($address) > 512) { // Kích thước cột address là VARCHAR(512)
+    if (strlen($address) > 512) {
         $response['message'] = 'Địa chỉ quá dài (tối đa 512 ký tự).';
         echo json_encode($response);
         exit();
@@ -125,32 +132,46 @@ if (empty($updatedData)) {
     exit();
 }
 
-// Gọi hàm cập nhật từ UserManager
-// updateUserProfile sẽ trả về mảng ['status' => 'success/error', 'message' => '...']
-$result = $userManager->updateUserProfile($userId, $updatedData);
+// Gọi hàm cập nhật từ ProfileManager
+$result = $profileManager->updateUserProfile($userId, $updatedData);
 
 if ($result['status'] === 'success') {
-    // Nếu email được cập nhật, có thể cần cập nhật lại session email
-    // Tùy thuộc vào cách bạn quản lý session, có thể không cần thiết nếu chỉ dựa vào user_id
     if (isset($updatedData['email'])) {
         $_SESSION['user_email'] = $updatedData['email'];
-        $_SESSION['username'] = $updatedData['email']; // Nếu username cũng là email
+        if (isset($_SESSION['username'])) { 
+            $_SESSION['username'] = $updatedData['email'];
+        }
     }
-    // Cập nhật tên trong session nếu có
     if (isset($updatedData['name'])) {
         $_SESSION['user_name'] = $updatedData['name'];
     }
 
-    // Sau khi cập nhật thành công, có thể trả về thông tin user mới nhất
-    // Hoặc chỉ trả về thông báo thành công
     $response['status'] = 'success';
     $response['message'] = $result['message'];
-    // Tùy chọn: Gửi lại thông tin user mới nhất để frontend cập nhật ngay lập tức
-    // $updated_user = $userManager->getUserById($userId);
-    // unset($updated_user['password']);
-    // $response['user'] = $updated_user;
+    
+    $updated_user = $profileManager->getUserById($userId);
+    if ($updated_user) {
+        unset($updated_user['password']);
+        unset($updated_user['username']);
+        if (isset($updated_user['date_of_birth']) && ($updated_user['date_of_birth'] === '0000-00-00' || $updated_user['date_of_birth'] === null)) {
+            $updated_user['date_of_birth'] = '';
+        }
+        if (!isset($updated_user['phone_number']) || $updated_user['phone_number'] === null) {
+            $updated_user['phone_number'] = '';
+        }
+        if (!isset($updated_user['address']) || $updated_user['address'] === null) {
+            $updated_user['address'] = '';
+        }
+        $response['user'] = $updated_user;
+    }
+
 } else {
     $response['message'] = $result['message'];
+    if ($result['message'] === 'Email mới đã được sử dụng bởi tài khoản khác.') {
+        http_response_code(409);
+    } else {
+        http_response_code(500);
+    }
 }
 
 echo json_encode($response);

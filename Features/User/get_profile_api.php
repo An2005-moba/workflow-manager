@@ -1,6 +1,5 @@
 <?php
 // C:/xampp/htdocs/Web_Project/Features/User/get_profile_api.php
-session_start(); // Bắt đầu session để truy cập thông tin người dùng
 
 // Bật báo lỗi để dễ debug trong quá trình phát triển
 ini_set('display_errors', 1);
@@ -11,12 +10,13 @@ error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 // Bao gồm các file cần thiết
-require_once __DIR__ . '/../../Modules/Auth/UserManager.php';
-require_once __DIR__ . '/../../Modules/Auth/SessionManager.php'; // Để kiểm tra session
+require_once realpath(__DIR__ . '/../../Modules/Auth/SessionManager.php');
+require_once realpath(__DIR__ . '/../../Modules/User/ProfileManager.php');
 
 $response = ['status' => 'error', 'message' => ''];
 
-$sessionManager = new SessionManager();
+$sessionManager = new SessionManager(); // Session sẽ được tự động bắt đầu trong constructor của SessionManager
+$profileManager = new ProfileManager();
 
 // Kiểm tra xem người dùng đã đăng nhập chưa
 if (!$sessionManager->isLoggedIn()) {
@@ -27,41 +27,45 @@ if (!$sessionManager->isLoggedIn()) {
 }
 
 // Lấy user ID từ session
-$userId = $_SESSION['user_id'] ?? null;
+$userId = $sessionManager->getUserId();
 
 if (!$userId) {
     http_response_code(400); // Bad Request
     $response['message'] = 'Không tìm thấy ID người dùng trong phiên đăng nhập.';
-    // Có thể cần hủy session nếu ID không hợp lệ
     $sessionManager->logout(); 
     echo json_encode($response);
     exit();
 }
 
-$userManager = new UserManager();
-
-// Lấy thông tin người dùng bằng ID
-// Hàm getUserById đã được cập nhật để trả về các trường mới
-$user = $userManager->getUserById($userId);
+// Lấy thông tin người dùng bằng ProfileManager
+$user = $profileManager->getUserById($userId);
 
 if ($user) {
     $response['status'] = 'success';
     $response['message'] = 'Tải thông tin người dùng thành công.';
     
-    // Đảm bảo không gửi mật khẩu hoặc các thông tin nhạy cảm khác
-    unset($user['password']); // Mặc dù UserManager::getUserById không chọn password, đây là biện pháp an toàn
-    unset($user['username']); // Hoặc bất kỳ trường nào không cần thiết cho frontend
+    unset($user['password']);
+    unset($user['username']);
 
-    // Format date_of_birth nếu nó tồn tại và không phải là NULL
-    if (isset($user['date_of_birth']) && $user['date_of_birth'] === '0000-00-00') {
-        $user['date_of_birth'] = ''; // Trả về chuỗi rỗng nếu là giá trị mặc định của MySQL
+    if (isset($user['date_of_birth'])) {
+        if ($user['date_of_birth'] === '0000-00-00' || $user['date_of_birth'] === null) {
+            $user['date_of_birth'] = '';
+        }
+    } else {
+        $user['date_of_birth'] = '';
     }
-
+    
+    if (!isset($user['phone_number']) || $user['phone_number'] === null) {
+        $user['phone_number'] = '';
+    }
+    if (!isset($user['address']) || $user['address'] === null) {
+        $user['address'] = '';
+    }
 
     $response['user'] = $user;
 } else {
-    http_response_code(404); // Not Found
-    $response['message'] = 'Không tìm thấy thông tin người dùng.';
+    http_response_code(404);
+    $response['message'] = 'Không tìm thấy thông tin người dùng hoặc có lỗi xảy ra.';
 }
 
 echo json_encode($response);

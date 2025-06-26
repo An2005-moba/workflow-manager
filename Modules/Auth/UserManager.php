@@ -174,7 +174,7 @@ class UserManager {
      * @return array|null Mảng thông tin người dùng nếu tìm thấy, ngược lại là null.
      */
     public function getUserById($userId) {
-        $sql = "SELECT id, name, email, role, phone_number, date_of_birth, address FROM users WHERE id = :id";
+        $sql = "SELECT id, name, email, password, role, phone_number, date_of_birth, address FROM users WHERE id = :id"; 
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':id', $userId, PDO::PARAM_INT);

@@ -1,19 +1,14 @@
 $(document).ready(function() {
-    const userNameInput = $('#userName'); // Đây sẽ là input, không còn là span
-    const userEmailInput = $('#userEmail'); // Đây sẽ là input
-    const userPhoneInput = $('#userPhone');
-    const userDOBInput = $('#userDOB');
-    const userAddressInput = $('#userAddress');
+    // Referencing span elements instead of input elements
+    const userNameDisplay = $('#userName');
+    const userEmailDisplay = $('#userEmail');
+    const userPhoneDisplay = $('#userPhone');
+    const userDOBDisplay = $('#userDOB');
+    const userAddressDisplay = $('#userAddress');
 
     const messageDisplay = $('#messageDisplay');
 
-    const editProfileBtn = $('#editProfileBtn');
-    const saveProfileBtn = $('#saveProfileBtn');
-    const cancelEditBtn = $('#cancelEditBtn');
-
-    let originalUserData = {}; // To store user data when entering edit mode
-
-    // Error message spans
+    // Error message spans (kept for consistency, but won't be actively used for client-side validation in view-only mode)
     const phoneError = $('#phoneError');
     const dobError = $('#dobError');
     const addressError = $('#addressError');
@@ -34,12 +29,12 @@ $(document).ready(function() {
         }).text('');
     }
 
-    // Function to show local error messages below inputs
+    // Function to show local error messages below display elements (will likely not be triggered now)
     function showError(elementId, message) {
         $('#' + elementId).text(message).show();
     }
 
-    // Function to clear local error messages
+    // Function to clear local error messages (will likely not be triggered now)
     function clearError(elementId) {
         $('#' + elementId).text('').hide();
     }
@@ -50,72 +45,34 @@ $(document).ready(function() {
         clearError('addressError');
     }
 
-    // Function to toggle edit mode
-    function toggleEditMode(enable) {
-        if (enable) {
-            // Save current data before enabling edit
-            originalUserData = {
-                name: userNameInput.val(),
-                email: userEmailInput.val(),
-                phone_number: userPhoneInput.val(),
-                date_of_birth: userDOBInput.val(),
-                address: userAddressInput.val()
-            };
-
-            // Readonly fields
-            userNameInput.prop('readonly', true); // Name and email are not editable
-            userEmailInput.prop('readonly', true);
-
-            // Editable fields
-            userPhoneInput.prop('readonly', false).focus();
-            userDOBInput.prop('readonly', false);
-            userAddressInput.prop('readonly', false);
-
-            editProfileBtn.addClass('hidden');
-            saveProfileBtn.removeClass('hidden');
-            cancelEditBtn.removeClass('hidden');
-        } else {
-            // Readonly fields
-            userNameInput.prop('readonly', true);
-            userEmailInput.prop('readonly', true);
-
-            // Editable fields
-            userPhoneInput.prop('readonly', true);
-            userDOBInput.prop('readonly', true);
-            userAddressInput.prop('readonly', true);
-
-            editProfileBtn.removeClass('hidden');
-            saveProfileBtn.addClass('hidden');
-            cancelEditBtn.addClass('hidden');
-            hideMessage();
-            clearAllErrors();
-        }
-    }
-
-    // Function to fetch user data
+    // Function to fetch user data and populate the display spans
     async function fetchUserProfile() {
         showMessage('Đang tải thông tin...', 'info');
 
         try {
             const response = await $.ajax({
-                url: '../../Features/User/get_profile_api.php', // This API endpoint needs to be created
+                url: './get_profile_api.php', // ĐÃ SỬA: Đường dẫn API tương đối đúng
                 method: 'GET',
                 dataType: 'json'
             });
 
             if (response.status === 'success' && response.user) {
-                userNameInput.val(response.user.name || '');
-                userEmailInput.val(response.user.email || '');
-                userPhoneInput.val(response.user.phone_number || '');
-                userDOBInput.val(response.user.date_of_birth || '');
-                userAddressInput.val(response.user.address || '');
+                userNameDisplay.text(response.user.name || 'Chưa cập nhật');
+                userEmailDisplay.text(response.user.email || 'Chưa cập nhật');
+                userPhoneDisplay.text(response.user.phone_number || 'Chưa cập nhật');
+                
+                // Format date for display if available
+                const dob = response.user.date_of_birth;
+                userDOBDisplay.text(dob && dob !== '0000-00-00' ? new Date(dob).toLocaleDateString('vi-VN') : 'Chưa cập nhật');
+                
+                userAddressDisplay.text(response.user.address || 'Chưa cập nhật');
                 hideMessage();
             } else {
-                userNameInput.val('N/A');
-                userEmailInput.val('N/A');
-                userPhoneInput.val('N/A');
-                userDOBInput.val(''); // Keep empty for date input
-                userAddressInput.val('N/A');
+                userNameDisplay.text('Không có dữ liệu');
+                userEmailDisplay.text('Không có dữ liệu');
+                userPhoneDisplay.text('Không có dữ liệu');
+                userDOBDisplay.text('Không có dữ liệu');
+                userAddressDisplay.text('Không có dữ liệu');
                 showMessage(response.message || 'Không thể tải thông tin người dùng.', 'error');
             }
         } catch (jqXHR) {
@@ -133,11 +90,11 @@ $(document).ready(function() {
                     errorMessage = `Lỗi từ server: ${jqXHR.responseText}`;
                 }
             }
-            userNameInput.val('Lỗi tải dữ liệu');
-            userEmailInput.val('Lỗi tải dữ liệu');
-            userPhoneInput.val('Lỗi tải dữ liệu');
-            userDOBInput.val('');
-            userAddressInput.val('Lỗi tải dữ liệu');
+            userNameDisplay.text('Lỗi tải dữ liệu');
+            userEmailDisplay.text('Lỗi tải dữ liệu');
+            userPhoneDisplay.text('Lỗi tải dữ liệu');
+            userDOBDisplay.text('Lỗi tải dữ liệu');
+            userAddressDisplay.text('Lỗi tải dữ liệu');
             showMessage(errorMessage, 'error');
 
             if (jqXHR.status === 401) {
@@ -148,126 +105,9 @@ $(document).ready(function() {
         }
     }
 
-    // Function to validate inputs before saving
-    function validateInputs() {
-        let isValid = true;
-        clearAllErrors();
+    // No event listeners for edit/save/cancel buttons as they are removed.
+    // No validation logic needed as there are no editable inputs.
 
-        const phone = userPhoneInput.val().trim();
-        const dob = userDOBInput.val();
-        const address = userAddressInput.val().trim();
-
-        // Phone number validation (optional, can be empty or a valid format)
-        if (phone !== '' && !/^\d{10,11}$/.test(phone)) { // Simple check for 10-11 digits
-            showError('phoneError', 'Số điện thoại không hợp lệ (10-11 chữ số).');
-            isValid = false;
-        }
-
-        // Date of Birth validation (optional, can be empty or a valid date)
-        if (dob !== '') {
-            const today = new Date();
-            const birthDate = new Date(dob);
-            if (birthDate > today) {
-                showError('dobError', 'Ngày sinh không thể ở tương lai.');
-                isValid = false;
-            }
-            // You can add more checks for min/max age if needed
-        }
-
-        // Address validation (optional, can be empty or a reasonable length)
-        if (address !== '' && address.length > 255) {
-            showError('addressError', 'Địa chỉ quá dài (tối đa 255 ký tự).');
-            isValid = false;
-        }
-        
-        return isValid;
-    }
-
-    // Function to update user profile
-    async function updateUserProfile() {
-        if (!validateInputs()) {
-            showMessage('Vui lòng kiểm tra lại các thông tin đã nhập.', 'error');
-            return;
-        }
-
-        showMessage('Đang lưu thông tin...', 'info');
-
-        const updatedData = {
-            name: userNameInput.val(), // May or may not be sent, depends on backend
-            email: userEmailInput.val(), // May or may not be sent
-            phone_number: userPhoneInput.val(),
-            date_of_birth: userDOBInput.val(),
-            address: userAddressInput.val()
-        };
-
-        try {
-            // Assume there's an API endpoint to update user profile data
-            // This API should return JSON like: { status: 'success', message: '...' }
-            // Or { status: 'error', message: '...' }
-            const response = await $.ajax({
-                url: '../../Features/User/update_profile_api.php', // This API endpoint needs to be created
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(updatedData),
-                dataType: 'json'
-            });
-
-            if (response.status === 'success') {
-                showMessage(response.message || 'Cập nhật thông tin thành công!', 'success');
-                toggleEditMode(false); // Exit edit mode on success
-                // Re-fetch data to ensure consistency, especially if backend does formatting
-                fetchUserProfile(); 
-            } else {
-                showMessage(response.message || 'Không thể cập nhật thông tin.', 'error');
-            }
-        } catch (jqXHR) {
-            console.error('Lỗi khi cập nhật thông tin người dùng:', jqXHR);
-            let errorMessage = 'Đã xảy ra lỗi mạng hoặc lỗi server khi cập nhật thông tin.';
-            if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
-                errorMessage = jqXHR.responseJSON.message;
-            } else if (jqXHR.responseText) {
-                try {
-                    const errorResponse = JSON.parse(jqXHR.responseText);
-                    if (errorResponse.message) {
-                        errorMessage = errorResponse.message;
-                    }
-                } catch (e) {
-                    errorMessage = `Lỗi từ server: ${jqXHR.responseText}`;
-                }
-            }
-            showMessage(errorMessage, 'error');
-        }
-    }
-
-    // Event listeners
-    editProfileBtn.on('click', function() {
-        toggleEditMode(true);
-    });
-
-    saveProfileBtn.on('click', function() {
-        updateUserProfile();
-    });
-
-    cancelEditBtn.on('click', function() {
-        // Revert inputs to original data
-        userNameInput.val(originalUserData.name);
-        userEmailInput.val(originalUserData.email);
-        userPhoneInput.val(originalUserData.phone_number);
-        userDOBInput.val(originalUserData.date_of_birth);
-        userAddressInput.val(originalUserData.address);
-        toggleEditMode(false); // Exit edit mode
-    });
-
-    // Clear messages/errors when input changes
-    $('.profile-info input').on('input', function() {
-        hideMessage();
-        const inputId = $(this).attr('id');
-        if (inputId === 'userPhone') clearError('phoneError');
-        if (inputId === 'userDOB') clearError('dobError');
-        if (inputId === 'userAddress') clearError('addressError');
-    });
-
-
-    // Initial fetch of user profile data
+    // Initial fetch of user profile data when the page loads
     fetchUserProfile();
 });

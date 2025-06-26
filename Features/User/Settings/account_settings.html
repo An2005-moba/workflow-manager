@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cài đặt tài khoản - WorkFlow</title>
+    <link rel="stylesheet" href="../../../Assets/styles/Features/User/settings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="settings-body">
+    <div class="settings-container">
+        <aside class="settings-sidebar">
+            <h3>Cài đặt tài khoản</h3>
+            <ul class="settings-nav">
+                <li class="settings-nav-item">
+                    <a href="#" data-page="personal_info.html" class="active">
+                        <i class="fas fa-user-circle"></i> Thông tin cá nhân
+                    </a>
+                </li>
+                <li class="settings-nav-item">
+                    <a href="#" data-page="change_password.html">
+                        <i class="fas fa-lock"></i> Thay đổi mật khẩu
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        <main class="settings-content">
+            <div id="dynamicContent">
+                <p>Chọn một mục từ menu bên trái để xem cài đặt.</p>
+            </div>
+        </main> 
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="account_settings.js"></script>
+</body>
+</html>

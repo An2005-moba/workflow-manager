@@ -33,23 +33,24 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // SQL để tạo bảng users
-    // Đã thêm các cột `phone_number`, `date_of_birth`, `address`
-    // ĐẶC BIỆT: 'phone_number' và 'address' có DEFAULT '' để lưu chuỗi rỗng thay vì NULL
-    // 'date_of_birth' giữ nguyên DEFAULT NULL vì input type="date" xử lý NULL tốt hơn chuỗi rỗng
-    $sql_create_table = "
+    // Đây là bảng cha, cần được tạo TRƯỚC bảng projects
+    $sql_create_users_table = "
         CREATE TABLE IF NOT EXISTS `users` (
             `id` INT AUTO_INCREMENT PRIMARY KEY,
             `username` VARCHAR(255) NOT NULL UNIQUE,
             `password` VARCHAR(255) NOT NULL,
             `email` VARCHAR(255) NOT NULL UNIQUE,
             `name` VARCHAR(255) NOT NULL,
-            `phone_number` VARCHAR(20) DEFAULT '',    -- ĐÃ THAY ĐỔI: DEFAULT ''
-            `date_of_birth` DATE DEFAULT NULL,        -- GIỮ NGUYÊN: DEFAULT NULL
-            `address` VARCHAR(512) DEFAULT '',        -- ĐÃ THAY ĐỔI: DEFAULT ''
+            `phone_number` VARCHAR(20) DEFAULT '',    
+            `date_of_birth` DATE DEFAULT NULL,        
+            `address` VARCHAR(512) DEFAULT '',        
             `role` VARCHAR(50) DEFAULT 'user',
             `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
     ";
+
+    // SQL để tạo bảng projects
+    // Bảng này có khóa ngoại tham chiếu đến bảng users, nên cần được tạo SAU bảng users
     $sql_create_projects_table = "
         CREATE TABLE IF NOT EXISTS `projects` (
             `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -64,21 +65,14 @@ try {
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
     ";
     
-    // Ghi chú:
-    // `FOREIGN KEY (`created_by_user_id`) REFERENCES `users`(`id`)`: Tạo liên kết đến cột id của bảng users.
-    // `ON DELETE SET NULL`: Nếu một user bị xóa, giá trị `created_by_user_id` trong các project của họ sẽ được set thành NULL (thay vì xóa cả project).
-    // `ON UPDATE CASCADE`: Nếu id của một user được cập nhật, id đó cũng sẽ được cập nhật trong bảng projects.
+    // THAY ĐỔI THỨ TỰ THỰC THI:
+    // 1. Thực thi câu lệnh tạo bảng users (bảng cha)
+    $conn->exec($sql_create_users_table);
+    echo "Table `users` created successfully or already exists.<br>";
 
-    // Thực thi câu lệnh tạo bảng projects
+    // 2. Thực thi câu lệnh tạo bảng projects (bảng con)
     $conn->exec($sql_create_projects_table);
     echo "Table `projects` created successfully or already exists.<br>";
-
-    echo "Database setup completed successfully!";
-
-
-    // Thực thi câu lệnh tạo bảng
-    $conn->exec($sql_create_table);
-    echo "Table `users` created successfully or already exists.<br>";
 
     echo "Database setup completed successfully!";
 

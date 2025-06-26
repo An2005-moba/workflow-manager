@@ -1,0 +1,449 @@
+/*
+    File: settings.css
+    Description: Comprehensive styles for the account settings page, including layout and sub-page forms.
+    Purpose: Provides styling for the two-column layout (sidebar and main content) and for displaying/editing user information.
+*/
+
+/* --- Base Styles for the overall settings page --- */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    margin: 0;
+    box-sizing: border-box;
+    color: #333;
+    background-color: #f4f7f6; /* Light background for the whole page */
+}
+
+/* Specific body style for settings page to ensure full height and flexible layout */
+.settings-body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align content to the top */
+    min-height: 100vh; /* Full viewport height */
+    padding: 30px 20px; /* Padding around the main settings container */
+}
+
+/* --- Main Settings Container (holds sidebar and content) --- */
+.settings-container {
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1000px; /* Max width for the whole settings area */
+    min-height: 700px; /* Minimum height to make it visually appealing */
+    overflow: hidden; /* Ensures rounded corners are respected */
+}
+
+/* --- Settings Sidebar (left navigation) --- */
+.settings-sidebar {
+    width: 280px; /* Fixed width for the sidebar */
+    flex-shrink: 0; /* Prevent shrinking */
+    padding: 30px;
+    background-color: #f8fbfd; /* Slightly different background for sidebar */
+    border-right: 1px solid #e2e8f0; /* Separator line */
+}
+
+.settings-sidebar h3 {
+    color: #1a202c;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.settings-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.settings-nav-item {
+    margin-bottom: 10px;
+}
+
+.settings-nav-item a {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: #4a5568;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.settings-nav-item a i {
+    margin-right: 12px;
+    font-size: 18px;
+    color: #6b7280;
+    transition: color 0.3s ease;
+}
+
+.settings-nav-item a:hover {
+    background-color: #edf2f7;
+    color: #2d3748;
+}
+
+.settings-nav-item a.active {
+    background-color: #4c51bf; /* Primary color for active link */
+    color: white;
+    font-weight: 600;
+}
+
+.settings-nav-item a.active i {
+    color: white; /* White icon for active link */
+}
+
+/* --- Settings Content (right main area) --- */
+.settings-content {
+    flex-grow: 1; /* Takes up remaining space */
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally within the content area */
+    justify-content: flex-start; /* Align content to the top */
+}
+
+#dynamicContent {
+    width: 100%;
+    max-width: 600px; /* Constrain width of loaded content for better readability, matching profile-container max-width */
+    /* Padding is often defined within the loaded content itself */
+}
+
+.loading-indicator {
+    text-align: center;
+    padding: 50px;
+    color: #6c757d;
+    font-size: 18px;
+}
+
+/* --- Profile Container --- */
+.profile-container {
+    background-color: #ffffff;
+    padding: 35px; /* From profile.css */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px; /* Wider container for profile details */
+    box-sizing: border-box;
+    text-align: center; /* Center main heading */
+    /* Adjust padding for .profile-container when loaded into settings-content */
+    padding: 0; /* Remove specific padding here as settings-content already has it */
+    box-shadow: none; /* Remove box-shadow as settings-container handles it */
+}
+
+/* --- Heading Styling --- */
+.profile-container h2 { /* Targeting h2 within profile-container for specificity */
+    color: #1a202c; /* Darker heading color */
+    margin-bottom: 30px;
+    font-size: 32px; /* From profile.css */
+    font-weight: 700;
+    text-align: left; /* Align to left within its container */
+    margin-top: 0; /* Remove top margin when loaded */
+    padding-top: 0; /* Ensure no extra padding at the top */
+}
+
+/* --- Profile Information Section --- */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between info items */
+    margin-bottom: 30px;
+}
+
+.form-group.info-item {
+    display: flex;
+    flex-direction: column; /* Stack label and input group */
+    text-align: left; /* Align labels to the left */
+}
+
+.form-group.info-item strong {
+    color: #4a5568; /* Label color */
+    font-weight: 600;
+    margin-bottom: 8px; /* Space between label and input */
+    display: block; /* Ensure label takes full width */
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between icon and input */
+    width: 100%;
+    border: 1px solid #e2e8f0; /* Default border for the wrapper */
+    border-radius: 8px; /* Rounded corners for the wrapper */
+    padding: 0 15px; /* Padding inside the wrapper */
+    background-color: #f8fbfd; /* **MẶC ĐỊNH LÀ MÀU XÁM NHẠT - GIỐNG ẢNH BẠN GỬI** */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; /* Thêm background-color vào transition */
+}
+
+.input-wrapper .icon {
+    color: #6b7280; /* Icon color */
+    font-size: 18px;
+    min-width: 20px; /* Ensure icon doesn't shift */
+    text-align: center;
+}
+
+/* Styles for the displayed value (now using .display-value for view-only in personal_info) */
+.profile-info .display-value {
+    flex-grow: 1; /* Allow span to take remaining space */
+    padding: 12px 0; /* Vertical padding to match original input */
+    font-size: 16px;
+    color: #2d3748;
+    box-sizing: border-box;
+    word-break: break-word; /* Ensure long values wrap */
+    background-color: transparent; /* **Để lấy màu xám nhạt từ input-wrapper** */
+}
+
+/* Styles for actual input fields (in both personal_info and change_password) */
+.profile-info input {
+    flex-grow: 1; /* Allow input to take remaining space */
+    border: none; /* Remove individual input border as wrapper has one */
+    background-color: transparent; /* **Để lấy màu xám nhạt từ input-wrapper** */
+    padding: 12px 0; /* Vertical padding for input within wrapper */
+    font-size: 16px;
+    color: #2d3748;
+    box-sizing: border-box;
+    outline: none; /* Remove outline on focus for default state */
+}
+
+/* Styles for input in readonly state (only applicable for personal_info if using input[readonly]) */
+.profile-info input[readonly] {
+    cursor: default;
+    background-color: transparent; /* **Đảm bảo vẫn lấy màu từ input-wrapper** */
+}
+
+/* Styling for the input wrapper when it contains a focused (editable) input */
+/* This rule makes the *entire* input-wrapper turn white when an editable input inside is focused */
+.form-group.info-item .input-wrapper:has(input:focus:not([readonly])) {
+    border-color: #4c51bf; /* Highlight border on focus */
+    box-shadow: 0 0 0 3px rgba(76, 81, 191, 0.2); /* Soft shadow on focus */
+    background-color: #ffffff; /* **CHUYỂN SANG MÀU TRẮNG KHI FOCUS/EDIT** */
+}
+
+/* --- Error Messages --- */
+.error-message {
+    display: none; /* Hidden by default */
+    color: #dc3545; /* Red text for errors */
+    font-size: 13px;
+    margin-top: 5px;
+    text-align: left; /* Align error message to the left */
+    padding-left: calc(20px + 10px); /* Align with input text, considering icon width + gap */
+}
+
+/* --- Message Display Styling (for success/error/info messages from JS/API) --- */
+.message-display {
+    margin-top: 25px;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 15px;
+    text-align: center;
+    visibility: hidden; /* Hidden by default, shown by JS */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s linear;
+}
+
+.message-display.success {
+    background-color: #e6ffed; /* Light green */
+    color: #2d7a46; /* Dark green text */
+    border: 1px solid #a3d9b4;
+    visibility: visible;
+    opacity: 1;
+}
+
+.message-display.error {
+    background-color: #ffe6e6; /* Light red */
+    color: #b33939; /* Dark red text */
+    border: 1px solid #e0b4b4;
+    visibility: visible;
+    opacity: 1;
+}
+
+.message-display.info {
+    background-color: #e0f2fe; /* Light blue for info */
+    color: #0c4a6e;
+    border: 1px solid #90cdf4;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* --- Profile Action Buttons --- */
+.profile-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Space between buttons */
+}
+
+.profile-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 16px;
+    white-space: nowrap; /* Prevent buttons from wrapping text */
+}
+
+.profile-actions .edit-btn {
+    background-color: #007bff; /* Blue for edit */
+    color: white;
+}
+.profile-actions .edit-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.profile-actions .save-btn {
+    background-color: #28a745; /* Green for save */
+    color: white;
+}
+.profile-actions .save-btn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.profile-actions .cancel-btn {
+    background-color: #6c757d; /* Gray for cancel */
+    color: white;
+}
+.profile-actions .cancel-btn:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* Utility class to hide elements (controlled by JavaScript) */
+.profile-actions .hidden {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .settings-container {
+        flex-direction: column; /* Stack sidebar and content on smaller screens */
+        min-height: auto;
+        max-width: 600px; /* Limit width to align with form */
+    }
+
+    .settings-sidebar {
+        width: 100%; /* Full width sidebar */
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0; /* Add bottom border */
+        padding-bottom: 20px;
+    }
+
+    .settings-sidebar h3 {
+        text-align: center; /* Center heading when stacked */
+        margin-bottom: 20px;
+    }
+
+    .settings-nav {
+        display: flex; /* Display nav items horizontally */
+        justify-content: center;
+        flex-wrap: wrap; /* Allow wrapping if too many items */
+        gap: 10px; /* Space between nav items */
+    }
+
+    .settings-nav-item {
+        margin-bottom: 0; /* Remove vertical margin */
+    }
+
+    .settings-nav-item a {
+        padding: 10px 15px; /* Adjust padding */
+        font-size: 15px;
+    }
+
+    .settings-nav-item a i {
+        margin-right: 8px; /* Reduce icon margin */
+    }
+
+    .settings-content {
+        padding: 25px 20px; /* Adjust padding for content area */
+    }
+
+    /* Adjust form-specific styles when nested */
+    .profile-container {
+        padding: 0; /* Remove specific padding as settings-content has it */
+    }
+    .profile-container h2 { /* Targeting h2 within profile-container for specificity */
+        font-size: 28px; /* From profile.css media query */
+    }
+    .form-group.info-item strong {
+        margin-bottom: 5px; /* From profile.css media query */
+    }
+    .input-wrapper {
+        padding: 0 10px; /* From profile.css media query */
+    }
+    .profile-info .display-value,
+    .profile-info input { /* Apply to both display-value and input */
+        padding: 10px 0; /* Adjust vertical padding */
+    }
+    .error-message {
+        padding-left: calc(18px + 8px); /* From profile.css media query */
+    }
+}
+
+@media (max-width: 600px) { /* This media query aligns with the 480px from profile.css to be the smallest breakpoint */
+    .settings-body {
+        padding: 20px 10px;
+    }
+
+    .settings-sidebar {
+        padding: 20px 15px;
+    }
+
+    .settings-sidebar h3 {
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+
+    .settings-nav {
+        flex-direction: column; /* Stack nav items vertically on very small screens */
+        gap: 5px;
+    }
+
+    .settings-nav-item a {
+        padding: 10px;
+        justify-content: center; /* Center text and icon */
+        text-align: center;
+    }
+
+    .settings-content {
+        padding: 20px 15px;
+    }
+
+    /* Adjust form-specific styles when nested */
+    .profile-container {
+        padding: 0; /* Ensure no extra padding */
+    }
+    .profile-container h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    .form-group.info-item strong {
+        font-size: 15px;
+    }
+    .profile-info .display-value,
+    .profile-info input { /* Apply to both display-value and input */
+        font-size: 15px;
+    }
+    .input-wrapper .icon {
+        font-size: 16px;
+        min-width: 18px;
+    }
+    .error-message {
+        font-size: 12px;
+        padding-left: calc(18px + 6px);
+    }
+    .profile-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .profile-actions button {
+        width: 100%;
+        font-size: 15px;
+        padding: 10px;
+    }
+}

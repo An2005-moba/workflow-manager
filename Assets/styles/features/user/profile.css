@@ -1,7 +1,7 @@
 /*
     File: profile.css
     Description: Styles for the user profile page (profile.html).
-    Purpose: Provides styling for displaying and editing basic user information.
+    Purpose: Provides styling for displaying basic user information (view-only).
 */
 
 /* --- Base Styles --- */
@@ -69,7 +69,7 @@ h2 {
     border-radius: 8px; /* Rounded corners for the wrapper */
     padding: 0 15px; /* Padding inside the wrapper, adjust as needed */
     background-color: #f8fbfd; /* Background for the wrapper */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    /* Remove transition for input focus as inputs are now readonly/spans */
 }
 
 .input-wrapper .icon {
@@ -79,32 +79,19 @@ h2 {
     text-align: center;
 }
 
-.profile-info input {
-    flex-grow: 1; /* Allow input to take remaining space */
-    border: none; /* Remove individual input border as wrapper has one */
-    background-color: transparent; /* Transparent background for input */
-    padding: 12px 0; /* Vertical padding for input within wrapper */
+/* Styles for the displayed value (now using .display-value) */
+.profile-info .display-value {
+    flex-grow: 1; /* Allow span to take remaining space */
+    padding: 12px 0; /* Vertical padding to match original input */
     font-size: 16px;
     color: #2d3748;
     box-sizing: border-box;
-    outline: none; /* Remove outline on focus for default state */
-}
-
-/* Style for readonly state of inputs */
-.profile-info input[readonly] {
-    cursor: default;
-    /* Optional: can make font lighter or slightly different if needed for readonly visual cue */
-}
-
-/* Styling for the input wrapper when it contains a focused (editable) input */
-.form-group.info-item .input-wrapper:has(input:focus:not([readonly])) {
-    border-color: #4c51bf; /* Highlight border on focus */
-    box-shadow: 0 0 0 3px rgba(76, 81, 191, 0.2); /* Soft shadow on focus */
-    background-color: #ffffff; /* White background when focused/editing */
+    /* No outline, no specific focus state for display */
+    word-break: break-word; /* Ensure long values wrap */
 }
 
 
-/* --- Error Messages --- */
+/* --- Error Messages (kept for consistency, though less relevant for view-only) --- */
 .error-message {
     display: none; /* Hidden by default */
     color: #dc3545; /* Red text for errors */
@@ -151,12 +138,12 @@ h2 {
     opacity: 1;
 }
 
-/* --- Profile Action Buttons --- */
+/* --- Profile Action Buttons (Removed from HTML, but keeping styles for consistency in case of future use or for other pages) --- */
 .profile-actions {
     margin-top: 30px;
-    display: flex;
+    display: flex; /* Kept display flex, but it won't show without buttons */
     justify-content: center;
-    gap: 15px; /* Space between buttons */
+    gap: 15px;
 }
 
 .profile-actions button {
@@ -167,36 +154,10 @@ h2 {
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
     font-size: 16px;
-    white-space: nowrap; /* Prevent buttons from wrapping text */
+    white-space: nowrap;
 }
 
-.profile-actions .edit-btn {
-    background-color: #007bff; /* Blue for edit */
-    color: white;
-}
-.profile-actions .edit-btn:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
-
-.profile-actions .save-btn {
-    background-color: #28a745; /* Green for save */
-    color: white;
-}
-.profile-actions .save-btn:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
-}
-
-.profile-actions .cancel-btn {
-    background-color: #6c757d; /* Gray for cancel */
-    color: white;
-}
-.profile-actions .cancel-btn:hover {
-    background-color: #5a6268;
-    transform: translateY(-2px);
-}
-
+/* No specific styles for .edit-btn, .save-btn, .cancel-btn as they are removed */
 /* Utility class to hide elements (controlled by JavaScript) */
 .profile-actions .hidden {
     display: none;
@@ -221,7 +182,7 @@ h2 {
         padding: 0 10px; /* Less horizontal padding for inputs */
     }
 
-    .profile-info input {
+    .profile-info .display-value { /* Apply to new display-value class */
         padding: 10px 0; /* Adjust vertical padding */
     }
 
@@ -229,10 +190,7 @@ h2 {
         padding-left: calc(18px + 8px); /* Adjust padding for error messages */
     }
 
-    .profile-actions button {
-        padding: 8px 15px;
-        font-size: 15px;
-    }
+    /* No button adjustments as buttons are removed */
 }
 
 @media (max-width: 480px) {
@@ -248,7 +206,7 @@ h2 {
         font-size: 15px;
     }
 
-    .profile-info input {
+    .profile-info .display-value { /* Apply to new display-value class */
         font-size: 15px;
     }
 
@@ -262,12 +220,5 @@ h2 {
         padding-left: calc(18px + 6px); /* Further adjust padding for error messages */
     }
 
-    .profile-actions {
-        flex-direction: column; /* Stack buttons vertically on very small screens */
-        gap: 10px;
-    }
-
-    .profile-actions button {
-        width: 100%; /* Make buttons full width when stacked */
-    }
+    /* No button adjustments as buttons are removed */
 }

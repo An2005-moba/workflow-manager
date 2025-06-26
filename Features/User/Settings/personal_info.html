@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông tin cá nhân - WorkFlow</title>
-    <link rel="stylesheet" href="../../Assets/styles/Features/User/profile.css">
+    <title>Cài đặt thông tin cá nhân - WorkFlow</title>
+    <link rel="stylesheet" href="../../../Assets/styles/Features/User/settings.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
@@ -16,21 +16,21 @@
                 <strong>Họ tên:</strong>
                 <div class="input-wrapper">
                     <i class="fas fa-user icon"></i>
-                    <span id="userName" class="display-value">Đang tải...</span>
+                    <input type="text" id="userName" name="name" readonly spellcheck="false">
                 </div>
             </div>
             <div class="form-group info-item">
                 <strong>Email:</strong>
                 <div class="input-wrapper">
                     <i class="fas fa-envelope icon"></i>
-                    <span id="userEmail" class="display-value">Đang tải...</span>
+                    <input type="email" id="userEmail" name="email" readonly spellcheck="false">
                 </div>
             </div>
             <div class="form-group info-item">
                 <strong>Số điện thoại:</strong>
                 <div class="input-wrapper">
                     <i class="fas fa-phone icon"></i>
-                    <span id="userPhone" class="display-value">Chưa cập nhật</span>
+                    <input type="text" id="userPhone" name="phone_number" placeholder="Chưa cập nhật" readonly spellcheck="false">
                 </div>
                 <span class="error-message" id="phoneError"></span>
             </div>
@@ -38,7 +38,7 @@
                 <strong>Ngày sinh:</strong>
                 <div class="input-wrapper">
                     <i class="fas fa-calendar-alt icon"></i>
-                    <span id="userDOB" class="display-value">Chưa cập nhật</span>
+                    <input type="date" id="userDOB" name="date_of_birth" readonly>
                 </div>
                 <span class="error-message" id="dobError"></span>
             </div>
@@ -46,7 +46,7 @@
                 <strong>Địa chỉ:</strong>
                 <div class="input-wrapper">
                     <i class="fas fa-map-marker-alt icon"></i>
-                    <span id="userAddress" class="display-value">Chưa cập nhật</span>
+                    <input type="text" id="userAddress" name="address" placeholder="Chưa cập nhật" readonly spellcheck="false">
                 </div>
                 <span class="error-message" id="addressError"></span>
             </div>
@@ -54,9 +54,11 @@
 
         <div id="messageDisplay" class="message-display"></div>
 
+        <div class="profile-actions">
+            <button id="editProfileBtn" class="edit-btn">Chỉnh sửa</button>
+            <button id="saveProfileBtn" class="save-btn hidden">Lưu</button>
+            <button id="cancelEditBtn" class="cancel-btn hidden">Hủy</button>
         </div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="profile.js"></script>
+    </div>
 </body>
 </html>
