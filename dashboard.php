@@ -169,7 +169,7 @@ if (count($name_parts) >= 2) {
                 <div class="dashboard-welcome-content">
                     <h1 class="dashboard-welcome-title">Chào mừng đến với WorkFlow!</h1>
                     <p class="dashboard-welcome-description">
-                        Bạn chưa có dự án nào. Hãy tạo dự án đầu tiên để bắt<br>
+                        Bạn chưa có dự án? Hãy tạo dự án để bắt<br>
                         đầu quản lý công việc của mình.
                     </p>
                   <a href="./Features/projects/create_project.html" class="dashboard-create-btn">Tạo dự án mới</a>
