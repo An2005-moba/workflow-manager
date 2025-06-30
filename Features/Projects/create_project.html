@@ -4,32 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tạo Dự Án Mới</title>
-    <!-- Liên kết đến file CSS -->
-    <link rel="stylesheet" href="../../Assets/styles/features/projects/create_project.css">
-    <!-- Google Fonts để có font chữ đẹp hơn -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="../../Assets/styles/features/projects/create_project.css?v=2">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="form-container">
-        <h2>Tạo Dự Án Mới</h2>
-        <form id="projectForm" action="handle_create_project.php" method="POST">
-            <div class="form-group">
-                <label for="project_name">Tên Dự Án:</label>
-                <input type="text" id="project_name" name="project_name" required>
-            </div>
-            <div class="form-group">
-                <label for="description">Mô Tả:</label>
-                <textarea id="description" name="description" rows="4"></textarea>
-            </div>
-            
-            <!-- ĐÃ XÓA TRƯỜNG NHẬP USER ID KHỎI ĐÂY -->
+    <div class="page-container">
+        <a href="../../dashboard.php" class="page-header">
+            <svg class="back-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            <span class="header-title">Tạo dự án mới</span>
+        </a>
 
-            <button type="submit" class="btn-submit">Tạo Dự Án</button>
-        </form>
-        <div id="message" class="message-area"></div>
+        <div class="form-container">
+            <form id="projectForm" action="handle_create_project.php" method="POST">
+                <div class="form-group">
+                    <label for="project_name">Tên Dự Án:</label>
+                    <input type="text" id="project_name" name="project_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Mô Tả:</label>
+                    <textarea id="description" name="description" rows="4"></textarea>
+                </div>
+                
+                <button type="submit" class="btn-submit">Tạo Dự Án</button>
+            </form>
+            <div id="message" class="message-area"></div>
+        </div>
     </div>
 
-    <!-- Liên kết đến file JavaScript (đặt ở cuối body để tải trang nhanh hơn) -->
     <script src="./create_project.js"></script>
 </body>
 </html>

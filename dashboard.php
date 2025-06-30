@@ -53,7 +53,7 @@ if (count($name_parts) >= 2) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkFlow - Dashboard</title>
-    <link rel="stylesheet" href="Assets/styles/main.css">
+    <link rel="stylesheet" href="Assets/styles/main.css?v=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -81,7 +81,7 @@ if (count($name_parts) >= 2) {
                             </svg>
                             Trang chủ
                         </a>
-                        <a href="#" class="dashboard-nav-item">
+                        <a href="./Features/Projects/list.php" class="dashboard-nav-item">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
                                 <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>

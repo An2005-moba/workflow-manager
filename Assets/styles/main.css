@@ -5,13 +5,12 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Inter', -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    line-height: 1.6;
-    color: #1F2937;
-    background-color: #FFFFFF;
-}
 
+
+body {
+     font-family: 'Inter';
+    background-color: rgb(255, 251, 251) !important;
+}
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -42,7 +41,10 @@ body {
     font-size: 24px;
     color: #1F2937;
 }
-
+/* Fix cho lỗi gạch chân ở logo link */
+.dashboard-logo-link {
+    text-decoration: none;
+}
 .logo-text {
     font-weight: 700;
 }
@@ -682,6 +684,8 @@ button#userDropdownToggle.dashboard-user:active {
     font-size: 16px;
     cursor: pointer;
     transition: all 0.2s ease;
+    text-decoration: none;
+
 }
 
 .dashboard-create-btn:hover {
@@ -913,4 +917,173 @@ button#userDropdownToggle.dashboard-user:active {
     .dashboard-welcome-description {
         font-size: 14px;
     }
+
+} /* <-- Dấu ngoặc này đóng khối @media (max-width: 480px) một cách chính xác */
+
+
+/* ======================================================= */
+/* ====   CSS CHO TRANG DANH SÁCH DỰ ÁN (ĐÚNG VỊ TRÍ)  ==== */
+/* ======================================================= */
+
+/* Tiêu đề trang */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1F2937;
+}
+
+.create-project-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #4F46E5;
+    color: #FFFFFF;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.create-project-btn:hover {
+    background-color: #4338CA;
+}
+
+/* Lưới chứa các dự án (ĐÃ SỬA LỖI) */
+.project-grid {
+    display: grid;
+    /* Dòng này cho phép tạo nhiều cột, tự động điều chỉnh */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    /* Bây giờ gap sẽ có tác dụng cho cả hàng và cột. Bạn có thể đổi giá trị này. */
+    gap: 24px; 
+}
+
+/* Thẻ dự án, sử dụng Flexbox để xếp item cạnh nhau */
+.project-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+    border-color: #C7D2FE;
+}
+
+/* Định dạng cho hộp chứa icon */
+.project-card-icon {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background-color: #EEF2FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-card-icon svg {
+    width: 32px;
+    height: 32px;
+    color: #4F46E5;
+}
+
+/* Định dạng cho hộp chứa nội dung */
+.project-card-content {
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    min-width: 0; 
+}
+
+/* Các thành phần bên trong hộp nội dung */
+.project-card-header {
+    margin-bottom: 4px;
+}
+
+.project-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1F2937;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.project-card-body {
+    flex-grow: 1;
+    margin-bottom: 12px;
+}
+
+.project-card-description {
+    font-size: 14px;
+    color: #6B7280;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.project-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #9CA3AF;
+    border-top: 1px solid #F3F4F6;
+    padding-top: 12px;
+}
+
+/* Trạng thái rỗng khi chưa có dự án */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #FFFFFF;
+    border: 1px dashed #D1D5DB;
+    border-radius: 8px;
+    margin-top: 40px;
+}
+
+.empty-state h2 {
+    font-size: 22px;
+    color: #1F2937;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: #6B7280;
+    margin-bottom: 24px;
+}
+
+.create-project-btn-empty {
+     display: inline-block;
+     background-color: #4F46E5;
+     color: #fff;
+     padding: 12px 24px;
+     border-radius: 8px;
+     text-decoration: none;
+     font-weight: 500;
+     transition: background-color 0.2s ease;
+}
+
+.create-project-btn-empty:hover {
+    background-color: #4338CA;
 }
