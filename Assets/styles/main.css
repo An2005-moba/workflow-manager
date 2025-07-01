@@ -5,10 +5,8 @@
     box-sizing: border-box;
 }
 
-
-
 body {
-     font-family: 'Inter';
+    font-family: 'Inter';
     background-color: rgb(255, 251, 251) !important;
 }
 .container {
@@ -459,40 +457,6 @@ body {
     gap: 16px;
 }
 
-.dashboard-search {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.dashboard-search svg {
-    position: absolute;
-    left: 12px;
-    color: #9CA3AF;
-    z-index: 1;
-}
-
-.dashboard-search input {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 10px 12px 10px 40px;
-    font-size: 14px;
-    color: #FFFFFF;
-    width: 280px;
-    transition: all 0.2s ease;
-}
-
-.dashboard-search input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.dashboard-search input:focus {
-    outline: none;
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
-}
-
 .dashboard-notification-btn {
     background: transparent;
     border: none;
@@ -723,10 +687,6 @@ button#userDropdownToggle.dashboard-user:active {
     .dashboard-nav-left {
         gap: 24px;
     }
-
-    .dashboard-search input {
-        width: 200px;
-    }
 }
 
 @media (max-width: 768px) {
@@ -823,10 +783,6 @@ button#userDropdownToggle.dashboard-user:active {
         display: none;
     }
 
-    .dashboard-search {
-        display: none;
-    }
-
     .dashboard-user-name {
         display: none;
     }
@@ -917,12 +873,11 @@ button#userDropdownToggle.dashboard-user:active {
     .dashboard-welcome-description {
         font-size: 14px;
     }
-
 } /* <-- Dấu ngoặc này đóng khối @media (max-width: 480px) một cách chính xác */
 
 
 /* ======================================================= */
-/* ====   CSS CHO TRANG DANH SÁCH DỰ ÁN (ĐÚNG VỊ TRÍ)  ==== */
+/* ====   CSS CHO TRANG DANH SÁCH DỰ ÁN (ĐÚNG VỊ TRÍ)   ==== */
 /* ======================================================= */
 
 /* Tiêu đề trang */
@@ -964,7 +919,7 @@ button#userDropdownToggle.dashboard-user:active {
     /* Dòng này cho phép tạo nhiều cột, tự động điều chỉnh */
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     /* Bây giờ gap sẽ có tác dụng cho cả hàng và cột. Bạn có thể đổi giá trị này. */
-    gap: 24px; 
+    gap: 24px;
 }
 
 /* Thẻ dự án, sử dụng Flexbox để xếp item cạnh nhau */
@@ -1006,10 +961,10 @@ button#userDropdownToggle.dashboard-user:active {
 
 /* Định dạng cho hộp chứa nội dung */
 .project-card-content {
-    flex-grow: 1; 
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    min-width: 0; 
+    min-width: 0;
 }
 
 /* Các thành phần bên trong hộp nội dung */
@@ -1036,7 +991,8 @@ button#userDropdownToggle.dashboard-user:active {
     color: #6B7280;
     line-height: 1.5;
     display: -webkit-box;
-    -webkit-line-clamp: 1; 
+    line-clamp: 1;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1074,16 +1030,156 @@ button#userDropdownToggle.dashboard-user:active {
 }
 
 .create-project-btn-empty {
-     display: inline-block;
-     background-color: #4F46E5;
-     color: #fff;
-     padding: 12px 24px;
-     border-radius: 8px;
-     text-decoration: none;
-     font-weight: 500;
-     transition: background-color 0.2s ease;
+    display: inline-block;
+    background-color: #4F46E5;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
 }
 
 .create-project-btn-empty:hover {
     background-color: #4338CA;
+}
+
+.dashboard-nav-right .search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    width: 300px;
+    max-width: 300px;
+    transition: all 0.2s ease;
+}
+
+.dashboard-nav-right .search-bar:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.dashboard-nav-right .search-bar:focus-within {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-nav-right .search-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 400;
+    flex: 1;
+    padding: 0;
+    margin-left: 8px;
+    min-width: 0; /* Cho phép input co lại khi cần thiết */
+}
+
+.dashboard-nav-right .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 400;
+}
+
+.dashboard-nav-right .search-input:focus::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.dashboard-nav-right .search-icon {
+    color: rgba(255, 255, 255, 0.6);
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    transition: color 0.2s ease;
+}
+
+.dashboard-nav-right .search-bar:focus-within .search-icon {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Animation cho search bar khi focus */
+.dashboard-nav-right .search-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 8px;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.dashboard-nav-right .search-bar:focus-within::before {
+    opacity: 1;
+}
+
+/* Responsive cho thanh tìm kiếm trong list.php */
+@media (max-width: 1024px) {
+    .dashboard-nav-right .search-bar {
+        width: 250px;
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-nav-right .search-bar {
+        width: 200px;
+        max-width: 200px;
+        padding: 6px 10px;
+    }
+    
+    .dashboard-nav-right .search-input {
+        font-size: 13px;
+    }
+    
+    .dashboard-nav-right .search-icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+@media (max-width: 640px) {
+    .dashboard-nav-right {
+        gap: 8px;
+    }
+    
+    .dashboard-nav-right .search-bar {
+        width: 150px;
+        max-width: 150px;
+        padding: 6px 8px;
+    }
+    
+    .dashboard-nav-right .search-input {
+        font-size: 12px;
+        margin-left: 6px;
+    }
+    
+    .dashboard-nav-right .search-icon {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-nav-right .search-bar {
+        width: 120px;
+        max-width: 120px;
+    }
+    
+    .dashboard-nav-right .search-input::placeholder {
+        font-size: 11px;
+    }
+}
+
+/* Đảm bảo thanh tìm kiếm không ảnh hưởng đến layout của dashboard.php */
+.dashboard-header-content:not(.dashboard-header-content-with-search) .search-bar {
+    display: none;
 }

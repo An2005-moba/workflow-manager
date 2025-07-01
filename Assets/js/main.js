@@ -2,9 +2,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Get dropdown elements
     const dashboardUserContainer = document.querySelector('.dashboard-user'); // Lấy toàn bộ container
-    const dropdownToggle = document.getElementById('userDropdownToggle'); 
-    const dropdownMenu = document.getElementById('userDropdownMenu'); 
-    
+    const dropdownToggle = document.getElementById('userDropdownToggle');
+    const dropdownMenu = document.getElementById('userDropdownMenu');
+
     if (!dashboardUserContainer || !dropdownToggle || !dropdownMenu) {
         console.warn('One or more dropdown elements not found. Make sure class "dashboard-user" and IDs "userDropdownToggle", "userDropdownMenu" exist.');
         return;
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Chúng ta không cần 'event.preventDefault()' ở đây vì nó sẽ được xử lý ở event listener
     function toggleDropdown() {
         const isOpen = dropdownMenu.classList.contains('show');
-        
+
         if (isOpen) {
             closeDropdown();
         } else {
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function openDropdown() {
         dropdownMenu.classList.add('show');
         dropdownToggle.classList.add('active'); // Đảm bảo mũi tên xoay
-        
+
         // Add event listener to close dropdown when clicking outside
         // Sử dụng setTimeout 0ms để đảm bảo event listener được thêm vào sau khi click hiện tại kết thúc
         setTimeout(() => {
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function closeDropdown() {
         dropdownMenu.classList.remove('show');
         dropdownToggle.classList.remove('active'); // Đảm bảo mũi tên trở lại trạng thái ban đầu
-        
+
         // Remove event listener
         document.removeEventListener('click', handleOutsideClick);
     }
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Kiểm tra xem click có nằm trong container tổng (.dashboard-user)
         // hoặc nằm trong menu dropdown (.dashboard-user-dropdown)
         const isClickInsideDropdownArea = dashboardUserContainer.contains(event.target);
-        
+
         if (!isClickInsideDropdownArea) {
             closeDropdown();
         }
@@ -75,12 +75,12 @@ document.addEventListener('DOMContentLoaded', function() {
     dropdownItems.forEach(item => {
         item.addEventListener('click', function(event) {
             // Ngăn chặn event nổi bọt từ item lên container và document
-            event.stopPropagation(); 
+            event.stopPropagation();
 
             // If it's the logout item, show confirmation
             if (this.classList.contains('dashboard-logout-item')) {
                 event.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ a (chuyển trang ngay lập tức)
-                
+
                 const confirmLogout = confirm('Bạn có chắc chắn muốn đăng xuất không?');
                 if (confirmLogout) {
                     window.location.href = this.getAttribute('href');
@@ -119,26 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Search functionality (optional enhancement - giữ nguyên)
-    const searchInput = document.querySelector('.dashboard-search input');
-    if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            const query = this.value.trim();
-            if (query.length > 2) {
-                console.log('Searching for:', query);
-            }
-        });
-
-        searchInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                const query = this.value.trim();
-                if (query.length > 0) {
-                    console.log('Search submitted:', query);
-                }
-            }
-        });
-    }
-
     // Create project button functionality (optional enhancement - giữ nguyên)
     const createBtn = document.querySelector('.dashboard-create-btn');
     if (createBtn) {
@@ -153,18 +133,18 @@ window.DashboardDropdown = {
     close: function() {
         const dropdownMenu = document.getElementById('userDropdownMenu');
         const dropdownToggle = document.getElementById('userDropdownToggle');
-        
+
         if (dropdownMenu && dropdownToggle) {
             dropdownMenu.classList.remove('show');
             dropdownToggle.classList.remove('active');
             document.removeEventListener('click', handleOutsideClick); // Đảm bảo gỡ bỏ listener
         }
     },
-    
+
     open: function() {
         const dropdownMenu = document.getElementById('userDropdownMenu');
         const dropdownToggle = document.getElementById('userDropdownToggle');
-        
+
         if (dropdownMenu && dropdownToggle) {
             dropdownMenu.classList.add('show');
             dropdownToggle.classList.add('active');
@@ -173,10 +153,10 @@ window.DashboardDropdown = {
             }, 0);
         }
     },
-    
+
     toggle: function() {
         const dropdownMenu = document.getElementById('userDropdownMenu');
-        
+
         if (dropdownMenu) {
             if (dropdownMenu.classList.contains('show')) {
                 this.close();

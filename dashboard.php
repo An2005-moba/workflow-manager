@@ -53,7 +53,7 @@ if (count($name_parts) >= 2) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkFlow - Dashboard</title>
-    <link rel="stylesheet" href="Assets/styles/main.css?v=1">
+    <link rel="stylesheet" href="Assets/styles/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -90,27 +90,10 @@ if (count($name_parts) >= 2) {
                             </svg>
                             Dự án
                         </a>
-                        <a href="#" class="dashboard-nav-item">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M23 21V19C23 18.1645 22.7155 17.3541 22.2094 16.6977C21.7033 16.0414 20.9999 15.5759 20.2 15.3726" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M16 3.37561C16.7999 3.57896 17.5033 4.04444 18.0094 4.70077C18.5155 5.35709 18.8 6.16754 18.8 7.00305C18.8 7.83856 18.5155 8.649 18.0094 9.30533C17.5033 9.96166 16.7999 10.4271 16 10.6305" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            Nhóm
-                        </a>
-                    </nav>
+                        </nav>
                 </div>
 
                 <div class="dashboard-nav-right">
-                    <div class="dashboard-search">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <input type="text" placeholder="Tìm kiếm...">
-                    </div>
-
                     <button class="dashboard-notification-btn">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -158,7 +141,7 @@ if (count($name_parts) >= 2) {
                             Đăng xuất
                         </a>
                     </div>
-                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -172,7 +155,7 @@ if (count($name_parts) >= 2) {
                         Bạn chưa có dự án? Hãy tạo dự án để bắt<br>
                         đầu quản lý công việc của mình.
                     </p>
-                  <a href="./Features/projects/create_project.html" class="dashboard-create-btn">Tạo dự án mới</a>
+                    <a href="./Features/projects/create_project.html" class="dashboard-create-btn">Tạo dự án mới</a>
                 </div>
             </div>
         </div>
