@@ -124,7 +124,45 @@ class ProjectManager {
             return ['status' => 'error', 'message' => 'Lỗi hệ thống khi truy vấn dự án.'];
         }
     }
-    
+   /**
+     * Lấy tất cả các dự án mà một người dùng có quyền truy cập.
+     * PHIÊN BẢN CUỐI CÙNG: Sử dụng UNION để đảm bảo hoạt động trên mọi cấu hình.
+     *
+     * @param int $userId ID của người dùng.
+     * @return array Mảng chứa trạng thái và danh sách các dự án.
+     */
+    public function getProjectsForUser($userId) {
+        $sql = "
+            (SELECT p.id, p.project_name, p.description, p.creation_date, u.name as created_by_name
+             FROM projects p
+             LEFT JOIN users u ON p.created_by_user_id = u.id
+             WHERE p.created_by_user_id = :userId1)
+            
+            UNION
+            
+            (SELECT p.id, p.project_name, p.description, p.creation_date, u.name as created_by_name
+             FROM projects p
+             JOIN project_members pm ON p.id = pm.project_id
+             LEFT JOIN users u ON p.created_by_user_id = u.id
+             WHERE pm.user_id = :userId2)
+             
+            ORDER BY creation_date DESC";
+        
+        try {
+            $stmt = $this->conn->prepare($sql);
+            // Gán giá trị cho cả hai tham số
+            $stmt->bindParam(':userId1', $userId, PDO::PARAM_INT);
+            $stmt->bindParam(':userId2', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return ['status' => 'success', 'projects' => $projects];
+
+        } catch (PDOException $e) {
+            error_log("Get Projects For User Error: " . $e->getMessage());
+            return ['status' => 'error', 'message' => 'Không thể lấy danh sách dự án cho người dùng. Chi tiết lỗi: ' . $e->getMessage()];
+        }
+    }
     // Các hàm khác như getProjectById(), updateProject(), deleteProject() có thể được thêm vào đây.
 }
 ?>

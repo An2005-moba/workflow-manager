@@ -16,17 +16,22 @@ if (!isset($_SESSION['user_id'])) {
 // Nhúng các file cần thiết: kết nối DB và lớp quản lý dự án
 // Sử dụng đường dẫn tương đối từ vị trí file `list.php`
 require_once '../../Context/db_connection.php';
-require_once '../../Modules//Projects/ProjectManager.php';
+require_once '../../Modules/Projects/ProjectManager.php';
 
 try {
     // Tạo kết nối CSDL
     $dbConnection = getDbConnection();
     // Khởi tạo ProjectManager với kết nối CSDL
     $projectManager = new ProjectManager($dbConnection);
+    $userId = $_SESSION['user_id'];
     // Lấy tất cả các dự án
+<<<<<<< HEAD
     // Sẽ cần truyền tham số tìm kiếm vào đây nếu bạn muốn tìm kiếm server-side
     // Hiện tại, chúng ta sẽ lấy tất cả và lọc bằng JS (client-side)
     $result = $projectManager->getAllProjects();
+=======
+     $result = $projectManager->getProjectsForUser($userId);
+>>>>>>> 96754b3 (Sua code)
 
     if ($result['status'] === 'success') {
         $projects = $result['projects'];
@@ -177,6 +182,6 @@ if (count($name_parts) >= 2) {
 </main>
 
     <script src="../../Assets/js/main.js"></script>
-    <script src="../../Assets/js/projects.js"></script>
+    
 </body>
 </html>

@@ -55,9 +55,6 @@ class MemberManager {
         return ['status' => 'error', 'message' => 'Không thể thêm thành viên.'];
     }
 
-    /**
-     * Xóa thành viên khỏi dự án.
-     */
     public function removeMember($projectId, $userId) {
         $sql = "DELETE FROM project_members WHERE project_id = :project_id AND user_id = :user_id";
         $stmt = $this->conn->prepare($sql);
