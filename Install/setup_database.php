@@ -47,7 +47,9 @@ try {
             `role` VARCHAR(50) DEFAULT 'user',
             `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+         
     ";
+    
 
     // SQL để tạo bảng projects
     // Bảng này có khóa ngoại tham chiếu đến bảng users, nên cần được tạo SAU bảng users
@@ -64,7 +66,32 @@ try {
                 ON UPDATE CASCADE
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
     ";
-    
+     $sql_create_tasks_table = "
+        CREATE TABLE IF NOT EXISTS `tasks` (
+            `id` INT AUTO_INCREMENT PRIMARY KEY,
+            `project_id` INT NOT NULL,
+            `task_name` VARCHAR(255) NOT NULL,
+            `description` TEXT,
+            `submitted_file_path` BLOB NULL DEFAULT NULL,
+            `status` VARCHAR(50) DEFAULT 'To Do',
+            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            `assigned_to_user_id` INT DEFAULT NULL,
+            FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+            FOREIGN KEY (`assigned_to_user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    ";
+
+     $sql_create_project_members_table = "
+        CREATE TABLE IF NOT EXISTS `project_members` (
+            `project_id` INT NOT NULL,
+            `user_id` INT NOT NULL,
+            `joined_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`project_id`, `user_id`),
+            FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON DELETE CASCADE,
+            FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    ";
+
     // THAY ĐỔI THỨ TỰ THỰC THI:
     // 1. Thực thi câu lệnh tạo bảng users (bảng cha)
     $conn->exec($sql_create_users_table);
@@ -73,6 +100,12 @@ try {
     // 2. Thực thi câu lệnh tạo bảng projects (bảng con)
     $conn->exec($sql_create_projects_table);
     echo "Table `projects` created successfully or already exists.<br>";
+     $conn->exec($sql_create_tasks_table);
+    echo "Table `tasks` created successfully or already exists.<br>";
+      // 3. Tạo bảng project_members (MỚI)
+    $conn->exec($sql_create_project_members_table);
+    echo "Table `project_members` created successfully or already exists.<br>";
+
 
     echo "Database setup completed successfully!";
 

@@ -1,0 +1,236 @@
+/* Thiết lập cơ bản */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+    margin: 0;
+    padding: 40px 20px;
+}
+
+.page-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Nút quay lại */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: 500;
+    margin-bottom: 24px;
+    transition: color 0.2s;
+}
+.back-link:hover {
+    color: #0056b3;
+}
+
+/* Header của dự án */
+.project-header {
+    background: #fff;
+    padding: 24px;
+    border-radius: 8px;
+    margin-bottom: 32px;
+    border: 1px solid #dee2e6;
+}
+.project-header h1 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+}
+.project-header p {
+    margin: 0;
+    color: #6c757d;
+}
+
+/* Main content layout */
+.project-main-content {
+    display: flex;
+    flex-direction: column; /* Sắp xếp các section theo chiều dọc */
+    gap: 32px; /* Khoảng cách giữa các section */
+}
+
+/* Style chung cho các hộp nội dung */
+.content-box {
+    background: #fff;
+    padding: 24px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+.content-box h2 {
+    font-size: 22px;
+    margin-top: 0;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 8px;
+}
+
+/* --- Khu vực Thành viên --- */
+.member-list {
+    margin-bottom: 24px;
+}
+.member-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 6px;
+}
+.member-item:nth-child(even) {
+    background-color: #f8f9fa; /* Thêm màu nền xen kẽ */
+}
+.member-name {
+    font-weight: 500;
+}
+.remove-member-btn {
+    background: transparent;
+    border: none;
+    color: #dc3545;
+    font-size: 24px;
+    cursor: pointer;
+}
+.add-member-form h3 {
+    font-size: 18px;
+    margin-top: 24px; /* Khoảng cách với danh sách */
+    margin-bottom: 12px;
+}
+
+/* --- Khu vực Nhiệm vụ --- */
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.task-item {
+    border-radius: 8px;
+    padding: 16px;
+    border-left: 5px solid #6c757d; /* 'To Do' */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.task-item[data-status="in progress"] { border-left-color: #ffc107; }
+.task-item[data-status="done"] { border-left-color: #28a745; }
+
+.task-name {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+}
+.task-description {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+.task-status {
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-weight: 500;
+    font-size: 12px;
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+/* Form dùng chung */
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; margin-bottom: 6px; font-weight: 500; }
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+textarea { resize: vertical; }
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-submit:hover { background-color: #0056b3; }
+
+.empty-list {
+    font-style: italic;
+    color: #6c757d;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+}
+/* Thêm/thay thế các đoạn CSS này vào file project_details.css */
+
+/* --- Container cho nút (+) và popover --- */
+.add-member-container {
+    position: relative; /* Quan trọng để định vị popover */
+}
+
+/* --- Popover Styles (THAY THẾ CHO MODAL) --- */
+.add-member-popover {
+    display: none; /* Mặc định ẩn đi */
+    position: absolute;
+    top: calc(100% + 8px); /* Vị trí ngay dưới nút cộng, cách 8px */
+    right: 0;
+    width: 320px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ddd;
+    z-index: 100;
+}
+.add-member-popover.show {
+    display: block; /* Hiện ra khi có class 'show' */
+}
+
+.popover-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+}
+.popover-header h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.close-popover-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #888;
+    cursor: pointer;
+    line-height: 1;
+}
+.close-popover-btn:hover {
+    color: #333;
+}
+
+.popover-content {
+    padding: 16px;
+}
+.popover-content .form-group label {
+    font-size: 14px;
+    font-weight: 500;
+}
+.popover-content .btn-submit {
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* Sửa lại form thêm thành viên để không còn margin */
+.add-member-form {
+    margin-top: 0;
+}
+.add-member-form h3 {
+    display: none; /* Ẩn thẻ h3 cũ nếu còn */
+}
