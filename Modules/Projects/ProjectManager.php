@@ -21,8 +21,8 @@ class ProjectManager {
         }
     }
 
-    /**
-     * Tạo một dự án mới và lưu vào cơ sở dữ liệu.
+   /**
+     * Tạo một dự án mới và tự động thêm người tạo làm thành viên đầu tiên.
      *
      * @param string $projectName Tên của dự án.
      * @param string $description Mô tả chi tiết cho dự án.
@@ -34,28 +34,42 @@ class ProjectManager {
         if (empty($projectName) || empty($userId)) {
             return ['status' => 'error', 'message' => 'Tên dự án và ID người tạo không được để trống.'];
         }
-        if (!is_numeric($userId)) {
-            return ['status' => 'error', 'message' => 'ID người tạo phải là một số nguyên.'];
-        }
 
-        $sql = "INSERT INTO projects (project_name, description, created_by_user_id) 
-                VALUES (:project_name, :description, :user_id)";
-        
         try {
-            $stmt = $this->conn->prepare($sql);
+            // Bắt đầu một transaction để đảm bảo toàn vẹn dữ liệu
+            $this->conn->beginTransaction();
+
+            // 1. Tạo dự án trong bảng `projects`
+            $sql_create_project = "INSERT INTO projects (project_name, description, created_by_user_id) 
+                                   VALUES (:project_name, :description, :user_id)";
+            
+            $stmt = $this->conn->prepare($sql_create_project);
             $stmt->bindParam(':project_name', $projectName, PDO::PARAM_STR);
             $stmt->bindParam(':description', $description, PDO::PARAM_STR);
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
 
-            if ($stmt->execute()) {
-                return ['status' => 'success', 'message' => 'Dự án đã được tạo thành công!'];
-            } else {
-                return ['status' => 'error', 'message' => 'Không thể tạo dự án do lỗi không xác định.'];
-            }
+            // Lấy ID của dự án vừa được tạo
+            $newProjectId = $this->conn->lastInsertId();
+
+            // 2. Tự động thêm người tạo làm thành viên trong bảng `project_members`
+            $sql_add_creator_as_member = "INSERT INTO project_members (project_id, user_id) 
+                                           VALUES (:project_id, :user_id)";
+            
+            $stmt_member = $this->conn->prepare($sql_add_creator_as_member);
+            $stmt_member->bindParam(':project_id', $newProjectId, PDO::PARAM_INT);
+            $stmt_member->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt_member->execute();
+
+            // Nếu cả 2 bước trên thành công, xác nhận transaction
+            $this->conn->commit();
+
+            return ['status' => 'success', 'message' => 'Dự án đã được tạo thành công!'];
+
         } catch (PDOException $e) {
-            if ($e->getCode() == '23000') {
-                return ['status' => 'error', 'message' => 'Lỗi: ID người tạo không tồn tại. Vui lòng kiểm tra lại.'];
-            }
+            // Nếu có bất kỳ lỗi nào, hủy bỏ tất cả các thay đổi
+            $this->conn->rollBack();
+            
             error_log("Create Project Error: " . $e->getMessage());
             return ['status' => 'error', 'message' => 'Lỗi hệ thống, không thể tạo dự án vào lúc này.'];
         }
@@ -78,6 +92,36 @@ class ProjectManager {
         } catch (PDOException $e) {
             error_log("Get All Projects Error: " . $e->getMessage());
             return ['status' => 'error', 'message' => 'Không thể lấy danh sách dự án.'];
+        }
+    }
+    /**
+     * Lấy thông tin của một dự án cụ thể bằng ID.
+     *
+     * @param int $projectId ID của dự án cần lấy.
+     * @return array Mảng chứa trạng thái ('status') và thông tin dự án ('project').
+     */
+    public function getProjectById($projectId) {
+        $sql = "SELECT p.*, u.name as creator_name 
+                FROM projects p
+                LEFT JOIN users u ON p.created_by_user_id = u.id
+                WHERE p.id = :id";
+        
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':id', $projectId, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $project = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($project) {
+                return ['status' => 'success', 'project' => $project];
+            } else {
+                return ['status' => 'error', 'message' => 'Không tìm thấy dự án với ID này.'];
+            }
+
+        } catch (PDOException $e) {
+            error_log("Get Project By ID Error: " . $e->getMessage());
+            return ['status' => 'error', 'message' => 'Lỗi hệ thống khi truy vấn dự án.'];
         }
     }
     

@@ -1,0 +1,1097 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+body {
+     font-family: 'Inter';
+    background-color: rgb(255, 251, 251) !important;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Header Styles */
+.header {
+    background: #FFFFFF;
+    border-bottom: 1px solid #E5E7EB;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 24px;
+    color: #1F2937;
+}
+/* Fix cho lỗi gạch chân ở logo link */
+.dashboard-logo-link {
+    text-decoration: none;
+}
+.logo-text {
+    font-weight: 700;
+}
+
+.header-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+/* Cập nhật selector cho nút signup-btn (giờ là thẻ a) */
+.signup-btn {
+    background: transparent;
+    color: #4F46E5;
+    border: 2px solid #4F46E5;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none; /* Rất quan trọng: loại bỏ gạch chân mặc định của thẻ a */
+    display: inline-flex; /* Để căn chỉnh tốt hơn nếu có biểu tượng bên trong */
+    align-items: center;
+    justify-content: center;
+}
+
+.signup-btn:hover {
+    background-color: #4F46E5;
+    color: white;
+}
+
+.signup-btn:active {
+    background-color: #D1D5DB;
+    color: #374151;
+    border-color: #D1D5DB;
+    transform: translateY(0);
+}
+
+/* Cập nhật selector cho nút login-btn (giờ là thẻ a) */
+.login-btn {
+    background: #4F46E5;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-decoration: none; /* Rất quan trọng: loại bỏ gạch chân mặc định của thẻ a */
+    display: inline-flex; /* Để căn chỉnh tốt hơn nếu có biểu tượng bên trong */
+    align-items: center;
+    justify-content: center;
+}
+
+.login-btn:hover {
+    background: #4338CA;
+}
+
+.login-btn:active {
+    background-color: #D1D5DB;
+    color: #374151;
+    transform: translateY(0);
+}
+
+/* Hero Section */
+.hero {
+    padding: 120px 0;
+    background: linear-gradient(135deg, #F0F4F8 0%, #E2E8F0 100%);
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-title {
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    color: #1F2937;
+}
+
+.hero-title-highlight {
+    color: #4F46E5;
+}
+
+.hero-description {
+    font-size: 20px;
+    color: #6B7280;
+    margin-bottom: 48px;
+    line-height: 1.6;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Button Styles (already apply to .btn, which is now on <a>) */
+.btn {
+    display: inline-flex; /* Rất quan trọng: giúp thẻ a có hành vi giống button */
+    align-items: center;
+    gap: 8px;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    text-decoration: none; /* Rất quan trọng: loại bỏ gạch chân mặc định của thẻ a */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    justify-content: center; /* Đảm bảo căn giữa nội dung nút */
+}
+
+.btn-primary {
+    background: #4F46E5;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #4338CA;
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    background-color: #D1D5DB;
+    color: #374151;
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #4F46E5;
+    border: 2px solid #4F46E5;
+}
+
+.btn-secondary:hover {
+    background: #4F46E5;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+    background-color: #D1D5DB;
+    color: #374151;
+    border-color: #D1D5DB;
+    transform: translateY(0);
+}
+
+/* Features Section */
+.features {
+    padding: 120px 0;
+    background: #FFFFFF;
+}
+
+.features-content {
+    text-align: center;
+}
+
+.features-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #1F2937;
+}
+
+.features-description {
+    font-size: 20px;
+    color: #6B7280;
+    margin-bottom: 80px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+    margin-top: 80px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.feature-card {
+    background: #FFFFFF;
+    padding: 24px 16px;
+    border-radius: 16px;
+    text-align: center;
+    border: 1px solid #E5E7EB;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border-color: #4F46E5;
+}
+
+.feature-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+}
+
+.feature-icon-blue {
+    background: #EEF2FF;
+}
+
+.feature-icon-green {
+    background: #DCFCE7;
+}
+
+.feature-icon-purple {
+    background: #F3E8FF;
+}
+
+.feature-icon-yellow {
+    background: #FEF3C7;
+}
+
+.feature-icon-light-blue {
+    background: #CFFAFE;
+}
+
+.feature-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1F2937;
+}
+
+.feature-description {
+    color: #6B7280;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Call to Action Section Styles */
+.cta-section {
+    background-color: #1976D2;
+    padding: 96px 0;
+    text-align: center;
+}
+
+.cta-content {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.cta-title {
+    font-size: 35px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+.cta-description {
+    font-size: 16px;
+    color: #FFFFFF;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+/* .cta-btn (already styled by .btn and .btn-primary, no specific changes needed here beyond general .btn styles) */
+.cta-btn {
+    padding: 16px 32px;
+    font-size: 18px;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: #4F46E5;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.cta-btn:hover {
+    background: #E5E7EB;
+    color: #4F46E5;
+    transform: translateY(-2px);
+}
+
+.cta-btn:active {
+    background-color: #D1D5DB;
+    color: #374151;
+    transform: translateY(0);
+}
+
+/* Footer */
+.footer {
+    background-color: #1F2937;
+    padding: 24px 0;
+    border-top: 1px solid #374151;
+}
+
+.footer-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 20px;
+    color: #E5E7EB;
+}
+
+.footer-copyright-text {
+    margin: 0;
+    font-size: 14px;
+    color: #9CA3AF;
+    text-align: right;
+}
+
+/* Dashboard Styles */
+.dashboard-body {
+    background-color: #F9FAFB;
+    min-height: 100vh;
+}
+
+.dashboard-header {
+    background: #4F46E5;
+    border-bottom: none;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.dashboard-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.dashboard-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 72px;
+}
+
+.dashboard-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+}
+
+.dashboard-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 20px;
+    color: #FFFFFF;
+}
+
+.dashboard-logo-text {
+    font-weight: 700;
+}
+
+.dashboard-nav {
+    display: flex;
+    gap: 8px;
+}
+
+.dashboard-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.dashboard-nav-item:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-nav-item.active {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.dashboard-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.dashboard-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.dashboard-search svg {
+    position: absolute;
+    left: 12px;
+    color: #9CA3AF;
+    z-index: 1;
+}
+
+.dashboard-search input {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 10px 12px 10px 40px;
+    font-size: 14px;
+    color: #FFFFFF;
+    width: 280px;
+    transition: all 0.2s ease;
+}
+
+.dashboard-search input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.dashboard-search input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.dashboard-notification-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dashboard-notification-btn:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* START: UPDATED STYLES FOR .dashboard-user (now a button) */
+button#userDropdownToggle.dashboard-user { /* Apply these styles to the button with id userDropdownToggle and class dashboard-user */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0px 8px 12px; /* Adjusted padding for a better clickable area */
+    background: none; /* Remove default button background */
+    border: none; /* Remove default button border */
+    cursor: pointer; /* Change cursor to pointer for the whole button */
+    font: inherit; /* Inherit font styles from body */
+    color: #FFFFFF; /* Default text color for the button content */
+    user-select: none; /* Prevent text selection on quick clicks */
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 8px; /* Slightly rounded corners for the hover/active state */
+    position: relative; /* Crucial for positioning the dropdown menu below it */
+    z-index: 20; /* Ensures the button is above the dropdown menu when open */
+}
+
+button#userDropdownToggle.dashboard-user:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Lighter gray background on hover */
+    /* Removed transform/box-shadow from here to avoid conflicting with button's own transition */
+}
+
+button#userDropdownToggle.dashboard-user:active {
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly darker gray on active */
+    transform: translateY(0); /* Ensure no jump on active */
+    box-shadow: none; /* No shadow on active */
+}
+
+.dashboard-user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #4F46E5; /* Keep original background for avatar initials */
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.dashboard-user-name {
+    color: #FFFFFF; /* Keep text color white for the name */
+    font-weight: 500;
+    font-size: 14px;
+}
+
+/* Renamed from .dashboard-user-dropdown-btn to .dashboard-user-dropdown-icon */
+.dashboard-user-dropdown-icon {
+    /* These styles were moved from .dashboard-user-dropdown-btn */
+    color: rgba(255, 255, 255, 0.8); /* Match default color of nav items */
+    transition: transform 0.2s ease, color 0.2s ease; /* Add color transition */
+    display: flex; /* Ensure SVG is properly centered if needed */
+    align-items: center;
+    justify-content: center;
+    /* No padding/border/background as it's now part of the parent button */
+}
+
+.dashboard-user-dropdown-icon.active {
+    transform: rotate(180deg);
+    color: #FFFFFF; /* Keep white when active */
+}
+
+.dashboard-user-dropdown {
+    position: absolute;
+    top: calc(100% + 8px); /* Position it 8px below the button */
+    right: 32px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB; /* Changed border color to lighter grey */
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Slightly adjusted shadow */
+    min-width: 200px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease; /* Simplified transition */
+    padding: 8px 0;
+}
+
+.dashboard-user-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dashboard-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: #1F2937;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; /* More specific transitions */
+    margin: 0;
+    border-radius: 0;
+}
+
+.dashboard-dropdown-item:hover {
+    background-color: #F3F4F6;
+    color: #1F2937;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-dropdown-item:active {
+    background-color: #E5E7EB;
+    color: #1F2937;
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Điều chỉnh màu SVG trong dropdown items trên hover/active */
+.dashboard-dropdown-item svg {
+    color: #6B7280; /* Default color for icons in dropdown */
+    transition: color 0.2s ease;
+}
+
+.dashboard-dropdown-item:hover svg,
+.dashboard-dropdown-item:active svg {
+    color: #1F2937; /* Change icon color to match text on hover/active */
+}
+
+.dashboard-dropdown-divider {
+    height: 1px;
+    background-color: #E5E7EB; /* Changed divider color to match border */
+    margin: 8px 0;
+}
+/* END: UPDATED STYLES FOR .dashboard-user */
+
+
+.dashboard-main {
+    padding: 48px 0;
+}
+
+.dashboard-welcome {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 80px 0;
+}
+
+.dashboard-welcome-content {
+    background: #FFFFFF;
+    padding: 48px;
+    border-radius: 16px;
+    border: 1px solid #E5E7EB;
+}
+
+.dashboard-welcome-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1F2937;
+    margin-bottom: 16px;
+}
+
+.dashboard-welcome-description {
+    font-size: 16px;
+    color: #6B7280;
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.dashboard-create-btn {
+    background: #4F46E5;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+
+}
+
+.dashboard-create-btn:hover {
+    background: #4338CA;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .features-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .feature-card {
+        padding: 20px 12px;
+    }
+
+    .feature-title {
+        font-size: 18px;
+    }
+
+    .feature-description {
+        font-size: 14px;
+    }
+
+    .cta-title {
+        font-size: 32px;
+    }
+
+    .cta-description {
+        font-size: 14px;
+    }
+
+    .dashboard-nav-left {
+        gap: 24px;
+    }
+
+    .dashboard-search input {
+        width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .hero {
+        padding: 80px 0;
+    }
+
+    .hero-title {
+        font-size: 40px;
+    }
+
+    .hero-description {
+        font-size: 18px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .features {
+        padding: 80px 0;
+    }
+
+    .features-title {
+        font-size: 36px;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 48px;
+    }
+
+    .feature-card {
+        padding: 16px 8px;
+    }
+
+    .feature-title {
+        font-size: 16px;
+    }
+
+    .feature-description {
+        font-size: 12px;
+    }
+
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+    }
+
+    .cta-section {
+        padding: 64px 0;
+    }
+
+    .cta-title {
+        font-size: 28px;
+    }
+
+    .cta-description {
+        font-size: 14px;
+    }
+
+    .cta-btn {
+        padding: 14px 28px;
+        font-size: 16px;
+    }
+
+    .footer-main {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+    }
+
+    .footer-copyright-text {
+        text-align: center;
+    }
+
+    .dashboard-container {
+        padding: 0 16px;
+    }
+
+    .dashboard-nav-left {
+        gap: 16px;
+    }
+
+    .dashboard-nav {
+        display: none;
+    }
+
+    .dashboard-search {
+        display: none;
+    }
+
+    .dashboard-user-name {
+        display: none;
+    }
+
+    /* Important: Adjusted for the new button structure */
+    .dashboard-user-dropdown {
+        right: 0px; /* Aligned with the button, not with a fixed margin */
+        min-width: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-content {
+        height: 64px;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .header-actions {
+        gap: 12px;
+    }
+
+    .hero {
+        padding: 60px 0;
+    }
+
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .hero-description {
+        font-size: 16px;
+    }
+
+    .features {
+        padding: 60px 0;
+    }
+
+    .features-title {
+        font-size: 28px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 32px;
+    }
+
+    .cta-section {
+        padding: 48px 0;
+    }
+
+    .cta-title {
+        font-size: 24px;
+    }
+
+    .cta-description {
+        font-size: 14px;
+    }
+
+    .cta-btn {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+
+    .dashboard-header-content {
+        height: 64px;
+    }
+
+    .dashboard-logo {
+        font-size: 18px;
+    }
+
+    .dashboard-welcome {
+        padding: 40px 0;
+    }
+
+    .dashboard-welcome-content {
+        padding: 32px 24px;
+    }
+
+    .dashboard-welcome-title {
+        font-size: 24px;
+    }
+
+    .dashboard-welcome-description {
+        font-size: 14px;
+    }
+
+} /* <-- Dấu ngoặc này đóng khối @media (max-width: 480px) một cách chính xác */
+
+
+/* ======================================================= */
+/* ====   CSS CHO TRANG DANH SÁCH DỰ ÁN (ĐÚNG VỊ TRÍ)  ==== */
+/* ======================================================= */
+
+/* Tiêu đề trang */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1F2937;
+}
+
+.create-project-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #4F46E5;
+    color: #FFFFFF;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.create-project-btn:hover {
+    background-color: #4338CA;
+}
+
+/* Lưới chứa các dự án (ĐÃ SỬA LỖI) */
+.project-grid {
+    display: grid;
+    /* Dòng này cho phép tạo nhiều cột, tự động điều chỉnh */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    /* Bây giờ gap sẽ có tác dụng cho cả hàng và cột. Bạn có thể đổi giá trị này. */
+    gap: 24px; 
+}
+
+/* Thẻ dự án, sử dụng Flexbox để xếp item cạnh nhau */
+.project-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+    border-color: #C7D2FE;
+}
+
+/* Định dạng cho hộp chứa icon */
+.project-card-icon {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background-color: #EEF2FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-card-icon svg {
+    width: 32px;
+    height: 32px;
+    color: #4F46E5;
+}
+
+/* Định dạng cho hộp chứa nội dung */
+.project-card-content {
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    min-width: 0; 
+}
+
+/* Các thành phần bên trong hộp nội dung */
+.project-card-header {
+    margin-bottom: 4px;
+}
+
+.project-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1F2937;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.project-card-body {
+    flex-grow: 1;
+    margin-bottom: 12px;
+}
+
+.project-card-description {
+    font-size: 14px;
+    color: #6B7280;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.project-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #9CA3AF;
+    border-top: 1px solid #F3F4F6;
+    padding-top: 12px;
+}
+
+/* Trạng thái rỗng khi chưa có dự án */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #FFFFFF;
+    border: 1px dashed #D1D5DB;
+    border-radius: 8px;
+    margin-top: 40px;
+}
+
+.empty-state h2 {
+    font-size: 22px;
+    color: #1F2937;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: #6B7280;
+    margin-bottom: 24px;
+}
+
+.create-project-btn-empty {
+     display: inline-block;
+     background-color: #4F46E5;
+     color: #fff;
+     padding: 12px 24px;
+     border-radius: 8px;
+     text-decoration: none;
+     font-weight: 500;
+     transition: background-color 0.2s ease;
+}
+
+.create-project-btn-empty:hover {
+    background-color: #4338CA;
+}
+/* Bỏ gạch chân và màu mặc định của link cho thẻ dự án */
+/* Bỏ gạch chân và màu mặc định của link cho thẻ dự án (Bản sửa lỗi ưu tiên) */
+.project-link-card, 
+.project-link-card:hover, 
+.project-link-card:visited {
+    text-decoration: none !important;
+    color: inherit !important;
+}
