@@ -25,13 +25,9 @@ try {
     $projectManager = new ProjectManager($dbConnection);
     $userId = $_SESSION['user_id'];
     // Lấy tất cả các dự án
-<<<<<<< HEAD
     // Sẽ cần truyền tham số tìm kiếm vào đây nếu bạn muốn tìm kiếm server-side
     // Hiện tại, chúng ta sẽ lấy tất cả và lọc bằng JS (client-side)
-    $result = $projectManager->getAllProjects();
-=======
      $result = $projectManager->getProjectsForUser($userId);
->>>>>>> 96754b3 (Sua code)
 
     if ($result['status'] === 'success') {
         $projects = $result['projects'];
@@ -67,7 +63,7 @@ if (count($name_parts) >= 2) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danh sách dự án - WorkFlow</title>
-    <link rel="stylesheet" href="../../Assets/styles/main.css?v=3">
+    <link rel="stylesheet" href="../../Assets/styles/features/projects/list.css?v=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -125,8 +121,37 @@ if (count($name_parts) >= 2) {
                         </svg>
                     </button>
                     <div class="dashboard-user-dropdown" id="userDropdownMenu">
-                        <a href="../User/profile.html" class="dashboard-dropdown-item">Hồ sơ</a>
-                        <a href="../Auth/logout_api.php" class="dashboard-dropdown-item dashboard-logout-item">Đăng xuất</a>
+                        <a href="../../Features/User/profile.html" class="dashboard-dropdown-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                            Thông tin cá nhân
+                        </a>
+                        <a href="../../Features/User/Settings/account_settings.html" class="dashboard-dropdown-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 2V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 20V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M4 12H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M22 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M4.93 4.93L6.34 6.34" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M17.66 17.66L19.07 19.07" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M4.93 19.07L6.34 17.66" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M17.66 6.34L19.07 4.93" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Cài đặt tài khoản
+                        </a>
+                        <div class="dashboard-dropdown-divider"></div>
+                        <a href="../../Features/Auth/logout_api.php" class="dashboard-dropdown-item dashboard-logout-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M17 17L22 12L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M22 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Đăng xuất
+                        </a>
                     </div>
                 </div>
             </div>
@@ -146,35 +171,37 @@ if (count($name_parts) >= 2) {
                 </div>
             <?php else: ?>
                 <div class="project-grid">
-                    <?php foreach ($projects as $project): ?>
-                        <div class="project-card">
-                            <div class="project-card-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                                </svg>
-                            </div>
-                            
-                            <div class="project-card-content">
-                                <div class="project-card-header">
-                                    <h3 class="project-card-title"><?php echo htmlspecialchars($project['project_name']); ?></h3>
-                                </div>
-                                <div class="project-card-body">
-                                    <p class="project-card-description">
-                                        <?php echo !empty($project['description']) ? htmlspecialchars($project['description']) : '<em>Không có mô tả.</em>'; ?>
-                                    </p>
-                                </div>
-                                <div class="project-card-footer">
-                                    <span class="project-card-creator">Người tạo: <?php echo htmlspecialchars($project['created_by_name'] ?? 'N/A'); ?></span>
-                                    <span class="project-card-date">
-                                        <?php 
-                                            $date = new DateTime($project['creation_date']);
-                                            echo $date->format('d/m/Y'); 
-                                        ?>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
+                  <?php foreach ($projects as $project): ?>
+    <a href="project_details.php?id=<?php echo $project['id']; ?>" class="project-link-card">
+        <div class="project-card">
+            <div class="project-card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </div>
+
+            <div class="project-card-content">
+                <div class="project-card-header">
+                    <h3 class="project-card-title"><?php echo htmlspecialchars($project['project_name']); ?></h3>
+                </div>
+                <div class="project-card-body">
+                    <p class="project-card-description">
+                        <?php echo !empty($project['description']) ? htmlspecialchars($project['description']) : '<em>Không có mô tả.</em>'; ?>
+                    </p>
+                </div>
+                <div class="project-card-footer">
+                    <span class="project-card-creator">Người tạo: <?php echo htmlspecialchars($project['created_by_name'] ?? 'N/A'); ?></span>
+                    <span class="project-card-date">
+                        <?php 
+                            $date = new DateTime($project['creation_date']);
+                            echo $date->format('d/m/Y'); 
+                        ?>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </a>
+<?php endforeach; ?>
                 </div>
             <?php endif; ?>
         </div>

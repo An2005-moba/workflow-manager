@@ -1036,7 +1036,7 @@ button#userDropdownToggle.dashboard-user:active {
     color: #6B7280;
     line-height: 1.5;
     display: -webkit-box;
-    -webkit-line-clamp: 1; 
+  
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1094,4 +1094,47 @@ button#userDropdownToggle.dashboard-user:active {
 .project-link-card:visited {
     text-decoration: none !important;
     color: inherit !important;
+}
+.search-bar {
+    position: relative; /* Quan trọng để định vị icon bên trong */
+    display: flex;
+    align-items: center;
+}
+
+/* Icon tìm kiếm */
+.search-icon {
+    position: absolute; /* Đặt icon nằm trên ô input */
+    left: 14px; /* Khoảng cách từ lề trái */
+    top: 50%;
+    transform: translateY(-50%); /* Căn giữa icon theo chiều dọc */
+    color: rgba(255, 255, 255, 0.6); /* Màu icon hơi mờ */
+    pointer-events: none; /* Cho phép nhấp xuyên qua icon */
+    width: 18px;
+    height: 18px;
+}
+
+/* Ô input chính */
+.search-input {
+    background-color: rgba(255, 255, 255, 0.1); /* Nền bán trong suốt */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px; /* Bo tròn góc */
+    padding: 10px 16px 10px 44px; /* Padding trái lớn để không che icon */
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: #FFFFFF; /* Màu chữ khi gõ */
+    width: 280px;
+    transition: all 0.2s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
+}
+
+/* Chữ gợi ý (placeholder) */
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Hiệu ứng khi nhấp vào ô tìm kiếm */
+.search-input:focus {
+    outline: none; /* Bỏ viền mặc định khi focus */
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1); /* Thêm hiệu ứng "glow" nhẹ */
 }
