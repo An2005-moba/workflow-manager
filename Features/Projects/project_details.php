@@ -45,7 +45,18 @@ try {
 } catch (Exception $e) {
     die("Lỗi hệ thống: " . $e->getMessage());
 }
-
+// --- BẮT ĐẦU: Tính toán tiến độ dự án ---
+$total_tasks = count($tasks);
+$completed_tasks = 0;
+foreach ($tasks as $task) {
+    // Coi "Hoàn thành" và "Đã duyệt" là đã xong
+    if ($task['status'] === 'Hoàn thành' || $task['status'] === 'Đã duyệt') {
+        $completed_tasks++;
+    }
+}
+// Tính phần trăm, tránh lỗi chia cho 0
+$percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
+// --- KẾT THÚC: Tính toán tiến độ dự án ---
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -70,6 +81,16 @@ try {
         <header class="project-header">
             <h1><?php echo htmlspecialchars($project['project_name']); ?></h1>
             <p><?php echo htmlspecialchars($project['description']); ?></p>
+
+            <div class="project-progress-summary">
+                <div class="progress-text">
+                    <span>Tiến độ</span>
+                    <strong><?php echo $completed_tasks; ?>/<?php echo $total_tasks; ?></strong>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: <?php echo $percentage; ?>%;"></div>
+                </div>
+            </div>
         </header>
 
         <?php if (isset($_SESSION['flash'])): ?>
@@ -182,7 +203,14 @@ try {
                                         </div>
                                     </div>
                                     <div class="task-status">
-                                        <span><?php echo htmlspecialchars($task['status']); ?></span>
+                                        <?php
+                                        // Chuyển đổi trạng thái sang dạng không dấu, không cách để dùng trong CSS
+                                        $status_text = ($task['status'] === 'To Do') ? 'Cần làm' : $task['status'];
+                                        $status_class = strtolower(str_replace(' ', '', $status_text));
+                                        ?>
+                                        <span class="status-badge" data-status="<?php echo htmlspecialchars($status_class); ?>">
+                                            <?php echo htmlspecialchars($status_text); ?>
+                                        </span>
                                     </div>
                                     <div class="task-actions">
                                         <button class="task-action-btn edit-task-btn">Sửa</button>
@@ -195,7 +223,7 @@ try {
                                 </div>
 
                                 <div class="edit-task-form-container" style="display: none;">
-                                    <form action="handle_update_task.php" method="POST">
+                                    <form action="../Task/handle_update_task.php" method="POST">
                                         <input type="hidden" name="project_id" value="<?php echo $projectId; ?>">
                                         <input type="hidden" name="task_id" value="<?php echo $task['id']; ?>">
                                         <div class="form-group">
@@ -234,9 +262,10 @@ try {
                                         <div class="form-group">
                                             <label>Trạng thái</label>
                                             <select name="status">
-                                                <option value="To Do" <?php if ($task['status'] == 'To Do') echo 'selected'; ?>>To Do</option>
-                                                <option value="In Progress" <?php if ($task['status'] == 'In Progress') echo 'selected'; ?>>In Progress</option>
-                                                <option value="Done" <?php if ($task['status'] == 'Done') echo 'selected'; ?>>Done</option>
+                                                <option value="Cần làm" <?php if ($task['status'] == 'Cần làm' || $task['status'] == 'To Do') echo 'selected'; ?>>Cần làm</option>
+                                                <option value="Đang làm" <?php if ($task['status'] == 'Đang làm') echo 'selected'; ?>>Đang làm</option>
+                                                <option value="Hoàn thành" <?php if ($task['status'] == 'Hoàn thành') echo 'selected'; ?>>Hoàn thành</option>
+                                                <option value="Đã duyệt" <?php if ($task['status'] == 'Đã duyệt') echo 'selected'; ?>>Đã duyệt</option>
                                             </select>
                                         </div>
                                         <div class="edit-form-actions">

@@ -12,14 +12,18 @@ if (!isset($_SESSION['user_id']) || $_SERVER["REQUEST_METHOD"] != "POST") {
 // Lấy dữ liệu từ form
 $projectId = $_POST['project_id'] ?? 0;
 $taskId = $_POST['task_id'] ?? 0;
-$assigneeId = $_POST['assignee_id'] ?? 0;
+$assigneeId = $_POST['assignee_id'] ?? 0; // ID của một người dùng được chọn
 
 if ($projectId && $taskId) {
     try {
         $dbConnection = getDbConnection();
         $taskManager = new TaskManager($dbConnection);
         
-        $result = $taskManager->assignTask($taskId, $assigneeId);
+        // SỬA LỖI: Gọi hàm reassignTask thay vì assignTask
+        // và truyền ID người dùng vào trong một mảng.
+        // Nếu assigneeId = 0 (tức là chọn "Bỏ gán"), chúng ta truyền vào một mảng rỗng.
+        $assigneeIdsArray = ($assigneeId > 0) ? [$assigneeId] : [];
+        $result = $taskManager->reassignTask($taskId, $assigneeIdsArray);
         
         $_SESSION['flash'] = [
             'message' => $result['message'],
@@ -40,6 +44,6 @@ if ($projectId && $taskId) {
 }
 
 // Chuyển hướng người dùng trở lại trang chi tiết dự án
-header("Location: project_details.php?id=" . $projectId);
+header("Location: ../Projects/project_details.php?id=" . $projectId);
 exit();
 ?>

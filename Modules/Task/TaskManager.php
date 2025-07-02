@@ -1,12 +1,15 @@
 <?php
-class TaskManager {
+class TaskManager
+{
     private $conn;
 
-    public function __construct($dbConnection) {
+    public function __construct($dbConnection)
+    {
         $this->conn = $dbConnection;
     }
 
-    public function getTasksByProjectId($projectId) {
+    public function getTasksByProjectId($projectId)
+    {
         // Cập nhật câu lệnh SQL để lấy danh sách tên người được gán
         $sql = "SELECT t.*, GROUP_CONCAT(u.name SEPARATOR ', ') as assignee_names
                 FROM tasks t
@@ -26,7 +29,8 @@ class TaskManager {
         }
     }
 
-    public function getAssigneeIdsForTask($taskId) {
+    public function getAssigneeIdsForTask($taskId)
+    {
         $sql = "SELECT user_id FROM task_assignments WHERE task_id = :task_id";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':task_id', $taskId, PDO::PARAM_INT);
@@ -34,8 +38,9 @@ class TaskManager {
         // Trả về một mảng các ID
         return $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
     }
-    
-    public function reassignTask($taskId, $assigneeIds = []) {
+
+    public function reassignTask($taskId, $assigneeIds = [])
+    {
         try {
             $this->conn->beginTransaction();
             // 1. Xóa tất cả các phân công cũ của nhiệm vụ này
@@ -60,7 +65,8 @@ class TaskManager {
         }
     }
 
-    public function createTask($projectId, $taskName, $description) {
+    public function createTask($projectId, $taskName, $description)
+    {
         if (empty($projectId) || empty($taskName)) {
             return ['status' => 'error', 'message' => 'Tên nhiệm vụ và ID dự án không được để trống.'];
         }
@@ -79,28 +85,47 @@ class TaskManager {
         return ['status' => 'error', 'message' => 'Không thể tạo nhiệm vụ.'];
     }
 
-    public function updateTask($taskId, $taskName, $description, $status) {
+    /**
+     * Cập nhật nhanh trạng thái của một nhiệm vụ.
+     */
+    public function updateTask($taskId, $taskName, $description, $status)
+    {
         if (empty($taskId) || empty($taskName)) {
             return ['status' => 'error', 'message' => 'ID và tên nhiệm vụ không được để trống.'];
         }
-        // Câu lệnh giờ chỉ cập nhật thông tin của task, không còn gán người dùng
-        $sql = "UPDATE tasks SET task_name = :task_name, description = :description, status = :status WHERE id = :task_id";
+
+        // Thêm kiểm tra trạng thái hợp lệ
+        $allowedStatus = ['Cần làm', 'Đang làm', 'Hoàn thành', 'Đã duyệt'];
+        if (!in_array($status, $allowedStatus)) {
+            return ['status' => 'error', 'message' => 'Trạng thái không hợp lệ.'];
+        }
+
+        $sql = "UPDATE tasks SET 
+                task_name = :task_name, 
+                description = :description, 
+                status = :status 
+            WHERE id = :task_id";
+
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':task_id', $taskId, PDO::PARAM_INT);
             $stmt->bindParam(':task_name', $taskName, PDO::PARAM_STR);
             $stmt->bindParam(':description', $description, PDO::PARAM_STR);
             $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+
             if ($stmt->execute()) {
-                return ['status' => 'success', 'message' => 'Cập nhật nhiệm vụ thành công.'];
+                return ['status' => 'success', 'message' => 'Cập nhật thông tin nhiệm vụ thành công.'];
             }
         } catch (PDOException $e) {
             error_log("Update Task Error: " . $e->getMessage());
         }
+
         return ['status' => 'error', 'message' => 'Không thể cập nhật nhiệm vụ.'];
     }
 
-    public function deleteTask($taskId) {
+
+    public function deleteTask($taskId)
+    {
         if (empty($taskId)) {
             return ['status' => 'error', 'message' => 'ID nhiệm vụ không được để trống.'];
         }
@@ -118,4 +143,3 @@ class TaskManager {
         return ['status' => 'error', 'message' => 'Không thể xóa nhiệm vụ.'];
     }
 }
-?>
