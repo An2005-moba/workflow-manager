@@ -1,34 +1,59 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Lấy các phần tử từ DOM
+    // =================================================
+    // === PHẦN 1: LOGIC CHO POPOVER THÊM THÀNH VIÊN ===
+    // =================================================
     const toggleBtn = document.getElementById('toggleAddMemberPopover');
     const closeBtn = document.getElementById('closeAddMemberPopover');
     const popover = document.getElementById('addMemberPopover');
 
-    // Chỉ thực hiện nếu nút bật/tắt popover tồn tại
     if (toggleBtn && popover) {
-        // Sự kiện khi nhấn vào icon dấu cộng
         toggleBtn.addEventListener('click', function(event) {
-            // Ngăn sự kiện click lan ra ngoài document
             event.stopPropagation(); 
-            // Bật/tắt class 'show' để hiện/ẩn popover
             popover.classList.toggle('show');
         });
     }
 
-    // Chỉ thực hiện nếu nút đóng popover tồn tại
     if (closeBtn && popover) {
-        // Sự kiện khi nhấn vào nút 'x' để đóng
         closeBtn.addEventListener('click', function() {
             popover.classList.remove('show');
         });
     }
 
-    // Sự kiện khi nhấn vào bất kỳ đâu trên trang để đóng popover
     document.addEventListener('click', function(event) {
-        // Nếu popover đang mở và người dùng không nhấn vào popover hoặc nút bật
         if (popover && popover.classList.contains('show') && !toggleBtn.contains(event.target) && !popover.contains(event.target)) {
-            // Thì ẩn popover đi
             popover.classList.remove('show');
+        }
+    });
+
+    // =================================================
+    // === PHẦN 2: LOGIC MỚI CHO SỬA/HỦY NHIỆM VỤ ===
+    // =================================================
+    
+    // Lấy tất cả các thẻ nhiệm vụ
+    const taskItems = document.querySelectorAll('.task-item');
+
+    // Lặp qua mỗi thẻ nhiệm vụ để gán sự kiện
+    taskItems.forEach(function(taskItem) {
+        const editBtn = taskItem.querySelector('.edit-task-btn');
+        const cancelBtn = taskItem.querySelector('.cancel-edit-btn');
+        
+        const taskView = taskItem.querySelector('.task-view');
+        const editForm = taskItem.querySelector('.edit-task-form-container');
+
+        // Sự kiện khi nhấn nút "Sửa"
+        if (editBtn && taskView && editForm) {
+            editBtn.addEventListener('click', function() {
+                taskView.style.display = 'none'; // Ẩn phần hiển thị
+                editForm.style.display = 'block'; // Hiện form sửa
+            });
+        }
+
+        // Sự kiện khi nhấn nút "Hủy"
+        if (cancelBtn && taskView && editForm) {
+            cancelBtn.addEventListener('click', function() {
+                editForm.style.display = 'none'; // Ẩn form sửa
+                taskView.style.display = 'flex';  // Hiện lại phần hiển thị
+            });
         }
     });
 });

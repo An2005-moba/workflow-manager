@@ -66,20 +66,31 @@ try {
                 ON UPDATE CASCADE
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
     ";
-     $sql_create_tasks_table = "
-        CREATE TABLE IF NOT EXISTS `tasks` (
-            `id` INT AUTO_INCREMENT PRIMARY KEY,
-            `project_id` INT NOT NULL,
-            `task_name` VARCHAR(255) NOT NULL,
-            `description` TEXT,
-            `submitted_file_path` BLOB NULL DEFAULT NULL,
-            `status` VARCHAR(50) DEFAULT 'To Do',
-            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            `assigned_to_user_id` INT DEFAULT NULL,
-            FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-            FOREIGN KEY (`assigned_to_user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL
-        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    ";
+     // Sửa lại câu lệnh tạo bảng `tasks`
+$sql_create_tasks_table = "
+    CREATE TABLE IF NOT EXISTS `tasks` (
+        `id` INT AUTO_INCREMENT PRIMARY KEY,
+        `project_id` INT NOT NULL,
+        `task_name` VARCHAR(255) NOT NULL,
+        `description` TEXT,
+        `submitted_file_path` BLOB NULL DEFAULT NULL,
+        `status` VARCHAR(50) DEFAULT 'To Do',
+        `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        -- Đã xóa cột assigned_to_user_id khỏi đây
+        FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+";
+
+// Thêm câu lệnh tạo bảng `task_assignments`
+$sql_create_task_assignments_table = "
+    CREATE TABLE IF NOT EXISTS `task_assignments` (
+        `task_id` INT NOT NULL,
+        `user_id` INT NOT NULL,
+        PRIMARY KEY (`task_id`, `user_id`),
+        FOREIGN KEY (`task_id`) REFERENCES `tasks`(`id`) ON DELETE CASCADE,
+        FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+";
 
      $sql_create_project_members_table = "
         CREATE TABLE IF NOT EXISTS `project_members` (
@@ -102,7 +113,10 @@ try {
     echo "Table `projects` created successfully or already exists.<br>";
      $conn->exec($sql_create_tasks_table);
     echo "Table `tasks` created successfully or already exists.<br>";
-      // 3. Tạo bảng project_members (MỚI)
+    // 3. Thêm dòng thực thi cho bảng mới
+$conn->exec($sql_create_task_assignments_table);
+echo "Table `task_assignments` created successfully or already exists.<br>";
+      // 4. Tạo bảng project_members (MỚI)
     $conn->exec($sql_create_project_members_table);
     echo "Table `project_members` created successfully or already exists.<br>";
 
