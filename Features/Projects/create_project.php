@@ -37,19 +37,26 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $projectName = isset($_POST['project_name']) ? trim($_POST['project_name']) : '';
 $description = isset($_POST['description']) ? trim($_POST['description']) : '';
 $userId = $_SESSION['user_id']; 
-
 try {
     // 1. Lấy kết nối từ file db_connection.php
     $connection = getDbConnection();
 
-    // 2. Khởi tạo đối tượng ProjectManager và "tiêm" kết nối vào
+    // 2. Khởi tạo đối tượng ProjectManager
     $projectManager = new ProjectManager($connection);
 
     // 3. Gọi phương thức createProject để xử lý logic
     $result = $projectManager->createProject($projectName, $description, $userId);
 
-    // Trả kết quả về cho client
-    send_response($result);
+    // 4. KIỂM TRA KẾT QUẢ VÀ CHUYỂN HƯỚNG
+    if ($result['status'] === 'success') {
+        // Nếu thành công, lưu thông báo và chuyển hướng đến list.php
+        $_SESSION['flash'] = ['status' => 'success', 'message' => 'Dự án đã được tạo thành công!'];
+        header("Location: list.php");
+        exit(); // Dừng script ngay sau khi chuyển hướng
+    } else {
+        // Nếu thất bại, trả về lỗi dưới dạng JSON (để JavaScript xử lý)
+        send_response($result);
+    }
 
 } catch (Exception $e) {
     error_log("API Error: " . $e->getMessage());

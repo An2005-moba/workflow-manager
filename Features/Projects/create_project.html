@@ -17,7 +17,7 @@
         </a>
 
         <div class="form-container">
-            <form id="projectForm" action="handle_create_project.php" method="POST">
+          <form id="projectForm" action="create_project.php" method="POST">
                 <div class="form-group">
                     <label for="project_name">Tên Dự Án:</label>
                     <input type="text" id="project_name" name="project_name" required>
@@ -26,13 +26,12 @@
                     <label for="description">Mô Tả:</label>
                     <textarea id="description" name="description" rows="4"></textarea>
                 </div>
-                
                 <button type="submit" class="btn-submit">Tạo Dự Án</button>
             </form>
             <div id="message" class="message-area"></div>
         </div>
     </div>
 
-    <script src="./create_project.js"></script>
+   
 </body>
 </html>
