@@ -73,8 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Lỗi khi gửi email
             $response['status'] = 'error';
             // SỬA TẠI ĐÂY: Lấy lỗi từ thuộc tính ErrorInfo của PHPMailer
-            $response['message'] = "Mật khẩu đã được cập nhật thành công, nhưng có lỗi khi gửi email. Vui lòng kiểm tra lại cấu hình email hoặc liên hệ hỗ trợ. Chi tiết: " . $mailer->ErrorInfo; 
-            error_log("Failed to send email for password reset to " . $email . ". PHPMailer Error: " . $mailer->ErrorInfo);
+            $response['message'] = "Mật khẩu đã được cập nhật thành công, nhưng có lỗi khi gửi email. Vui lòng kiểm tra lại cấu hình email hoặc liên hệ hỗ trợ. Chi tiết: " . $mailer->getErrorMessage(); 
+            error_log("Failed to send email for password reset to " . $email . ". PHPMailer Error: " . $mailer->getErrorMessage());
         }
     } else {
         // Lỗi khi cập nhật mật khẩu trong database

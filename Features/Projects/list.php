@@ -27,7 +27,7 @@ try {
     // Lấy tất cả các dự án
     // Sẽ cần truyền tham số tìm kiếm vào đây nếu bạn muốn tìm kiếm server-side
     // Hiện tại, chúng ta sẽ lấy tất cả và lọc bằng JS (client-side)
-     $result = $projectManager->getProjectsForUser($userId);
+    $result = $projectManager->getProjectsForUser($userId);
 
     if ($result['status'] === 'success') {
         $projects = $result['projects'];
@@ -158,57 +158,58 @@ if (count($name_parts) >= 2) {
         </div>
     </header>
 
-   <main class="dashboard-main">
-    <div class="dashboard-container">
-        <div class="project-list-container">
-            <?php if (isset($errorMessage)): ?>
-                <div class="error-message"><?php echo htmlspecialchars($errorMessage); ?></div>
-            <?php elseif (empty($projects)): ?>
-                <div class="empty-state">
-                    <h2>Bạn chưa có dự án nào.</h2>
-                    <p>Hãy bắt đầu bằng cách tạo dự án đầu tiên của bạn.</p>
-                    <a href="create_project.html" class="create-project-btn-empty">Tạo dự án ngay</a>
-                </div>
-            <?php else: ?>
-                <div class="project-grid">
-                  <?php foreach ($projects as $project): ?>
-    <a href="project_details.php?id=<?php echo $project['id']; ?>" class="project-link-card">
-        <div class="project-card">
-            <div class="project-card-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                </svg>
-            </div>
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <div class="project-list-container">
+                <?php if (isset($errorMessage)): ?>
+                    <div class="error-message"><?php echo htmlspecialchars($errorMessage); ?></div>
+                <?php elseif (empty($projects)): ?>
+                    <div class="empty-state" id="emptyState"> <h2>Bạn chưa có dự án nào.</h2>
+                        <p>Hãy bắt đầu bằng cách tạo dự án đầu tiên của bạn.</p>
+                        <a href="create_project.html" class="create-project-btn-empty">Tạo dự án ngay</a>
+                    </div>
+                <?php else: ?>
+                    <div class="project-grid">
+                        <?php foreach ($projects as $project): ?>
+                            <a href="project_details.php?id=<?php echo $project['id']; ?>" class="project-link-card">
+                                <div class="project-card"
+                                     data-project-name="<?php echo htmlspecialchars(mb_strtolower($project['project_name'], 'UTF-8')); ?>"
+                                     data-project-description="<?php echo htmlspecialchars(mb_strtolower($project['description'] ?? '', 'UTF-8')); ?>"> <div class="project-card-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                        </svg>
+                                    </div>
 
-            <div class="project-card-content">
-                <div class="project-card-header">
-                    <h3 class="project-card-title"><?php echo htmlspecialchars($project['project_name']); ?></h3>
-                </div>
-                <div class="project-card-body">
-                    <p class="project-card-description">
-                        <?php echo !empty($project['description']) ? htmlspecialchars($project['description']) : '<em>Không có mô tả.</em>'; ?>
-                    </p>
-                </div>
-                <div class="project-card-footer">
-                    <span class="project-card-creator">Người tạo: <?php echo htmlspecialchars($project['created_by_name'] ?? 'N/A'); ?></span>
-                    <span class="project-card-date">
-                        <?php 
-                            $date = new DateTime($project['creation_date']);
-                            echo $date->format('d/m/Y'); 
-                        ?>
-                    </span>
-                </div>
+                                    <div class="project-card-content">
+                                        <div class="project-card-header">
+                                            <h3 class="project-card-title"><?php echo htmlspecialchars($project['project_name']); ?></h3>
+                                        </div>
+                                        <div class="project-card-body">
+                                            <p class="project-card-description">
+                                                <?php echo !empty($project['description']) ? htmlspecialchars($project['description']) : '<em>Không có mô tả.</em>'; ?>
+                                            </p>
+                                        </div>
+                                        <div class="project-card-footer">
+                                            <span class="project-card-creator">Người tạo: <?php echo htmlspecialchars($project['created_by_name'] ?? 'N/A'); ?></span>
+                                            <span class="project-card-date">
+                                                <?php 
+                                                    $date = new DateTime($project['creation_date']);
+                                                    echo $date->format('d/m/Y'); 
+                                                ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
-    </a>
-<?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-</main>
+    </main>
 
     <script src="../../Assets/js/main.js"></script>
+    <script src="../../Assets/js/projects.js"></script>
     
 </body>
 </html>
