@@ -39,9 +39,21 @@ try {
         die("Không tìm thấy dự án.");
     }
 
-    // Lấy danh sách nhiệm vụ và thành viên
-    $tasks = $taskManager->getTasksByProjectId($projectId);
+    // Lấy danh sách thành viên trước, vì form lọc cần nó
     $members = $memberManager->getProjectMembers($projectId);
+
+    // BƯỚC 1: Lấy các giá trị lọc từ URL
+    $filter_status = $_GET['status'] ?? 'all';
+    $filter_assignee = $_GET['assignee'] ?? 'all';
+
+    // BƯỚC 2: Tạo mảng $filters
+    $filters = [
+        'status' => $filter_status,
+        'assignee' => $filter_assignee
+    ];
+
+    // BƯỚC 3: Lấy danh sách nhiệm vụ và truyền $filters vào
+    $tasks = $taskManager->getTasksByProjectId($projectId, $filters);
 } catch (Exception $e) {
     die("Lỗi hệ thống: " . $e->getMessage());
 }
@@ -181,17 +193,47 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
 
             <section class="task-list-section content-box">
                 <h2>Danh sách nhiệm vụ</h2>
+                <div id="task-ajax-message" class="flash-message" style="margin-bottom: 16px;"></div>
+
+                <form method="GET"
+                    action="project_details.php"
+                    class="filter-form"
+                    data-api-url="../Task/get_filtered_tasks_api.php">
+                    <input type="hidden" name="id" value="<?php echo $projectId; ?>">
+                    <div class="filter-group">
+                        <label for="filter-status">Lọc theo trạng thái:</label>
+                        <select name="status" id="filter-status">
+                            <option value="all">Tất cả trạng thái</option>
+                            <option value="Cần làm" <?php if (isset($_GET['status']) && $_GET['status'] == 'Cần làm') echo 'selected'; ?>>Cần làm</option>
+                            <option value="Đang làm" <?php if (isset($_GET['status']) && $_GET['status'] == 'Đang làm') echo 'selected'; ?>>Đang làm</option>
+                            <option value="Hoàn thành" <?php if (isset($_GET['status']) && $_GET['status'] == 'Hoàn thành') echo 'selected'; ?>>Hoàn thành</option>
+                            <option value="Đã duyệt" <?php if (isset($_GET['status']) && $_GET['status'] == 'Đã duyệt') echo 'selected'; ?>>Đã duyệt</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-assignee">Lọc theo người được giao:</label>
+                        <select name="assignee" id="filter-assignee">
+                            <option value="all">Tất cả thành viên</option>
+                            <?php foreach ($members as $member): ?>
+                                <option value="<?php echo $member['id']; ?>" <?php if (isset($_GET['assignee']) && $_GET['assignee'] == $member['id']) echo 'selected'; ?>>
+                                    <?php echo htmlspecialchars($member['name']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-filter">Lọc</button>
+                </form>
+
                 <div class="task-list">
                     <?php if (empty($tasks)): ?>
-                        <p class="empty-list">Chưa có nhiệm vụ nào trong dự án này.</p>
+                        <p class="empty-list">Không có nhiệm vụ nào khớp với bộ lọc của bạn.</p>
                     <?php else: ?>
                         <?php foreach ($tasks as $task): ?>
                             <div class="task-item" data-task-id="<?php echo $task['id']; ?>">
                                 <div class="task-view">
-                                    <div class="task-info" data-status="<?php echo htmlspecialchars(strtolower($task['status'])); ?>">
+                                    <div class="task-info">
                                         <h3 class="task-name"><?php echo htmlspecialchars($task['task_name']); ?></h3>
                                         <p class="task-description"><?php echo nl2br(htmlspecialchars($task['description'])); ?></p>
-
                                         <div class="task-assignee">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -202,23 +244,26 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
                                             <span><?php echo !empty($task['assignee_names']) ? htmlspecialchars($task['assignee_names']) : 'Chưa gán'; ?></span>
                                         </div>
                                     </div>
-                                    <div class="task-status">
-                                        <?php
-                                        // Chuyển đổi trạng thái sang dạng không dấu, không cách để dùng trong CSS
-                                        $status_text = ($task['status'] === 'To Do') ? 'Cần làm' : $task['status'];
-                                        $status_class = strtolower(str_replace(' ', '', $status_text));
-                                        ?>
-                                        <span class="status-badge" data-status="<?php echo htmlspecialchars($status_class); ?>">
-                                            <?php echo htmlspecialchars($status_text); ?>
-                                        </span>
-                                    </div>
-                                    <div class="task-actions">
-                                        <button class="task-action-btn edit-task-btn">Sửa</button>
-                                        <form action="../Task/handle_delete_task.php" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa nhiệm vụ này?');">
-                                            <input type="hidden" name="project_id" value="<?php echo $projectId; ?>">
-                                            <input type="hidden" name="task_id" value="<?php echo $task['id']; ?>">
-                                            <button type="submit" class="task-action-btn delete-task-btn">Xóa</button>
-                                        </form>
+                                    <div class="task-right-panel">
+                                        <div class="task-status">
+                                            <?php
+                                            $status_text = ($task['status'] === 'To Do') ? 'Cần làm' : $task['status'];
+                                            // Luôn sử dụng hàm create_slug để đảm bảo tính nhất quán
+                                            $status_class = create_slug($status_text);
+                                            ?>
+                                            <span class="status-badge" data-status="<?php echo $status_class; ?>">
+                                                <?php echo htmlspecialchars($status_text); ?>
+                                            </span>
+                                        </div>
+                                        <div class="task-actions">
+                                            <button class="task-action-btn edit-task-btn">Sửa</button>
+                                            <button
+                                                class="task-action-btn delete-task-btn"
+                                                data-task-id="<?php echo $task['id']; ?>"
+                                                data-project-id="<?php echo $projectId; ?>">
+                                                Xóa
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -234,31 +279,20 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
                                             <label>Mô tả</label>
                                             <textarea name="description" rows="3"><?php echo htmlspecialchars($task['description']); ?></textarea>
                                         </div>
-
                                         <div class="form-group">
                                             <label>Gán cho thành viên</label>
-
                                             <div class="assignee-checkbox-container">
                                                 <?php
-                                                // Lấy danh sách ID của các thành viên đã được gán cho task này
                                                 $assignedUserIds = $taskManager->getAssigneeIdsForTask($task['id']);
                                                 ?>
                                                 <?php foreach ($members as $member): ?>
                                                     <div class="assignee-checkbox-item">
-                                                        <input
-                                                            type="checkbox"
-                                                            name="assignee_ids[]"
-                                                            value="<?php echo $member['id']; ?>"
-                                                            id="task-<?php echo $task['id']; ?>-member-<?php echo $member['id']; ?>"
-                                                            <?php if (in_array($member['id'], $assignedUserIds)) echo 'checked'; ?>>
-                                                        <label for="task-<?php echo $task['id']; ?>-member-<?php echo $member['id']; ?>">
-                                                            <?php echo htmlspecialchars($member['name']); ?>
-                                                        </label>
+                                                        <input type="checkbox" name="assignee_ids[]" value="<?php echo $member['id']; ?>" id="task-<?php echo $task['id']; ?>-member-<?php echo $member['id']; ?>" <?php if (in_array($member['id'], $assignedUserIds)) echo 'checked'; ?>>
+                                                        <label for="task-<?php echo $task['id']; ?>-member-<?php echo $member['id']; ?>"><?php echo htmlspecialchars($member['name']); ?></label>
                                                     </div>
                                                 <?php endforeach; ?>
                                             </div>
                                         </div>
-
                                         <div class="form-group">
                                             <label>Trạng thái</label>
                                             <select name="status">

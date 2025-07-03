@@ -8,20 +8,40 @@ class TaskManager
         $this->conn = $dbConnection;
     }
 
-    public function getTasksByProjectId($projectId)
+    public function getTasksByProjectId($projectId, $filters = [])
     {
-        // Cập nhật câu lệnh SQL để lấy danh sách tên người được gán
-        $sql = "SELECT t.*, GROUP_CONCAT(u.name SEPARATOR ', ') as assignee_names
-                FROM tasks t
-                LEFT JOIN task_assignments ta ON t.id = ta.task_id
-                LEFT JOIN users u ON ta.user_id = u.id
-                WHERE t.project_id = :project_id
-                GROUP BY t.id
-                ORDER BY t.created_at DESC";
+        // Câu lệnh SQL cơ bản
+        $sql = "SELECT t.*, GROUP_CONCAT(DISTINCT u.name SEPARATOR ', ') as assignee_names
+            FROM tasks t
+            LEFT JOIN task_assignments ta ON t.id = ta.task_id
+            LEFT JOIN users u ON ta.user_id = u.id
+            WHERE t.project_id = :project_id";
+
+        // Mảng chứa các tham số để bind
+        $params = [':project_id' => $projectId];
+
+        // Thêm điều kiện lọc theo trạng thái
+        if (!empty($filters['status']) && $filters['status'] !== 'all') {
+            $sql .= " AND t.status = :status";
+            $params[':status'] = $filters['status'];
+        }
+
+        // Thêm điều kiện lọc theo người được giao
+        // Dùng subquery để đảm bảo lọc đúng các task có người đó được gán
+        if (!empty($filters['assignee']) && $filters['assignee'] !== 'all') {
+            $sql .= " AND t.id IN (SELECT task_id FROM task_assignments WHERE user_id = :assignee_id)";
+            $params[':assignee_id'] = $filters['assignee'];
+        }
+
+        // Luôn có GROUP BY và ORDER BY ở cuối
+        $sql .= " GROUP BY t.id ORDER BY t.created_at DESC";
+
         try {
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':project_id', $projectId, PDO::PARAM_INT);
-            $stmt->execute();
+
+            // Thực thi với các tham số đã được thêm vào
+            $stmt->execute($params);
+
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Get Tasks Error: " . $e->getMessage());
@@ -141,5 +161,23 @@ class TaskManager
             error_log("Delete Task Error: " . $e->getMessage());
         }
         return ['status' => 'error', 'message' => 'Không thể xóa nhiệm vụ.'];
+    }
+    public function getTaskById($taskId) {
+        // Câu lệnh này lấy thông tin của một task, tương tự như trong getTasksByProjectId
+        $sql = "SELECT t.*, GROUP_CONCAT(DISTINCT u.name SEPARATOR ', ') as assignee_names
+                FROM tasks t
+                LEFT JOIN task_assignments ta ON t.id = ta.task_id
+                LEFT JOIN users u ON ta.user_id = u.id
+                WHERE t.id = :task_id
+                GROUP BY t.id";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':task_id', $taskId, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Get Task By ID Error: " . $e->getMessage());
+            return null;
+        }
     }
 }
