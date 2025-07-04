@@ -62,7 +62,7 @@ if (empty($tasks)): ?>
             </div>
             
             <div class="edit-task-form-container" style="display: none;">
-                <form action="/web_project/Features/Projects/Task/handle_update_task.php" method="POST">
+                <form action="../Task/handle_update_task.php" method="POST">
                     <input type="hidden" name="project_id" value="<?php echo $projectId; ?>">
                     <input type="hidden" name="task_id" value="<?php echo $task['id']; ?>">
                     <div class="form-group">

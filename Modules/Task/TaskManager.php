@@ -90,14 +90,16 @@ class TaskManager
         if (empty($projectId) || empty($taskName)) {
             return ['status' => 'error', 'message' => 'Tên nhiệm vụ và ID dự án không được để trống.'];
         }
-        $sql = "INSERT INTO tasks (project_id, task_name, description) VALUES (:project_id, :task_name, :description)";
+        $sql = "INSERT INTO tasks (project_id, task_name, description, status) VALUES (:project_id, :task_name, :description, 'Cần làm')";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':project_id', $projectId, PDO::PARAM_INT);
             $stmt->bindParam(':task_name', $taskName, PDO::PARAM_STR);
             $stmt->bindParam(':description', $description, PDO::PARAM_STR);
             if ($stmt->execute()) {
-                return ['status' => 'success', 'message' => 'Nhiệm vụ đã được tạo thành công.'];
+                // SỬA LỖI QUAN TRỌNG: Trả về ID của task vừa được tạo
+                $newId = $this->conn->lastInsertId();
+                return ['status' => 'success', 'message' => 'Nhiệm vụ đã được tạo thành công.', 'new_task_id' => $newId];
             }
         } catch (PDOException $e) {
             error_log("Create Task Error: " . $e->getMessage());
@@ -162,7 +164,8 @@ class TaskManager
         }
         return ['status' => 'error', 'message' => 'Không thể xóa nhiệm vụ.'];
     }
-    public function getTaskById($taskId) {
+    public function getTaskById($taskId)
+    {
         // Câu lệnh này lấy thông tin của một task, tương tự như trong getTasksByProjectId
         $sql = "SELECT t.*, GROUP_CONCAT(DISTINCT u.name SEPARATOR ', ') as assignee_names
                 FROM tasks t
@@ -179,5 +182,22 @@ class TaskManager
             error_log("Get Task By ID Error: " . $e->getMessage());
             return null;
         }
+    }
+    public function getProjectProgress($projectId)
+    {
+        // Đếm tổng số nhiệm vụ trong dự án
+        $stmt_total = $this->conn->prepare("SELECT COUNT(*) FROM tasks WHERE project_id = :project_id");
+        $stmt_total->execute([':project_id' => $projectId]);
+        $total_tasks = $stmt_total->fetchColumn();
+
+        // Đếm số nhiệm vụ đã hoàn thành (Hoàn thành hoặc Đã duyệt)
+        $stmt_completed = $this->conn->prepare("SELECT COUNT(*) FROM tasks WHERE project_id = :project_id AND (status = 'Hoàn thành' OR status = 'Đã duyệt')");
+        $stmt_completed->execute([':project_id' => $projectId]);
+        $completed_tasks = $stmt_completed->fetchColumn();
+
+        return [
+            'total_tasks' => (int)$total_tasks,
+            'completed_tasks' => (int)$completed_tasks
+        ];
     }
 }

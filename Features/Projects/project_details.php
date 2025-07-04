@@ -97,10 +97,10 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
             <div class="project-progress-summary">
                 <div class="progress-text">
                     <span>Tiến độ</span>
-                    <strong><?php echo $completed_tasks; ?>/<?php echo $total_tasks; ?></strong>
+                    <strong id="progress-summary-text"><?php echo $completed_tasks; ?>/<?php echo $total_tasks; ?></strong>
                 </div>
                 <div class="progress-bar-container">
-                    <div class="progress-bar-fill" style="width: <?php echo $percentage; ?>%;"></div>
+                    <div id="progress-bar-fill" class="progress-bar-fill" style="width: <?php echo $percentage; ?>%;"></div>
                 </div>
             </div>
         </header>
@@ -177,7 +177,7 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
 
             <section class="create-task-section content-box">
                 <h2>Tạo nhiệm vụ mới</h2>
-                <form action="../Task/handle_create_task.php" method="POST">
+                <form id="create-task-form" action="../Task/handle_create_task.php" method="POST">
                     <input type="hidden" name="project_id" value="<?php echo $projectId; ?>">
                     <div class="form-group">
                         <label for="task_name">Tên nhiệm vụ</label>
