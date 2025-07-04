@@ -75,6 +75,7 @@ $sql_create_tasks_table = "
         `description` TEXT,
         `submitted_file_path` BLOB NULL DEFAULT NULL,
         `status` VARCHAR(50) DEFAULT 'To Do',
+        `deadline` DATE DEFAULT NULL, -- THÊM DÒNG NÀY
         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         -- Đã xóa cột assigned_to_user_id khỏi đây
         FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON DELETE CASCADE ON UPDATE CASCADE

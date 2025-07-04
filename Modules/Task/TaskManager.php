@@ -85,19 +85,23 @@ class TaskManager
         }
     }
 
-    public function createTask($projectId, $taskName, $description)
+    // Hàm createTask mới
+    public function createTask($projectId, $taskName, $description, $deadline = null)
     {
         if (empty($projectId) || empty($taskName)) {
             return ['status' => 'error', 'message' => 'Tên nhiệm vụ và ID dự án không được để trống.'];
         }
-        $sql = "INSERT INTO tasks (project_id, task_name, description, status) VALUES (:project_id, :task_name, :description, 'Cần làm')";
+        // Thêm cột 'deadline' vào câu lệnh INSERT
+        $sql = "INSERT INTO tasks (project_id, task_name, description, status, deadline) VALUES (:project_id, :task_name, :description, 'Cần làm', :deadline)";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':project_id', $projectId, PDO::PARAM_INT);
             $stmt->bindParam(':task_name', $taskName, PDO::PARAM_STR);
             $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+            // Thêm dòng này để gán giá trị cho deadline
+            $stmt->bindValue(':deadline', empty($deadline) ? null : $deadline, PDO::PARAM_STR);
+
             if ($stmt->execute()) {
-                // SỬA LỖI QUAN TRỌNG: Trả về ID của task vừa được tạo
                 $newId = $this->conn->lastInsertId();
                 return ['status' => 'success', 'message' => 'Nhiệm vụ đã được tạo thành công.', 'new_task_id' => $newId];
             }
@@ -110,40 +114,44 @@ class TaskManager
     /**
      * Cập nhật nhanh trạng thái của một nhiệm vụ.
      */
-    public function updateTask($taskId, $taskName, $description, $status)
-    {
-        if (empty($taskId) || empty($taskName)) {
-            return ['status' => 'error', 'message' => 'ID và tên nhiệm vụ không được để trống.'];
-        }
+    // Hàm updateTask mới
+public function updateTask($taskId, $taskName, $description, $status, $deadline = null)
+{
+    if (empty($taskId) || empty($taskName)) {
+        return ['status' => 'error', 'message' => 'ID và tên nhiệm vụ không được để trống.'];
+    }
 
-        // Thêm kiểm tra trạng thái hợp lệ
-        $allowedStatus = ['Cần làm', 'Đang làm', 'Hoàn thành', 'Đã duyệt'];
-        if (!in_array($status, $allowedStatus)) {
-            return ['status' => 'error', 'message' => 'Trạng thái không hợp lệ.'];
-        }
+    $allowedStatus = ['Cần làm', 'Đang làm', 'Hoàn thành', 'Đã duyệt'];
+    if (!in_array($status, $allowedStatus)) {
+        return ['status' => 'error', 'message' => 'Trạng thái không hợp lệ.'];
+    }
 
-        $sql = "UPDATE tasks SET 
+    // Thêm 'deadline = :deadline' vào câu lệnh UPDATE
+    $sql = "UPDATE tasks SET 
                 task_name = :task_name, 
                 description = :description, 
-                status = :status 
+                status = :status,
+                deadline = :deadline 
             WHERE id = :task_id";
 
-        try {
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':task_id', $taskId, PDO::PARAM_INT);
-            $stmt->bindParam(':task_name', $taskName, PDO::PARAM_STR);
-            $stmt->bindParam(':description', $description, PDO::PARAM_STR);
-            $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+    try {
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':task_id', $taskId, PDO::PARAM_INT);
+        $stmt->bindParam(':task_name', $taskName, PDO::PARAM_STR);
+        $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+        $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+        // Thêm dòng này để gán giá trị cho deadline
+        $stmt->bindValue(':deadline', empty($deadline) ? null : $deadline, PDO::PARAM_STR);
 
-            if ($stmt->execute()) {
-                return ['status' => 'success', 'message' => 'Cập nhật thông tin nhiệm vụ thành công.'];
-            }
-        } catch (PDOException $e) {
-            error_log("Update Task Error: " . $e->getMessage());
+        if ($stmt->execute()) {
+            return ['status' => 'success', 'message' => 'Cập nhật thông tin nhiệm vụ thành công.'];
         }
-
-        return ['status' => 'error', 'message' => 'Không thể cập nhật nhiệm vụ.'];
+    } catch (PDOException $e) {
+        error_log("Update Task Error: " . $e->getMessage());
     }
+
+    return ['status' => 'error', 'message' => 'Không thể cập nhật nhiệm vụ.'];
+}
 
 
     public function deleteTask($taskId)

@@ -121,7 +121,15 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
         <main class="project-main-content">
             <section class="members-section content-box">
                 <div class="section-header">
-                    <h2>Thành viên</h2>
+                    <h2 class="header-with-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <line x1="19" x2="19" y1="8" y2="14"></line>
+                            <line x1="22" x2="16" y1="11" y2="11"></line>
+                        </svg>
+                        <span>Thành viên</span>
+                    </h2>
 
                     <div class="add-member-container">
                         <?php if ($isProjectCreator): ?>
@@ -176,9 +184,22 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
             </section>
 
             <section class="create-task-section content-box">
-                <h2>Tạo nhiệm vụ mới</h2>
+                <h2 class="header-with-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                    <span>Tạo nhiệm vụ mới</span>
+                </h2>
                 <form id="create-task-form" action="../Task/handle_create_task.php" method="POST">
                     <input type="hidden" name="project_id" value="<?php echo $projectId; ?>">
+
+
+                    <div class="form-group">
+                        <label for="deadline">Thời hạn (Deadline)</label>
+                        <input type="date" id="deadline" name="deadline">
+                    </div>
                     <div class="form-group">
                         <label for="task_name">Tên nhiệm vụ</label>
                         <input type="text" id="task_name" name="task_name" required>

@@ -64,6 +64,21 @@ function create_slug($string){
    
    return $string;
 }
+function get_deadline_info($deadline_str) {
+    if (empty($deadline_str)) return ['text' => '', 'class' => ''];
+    try {
+        $deadline = new DateTime($deadline_str);
+        $now = new DateTime();
+        $deadline->setTime(0, 0, 0);
+        $now->setTime(0, 0, 0);
+        $diff = $now->diff($deadline);
+        $days_left = (int)$diff->format('%r%a');
+        if ($days_left < 0) return ['text' => 'Quá hạn ' . abs($days_left) . ' ngày', 'class' => 'overdue'];
+        if ($days_left == 0) return ['text' => 'Hết hạn hôm nay', 'class' => 'due-today'];
+        if ($days_left <= 3) return ['text' => 'Còn ' . $days_left . ' ngày', 'class' => 'due-soon'];
+        return ['text' => 'Hạn chót: ' . date('d/m/Y', strtotime($deadline_str)), 'class' => 'safe'];
+    } catch (Exception $e) { return ['text' => '', 'class' => '']; }
+}
 // Bạn có thể thêm một số hàm tiện ích khác ở đây nếu muốn,
 // ví dụ: một hàm để đóng kết nối (mặc dù PDO tự động đóng khi script kết thúc)
 
