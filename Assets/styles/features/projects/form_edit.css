@@ -1,0 +1,138 @@
+/* File: /Assets/styles/features/projects/form.css */
+/* CSS dùng chung cho các form như tạo mới và chỉnh sửa dự án */
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F9FAFB; /* Màu nền xám nhạt giống trang list */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 60px 24px; /* Thêm khoảng đệm trên dưới */
+    margin: 0;
+}
+
+/* Khung chứa form chính */
+.form-container {
+    background-color: #FFFFFF;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    width: 100%;
+    max-width: 650px; /* Tăng độ rộng một chút */
+    border: 1px solid #E5E7EB;
+}
+
+/* Tiêu đề "Chỉnh sửa dự án" */
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1F2937;
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+/* Nhóm các phần tử trong form */
+.form-group {
+    margin-bottom: 24px;
+}
+
+/* Nhãn (Tên dự án, Mô tả) */
+label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+/* Ô nhập liệu và ô mô tả */
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    color: #1F2937;
+    background-color: #FFFFFF;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder {
+    color: #9CA3AF;
+}
+
+/* Hiệu ứng khi nhấp vào ô nhập liệu */
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #4F46E5; /* Màu xanh tím chủ đạo */
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); /* Hiệu ứng "glow" */
+}
+
+textarea {
+    resize: vertical; /* Cho phép thay đổi chiều cao */
+    min-height: 120px;
+}
+
+/* Khung chứa các nút bấm */
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Đẩy các nút về bên phải */
+    gap: 16px;
+    margin-top: 32px;
+    border-top: 1px solid #E5E7EB;
+    padding-top: 24px;
+}
+
+/* Style chung cho các nút */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+/* Nút chính (Cập nhật) */
+.btn-primary {
+    background-color: #4F46E5; /* Màu xanh tím chủ đạo */
+    color: #FFFFFF;
+}
+
+.btn-primary:hover {
+    background-color: #4338CA; /* Đậm hơn khi di chuột */
+}
+
+/* Nút phụ (Hủy) */
+.btn-secondary {
+    background-color: #FFFFFF;
+    color: #374151;
+    border: 1px solid #D1D5DB;
+}
+
+.btn-secondary:hover {
+    background-color: #F9FAFB; /* Hơi xám khi di chuột */
+}
+
+/* Khung thông báo lỗi */
+.error-message {
+    text-align: center;
+    color: #991B1B; /* Chữ đỏ đậm */
+    background-color: #FEE2E2; /* Nền đỏ rất nhạt */
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #FCA5A5;
+}
+
+.error-message p {
+    margin: 0 0 16px 0;
+}

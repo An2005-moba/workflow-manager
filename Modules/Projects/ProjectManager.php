@@ -163,6 +163,41 @@ class ProjectManager {
             return ['status' => 'error', 'message' => 'Không thể lấy danh sách dự án cho người dùng. Chi tiết lỗi: ' . $e->getMessage()];
         }
     }
+    /**
+     * Cập nhật thông tin một dự án.
+     */
+    public function updateProject($projectId, $projectName, $description) {
+        $sql = "UPDATE projects SET project_name = :project_name, description = :description WHERE id = :project_id";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':project_name', $projectName, PDO::PARAM_STR);
+            $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+            $stmt->bindParam(':project_id', $projectId, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return ['status' => 'success', 'message' => 'Cập nhật dự án thành công.'];
+            }
+        } catch (PDOException $e) {
+            error_log("Update Project Error: " . $e->getMessage());
+        }
+        return ['status' => 'error', 'message' => 'Không thể cập nhật dự án.'];
+    }
+
+    /**
+     * Xóa một dự án.
+     */
+    public function deleteProject($projectId) {
+        $sql = "DELETE FROM projects WHERE id = :project_id";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':project_id', $projectId, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return ['status' => 'success', 'message' => 'Đã xóa dự án thành công.'];
+            }
+        } catch (PDOException $e) {
+            error_log("Delete Project Error: " . $e->getMessage());
+        }
+        return ['status' => 'error', 'message' => 'Không thể xóa dự án.'];
+    }
     // Các hàm khác như getProjectById(), updateProject(), deleteProject() có thể được thêm vào đây.
 }
 ?>
