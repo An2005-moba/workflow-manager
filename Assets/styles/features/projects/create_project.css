@@ -1,36 +1,40 @@
 /* Thiết lập cơ bản và font chữ */
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f0f2f5;
+    /* ✅ Đổi font cho nhất quán */
+    font-family: 'Inter', sans-serif; 
+    /* ✅ Sử dụng cùng ảnh nền để đồng bộ */
+    background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2029&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     display: flex;
     justify-content: center;
-    /* THAY ĐỔI QUAN TRỌNG: Căn các mục lên trên cùng */
     align-items: flex-start;
     min-height: 100vh;
     margin: 0;
-    /* Thêm khoảng đệm ở trên để nội dung không bị dính vào cạnh màn hình */
     padding: 60px 20px;
+    box-sizing: border-box;
 }
 
-/* --- Container chính bao bọc cả trang (MỚI) --- */
+/* --- Container chính bao bọc cả trang --- */
 .page-container {
     width: 100%;
     max-width: 500px;
 }
 
-/* --- Header / Nút quay lại (MỚI) --- */
+/* ✅ Style lại header và nút quay lại cho nổi bật trên nền ảnh */
 .page-header {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     margin-bottom: 24px;
     text-decoration: none;
-    color: #333;
+    color: #E5E7EB; /* Màu trắng xám cho dễ đọc trên nền tối */
     transition: color 0.2s ease;
 }
 
 .page-header:hover {
-    color: #007bff;
+    color: #FFFFFF; /* Sáng lên thành màu trắng khi hover */
 }
 
 .back-icon {
@@ -43,13 +47,16 @@ body {
     font-weight: 600;
 }
 
-/* Container chính cho form */
+/* ✅ Hiệu ứng kính mờ cho container chính */
 .form-container {
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Nhóm các label và input */
@@ -60,8 +67,8 @@ body {
 label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 500;
-    color: #555;
+    font-weight: 600;
+    color: #374151;
 }
 
 /* Kiểu cho các trường input và textarea */
@@ -69,30 +76,33 @@ input[type="text"],
 textarea {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ccc;
+    border: 1px solid #D1D5DB;
     border-radius: 8px;
     box-sizing: border-box;
     font-size: 16px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif; /* Đổi font */
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+/* ✅ Đổi màu hiệu ứng focus cho đồng bộ */
 input[type="text"]:focus,
 textarea:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    border-color: #4F46E5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
 }
 
 textarea {
     resize: vertical;
+    min-height: 120px;
 }
 
-/* Nút Submit */
+/* ✅ Đổi màu nút Submit cho đồng bộ */
 .btn-submit {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(90deg, #007bff, #0056b3);
+    /* Dùng gradient với màu chủ đạo */
+    background: linear-gradient(90deg, #4F46E5, #4338CA); 
     border: none;
     border-radius: 8px;
     color: white;
@@ -104,10 +114,10 @@ textarea {
 
 .btn-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 6px 15px rgba(79, 70, 229, 0.3);
 }
 
-/* Khu vực hiển thị thông báo */
+/* Khu vực hiển thị thông báo (giữ nguyên) */
 .message-area {
     margin-top: 20px;
     padding: 15px;
