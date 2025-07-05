@@ -115,43 +115,43 @@ class TaskManager
      * Cập nhật nhanh trạng thái của một nhiệm vụ.
      */
     // Hàm updateTask mới
-public function updateTask($taskId, $taskName, $description, $status, $deadline = null)
-{
-    if (empty($taskId) || empty($taskName)) {
-        return ['status' => 'error', 'message' => 'ID và tên nhiệm vụ không được để trống.'];
-    }
+    public function updateTask($taskId, $taskName, $description, $status, $deadline = null)
+    {
+        if (empty($taskId) || empty($taskName)) {
+            return ['status' => 'error', 'message' => 'ID và tên nhiệm vụ không được để trống.'];
+        }
 
-    $allowedStatus = ['Cần làm', 'Đang làm', 'Hoàn thành', 'Đã duyệt'];
-    if (!in_array($status, $allowedStatus)) {
-        return ['status' => 'error', 'message' => 'Trạng thái không hợp lệ.'];
-    }
+        $allowedStatus = ['Cần làm', 'Đang làm', 'Hoàn thành', 'Đã duyệt'];
+        if (!in_array($status, $allowedStatus)) {
+            return ['status' => 'error', 'message' => 'Trạng thái không hợp lệ.'];
+        }
 
-    // Thêm 'deadline = :deadline' vào câu lệnh UPDATE
-    $sql = "UPDATE tasks SET 
+        // Thêm 'deadline = :deadline' vào câu lệnh UPDATE
+        $sql = "UPDATE tasks SET 
                 task_name = :task_name, 
                 description = :description, 
                 status = :status,
                 deadline = :deadline 
             WHERE id = :task_id";
 
-    try {
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':task_id', $taskId, PDO::PARAM_INT);
-        $stmt->bindParam(':task_name', $taskName, PDO::PARAM_STR);
-        $stmt->bindParam(':description', $description, PDO::PARAM_STR);
-        $stmt->bindParam(':status', $status, PDO::PARAM_STR);
-        // Thêm dòng này để gán giá trị cho deadline
-        $stmt->bindValue(':deadline', empty($deadline) ? null : $deadline, PDO::PARAM_STR);
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':task_id', $taskId, PDO::PARAM_INT);
+            $stmt->bindParam(':task_name', $taskName, PDO::PARAM_STR);
+            $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+            $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+            // Thêm dòng này để gán giá trị cho deadline
+            $stmt->bindValue(':deadline', empty($deadline) ? null : $deadline, PDO::PARAM_STR);
 
-        if ($stmt->execute()) {
-            return ['status' => 'success', 'message' => 'Cập nhật thông tin nhiệm vụ thành công.'];
+            if ($stmt->execute()) {
+                return ['status' => 'success', 'message' => 'Cập nhật thông tin nhiệm vụ thành công.'];
+            }
+        } catch (PDOException $e) {
+            error_log("Update Task Error: " . $e->getMessage());
         }
-    } catch (PDOException $e) {
-        error_log("Update Task Error: " . $e->getMessage());
-    }
 
-    return ['status' => 'error', 'message' => 'Không thể cập nhật nhiệm vụ.'];
-}
+        return ['status' => 'error', 'message' => 'Không thể cập nhật nhiệm vụ.'];
+    }
 
 
     public function deleteTask($taskId)
@@ -207,5 +207,68 @@ public function updateTask($taskId, $taskName, $description, $status, $deadline 
             'total_tasks' => (int)$total_tasks,
             'completed_tasks' => (int)$completed_tasks
         ];
+    }
+    // Thêm 2 hàm này vào cuối file, trước dấu } của class
+
+    /**
+     * Lấy tất cả bình luận của một nhiệm vụ.
+     */
+    public function getCommentsByTaskId($taskId)
+    {
+        $sql = "SELECT c.*, u.name as user_name 
+            FROM task_comments c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.task_id = :task_id 
+            ORDER BY c.created_at ASC";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':task_id', $taskId, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Get Comments Error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Thêm một bình luận mới vào nhiệm vụ.
+     */
+    public function addComment($taskId, $userId, $commentText)
+    {
+        if (empty($commentText)) {
+            return ['status' => 'error', 'message' => 'Nội dung bình luận không được để trống.'];
+        }
+        $sql = "INSERT INTO task_comments (task_id, user_id, comment_text) VALUES (:task_id, :user_id, :comment_text)";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':task_id', $taskId, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->bindParam(':comment_text', $commentText, PDO::PARAM_STR);
+
+            if ($stmt->execute()) {
+                $newCommentId = $this->conn->lastInsertId();
+                // Lấy lại bình luận vừa tạo để trả về cho giao diện
+                $newComment = $this->getCommentById($newCommentId); // Cần tạo hàm này
+                return ['status' => 'success', 'message' => 'Đã thêm bình luận.', 'new_comment' => $newComment];
+            }
+        } catch (PDOException $e) {
+            error_log("Add Comment Error: " . $e->getMessage());
+        }
+        return ['status' => 'error', 'message' => 'Không thể thêm bình luận.'];
+    }
+
+    /**
+     * Lấy một bình luận theo ID (hàm hỗ trợ).
+     */
+    private function getCommentById($commentId)
+    {
+        $sql = "SELECT c.*, u.name as user_name 
+            FROM task_comments c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.id = :comment_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':comment_id' => $commentId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

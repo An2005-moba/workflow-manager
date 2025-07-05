@@ -83,12 +83,42 @@ document.addEventListener('DOMContentLoaded', function () {
                     .then(data => {
                         if (data.status === 'success' && data.updated_task) {
                             const updatedTask = data.updated_task;
+
+                            // Cập nhật các thông tin cơ bản
                             taskItem.querySelector('.task-name').textContent = updatedTask.task_name;
                             taskItem.querySelector('.task-description').innerHTML = updatedTask.description.replace(/\n/g, '<br>');
                             taskItem.querySelector('.task-assignee span').textContent = updatedTask.assignee_names || 'Chưa gán';
                             const statusBadge = taskItem.querySelector('.status-badge');
                             statusBadge.textContent = updatedTask.status;
                             statusBadge.dataset.status = convertStatusToClass(updatedTask.status);
+
+                            // --- BẮT ĐẦU: CẬP NHẬT DEADLINE ---
+                            const deadlineContainer = taskItem.querySelector('.task-deadline');
+                            const deadlineInfo = updatedTask.deadline_info;
+
+                            if (deadlineInfo && deadlineInfo.text) {
+                                // Nếu có thông tin deadline mới
+                                const newDeadlineHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <span>${deadlineInfo.text}</span>
+                        `;
+
+                                if (deadlineContainer) {
+                                    // Nếu đã có sẵn khu vực deadline, chỉ cập nhật
+                                    deadlineContainer.className = `task-deadline ${deadlineInfo.class}`;
+                                    deadlineContainer.innerHTML = newDeadlineHTML;
+                                } else {
+                                    // Nếu chưa có (ví dụ task trước đó không có deadline), tạo mới
+                                    const assigneeDiv = taskItem.querySelector('.task-assignee');
+                                    assigneeDiv.insertAdjacentHTML('afterend', `<div class="task-deadline ${deadlineInfo.class}">${newDeadlineHTML}</div>`);
+                                }
+                            } else if (deadlineContainer) {
+                                // Nếu deadline bị xóa, loại bỏ luôn khu vực hiển thị
+                                deadlineContainer.remove();
+                            }
+                            // --- KẾT THÚC: CẬP NHẬT DEADLINE ---
+
+                            // Đóng form sửa và hiển thị thông báo
                             cancelBtn.click();
                             showTaskMessage(data.message, 'success');
                             updateProjectProgress();
@@ -190,6 +220,42 @@ document.addEventListener('DOMContentLoaded', function () {
                     showTaskMessage('Lỗi kết nối khi tạo nhiệm vụ.', 'error');
                 });
         });
+    }
+    // Thêm hàm này vào bên trong hàm attachTaskEventListeners(taskItem)
+
+    function attachCommentFormListener(form) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const commentInput = form.querySelector('input[name="comment_text"]');
+            const commentList = form.closest('.task-comments-section').querySelector('.comment-list');
+
+            fetch(form.action, { method: 'POST', body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success' && data.new_comment) {
+                        const newComment = data.new_comment;
+                        const commentHTML = `
+                        <div class="comment-item">
+                            <strong>${newComment.user_name}:</strong>
+                            <span>${newComment.comment_text}</span>
+                        </div>
+                    `;
+                        commentList.insertAdjacentHTML('beforeend', commentHTML);
+                        commentInput.value = ''; // Xóa nội dung trong ô nhập
+                        commentList.scrollTop = commentList.scrollHeight; // Tự cuộn xuống bình luận mới nhất
+                    } else {
+                        alert(data.message || 'Lỗi khi gửi bình luận.');
+                    }
+                })
+                .catch(error => alert('Lỗi kết nối.'));
+        });
+    }
+
+    // Trong hàm attachTaskEventListeners, tìm đến dòng cuối và thêm:
+    const commentForm = taskItem.querySelector('.add-comment-form');
+    if (commentForm) {
+        attachCommentFormListener(commentForm);
     }
 
     updateProjectProgress();
