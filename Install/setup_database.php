@@ -49,7 +49,7 @@ try {
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
          
     ";
-    
+
 
     // SQL để tạo bảng projects
     // Bảng này có khóa ngoại tham chiếu đến bảng users, nên cần được tạo SAU bảng users
@@ -66,8 +66,8 @@ try {
                 ON UPDATE CASCADE
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
     ";
-     // Sửa lại câu lệnh tạo bảng `tasks`
-$sql_create_tasks_table = "
+    // Sửa lại câu lệnh tạo bảng `tasks`
+    $sql_create_tasks_table = "
     CREATE TABLE IF NOT EXISTS `tasks` (
         `id` INT AUTO_INCREMENT PRIMARY KEY,
         `project_id` INT NOT NULL,
@@ -75,14 +75,15 @@ $sql_create_tasks_table = "
         `description` TEXT,
         `submitted_file_path` BLOB NULL DEFAULT NULL,
         `status` VARCHAR(50) DEFAULT 'To Do',
+        `deadline` DATETIME DEFAULT NULL,
         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         -- Đã xóa cột assigned_to_user_id khỏi đây
         FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ";
 
-// Thêm câu lệnh tạo bảng `task_assignments`
-$sql_create_task_assignments_table = "
+    // Thêm câu lệnh tạo bảng `task_assignments`
+    $sql_create_task_assignments_table = "
     CREATE TABLE IF NOT EXISTS `task_assignments` (
         `task_id` INT NOT NULL,
         `user_id` INT NOT NULL,
@@ -92,7 +93,7 @@ $sql_create_task_assignments_table = "
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ";
 
-     $sql_create_project_members_table = "
+    $sql_create_project_members_table = "
         CREATE TABLE IF NOT EXISTS `project_members` (
             `project_id` INT NOT NULL,
             `user_id` INT NOT NULL,
@@ -102,6 +103,17 @@ $sql_create_task_assignments_table = "
             FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
     ";
+    $sql_create_task_comments_table = "
+    CREATE TABLE IF NOT EXISTS `task_comments` (
+        `id` INT AUTO_INCREMENT PRIMARY KEY,
+        `task_id` INT NOT NULL,
+        `user_id` INT NOT NULL,
+        `comment_text` TEXT NOT NULL,
+        `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (`task_id`) REFERENCES `tasks`(`id`) ON DELETE CASCADE,
+        FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+";
 
     // THAY ĐỔI THỨ TỰ THỰC THI:
     // 1. Thực thi câu lệnh tạo bảng users (bảng cha)
@@ -111,23 +123,23 @@ $sql_create_task_assignments_table = "
     // 2. Thực thi câu lệnh tạo bảng projects (bảng con)
     $conn->exec($sql_create_projects_table);
     echo "Table `projects` created successfully or already exists.<br>";
-     $conn->exec($sql_create_tasks_table);
+    $conn->exec($sql_create_tasks_table);
     echo "Table `tasks` created successfully or already exists.<br>";
     // 3. Thêm dòng thực thi cho bảng mới
-$conn->exec($sql_create_task_assignments_table);
-echo "Table `task_assignments` created successfully or already exists.<br>";
-      // 4. Tạo bảng project_members (MỚI)
+    $conn->exec($sql_create_task_assignments_table);
+    echo "Table `task_assignments` created successfully or already exists.<br>";
+    // 4. Tạo bảng project_members (MỚI)
     $conn->exec($sql_create_project_members_table);
     echo "Table `project_members` created successfully or already exists.<br>";
-
+    // 5. Tạo bảng task_comments (MỚI)
+    $conn->exec($sql_create_task_comments_table);
+    echo "Table `task_comments` created successfully or already exists.<br>";
 
     echo "Database setup completed successfully!";
-
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     // Bắt lỗi nếu có vấn đề trong quá trình kết nối hoặc thực thi SQL
     echo "Error: " . $e->getMessage();
 }
 
 // Đóng kết nối
 $conn = null;
-?>
