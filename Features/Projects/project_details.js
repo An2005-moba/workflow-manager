@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const editFormContainer = taskItem.querySelector('.edit-task-form-container');
         const updateForm = editFormContainer ? editFormContainer.querySelector('form') : null;
         const deleteBtn = taskView ? taskView.querySelector('.delete-task-btn') : null;
+        const submitBtn = taskItem.querySelector('.submit-assignment-btn');
 
         if (editBtn) {
             editBtn.addEventListener('click', () => {
@@ -150,6 +151,15 @@ document.addEventListener('DOMContentLoaded', function () {
                             showTaskMessage('Lỗi kết nối khi xóa.', 'error');
                         });
                 }
+            });
+        }
+        if (submitBtn) {
+            submitBtn.addEventListener('click', function () {
+                // Lấy ID của task từ thẻ cha
+                const taskId = taskItem.dataset.taskId;
+
+                // Chuyển hướng đến trang upload, đính kèm task_id vào URL
+                window.location.href = `../../Features/Task/uploads_task.php?task_id=${taskId}`;
             });
         }
     }

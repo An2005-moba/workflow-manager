@@ -295,6 +295,9 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
                                                 Xóa
                                             </button>
                                         </div>
+                                        <button class="task-action-btn submit-assignment-btn">
+                                            Nộp bài
+                                        </button>
                                     </div>
                                     <div class="task-comments-section">
                                         <div class="comment-list" data-task-id="<?php echo $task['id']; ?>">

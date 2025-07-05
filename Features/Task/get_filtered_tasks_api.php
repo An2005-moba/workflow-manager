@@ -73,6 +73,9 @@ if (empty($tasks)): ?>
                         <button class="task-action-btn edit-task-btn">Sửa</button>
                         <button class="task-action-btn delete-task-btn" data-task-id="<?php echo $task['id']; ?>" data-project-id="<?php echo $projectId; ?>">Xóa</button>
                     </div>
+                    <button class="task-action-btn submit-assignment-btn">
+                        Nộp bài
+                    </button>
                 </div>
                 <div class="task-comments-section">
                     <div class="comment-list" data-task-id="<?php echo $newTask['id']; ?>">
