@@ -1,0 +1,83 @@
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            text-align: center;
+            color: #1c1e21;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            color: #606770;
+            margin-bottom: 8px;
+        }
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #166fe5;
+        }
+        /* Style cho khu vực hiển thị kết quả */
+        .result {
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+        .result h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #1c1e21;
+        }
+        .result pre {
+            background-color: #f6f7f8;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .success { color: #31a24c; font-weight: bold; }
+        .error { color: #fa383e; font-weight: bold; }

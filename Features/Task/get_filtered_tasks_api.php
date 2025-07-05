@@ -39,9 +39,24 @@ if (empty($tasks)): ?>
                     <h3 class="task-name"><?php echo htmlspecialchars($task['task_name']); ?></h3>
                     <p class="task-description"><?php echo nl2br(htmlspecialchars($task['description'])); ?></p>
                     <div class="task-assignee">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
                         <span><?php echo !empty($task['assignee_names']) ? htmlspecialchars($task['assignee_names']) : 'Chưa gán'; ?></span>
                     </div>
+                    <?php $deadline_info = get_deadline_info($task['deadline']); ?>
+                    <?php if (!empty($deadline_info['text'])): ?>
+                        <div class="task-deadline <?php echo $deadline_info['class']; ?>">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span><?php echo htmlspecialchars($deadline_info['text']); ?></span>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <div class="task-right-panel">
                     <div class="task-status">
@@ -59,8 +74,17 @@ if (empty($tasks)): ?>
                         <button class="task-action-btn delete-task-btn" data-task-id="<?php echo $task['id']; ?>" data-project-id="<?php echo $projectId; ?>">Xóa</button>
                     </div>
                 </div>
+                <div class="task-comments-section">
+                    <div class="comment-list" data-task-id="<?php echo $newTask['id']; ?>">
+                    </div>
+                    <form class="add-comment-form" action="../Task/handle_add_comment.php" method="POST">
+                        <input type="hidden" name="task_id" value="<?php echo $newTask['id']; ?>">
+                        <input type="text" name="comment_text" placeholder="Viết bình luận..." required>
+                        <button type="submit">Gửi</button>
+                    </form>
+                </div>
             </div>
-            
+
             <div class="edit-task-form-container" style="display: none;">
                 <form action="../Task/handle_update_task.php" method="POST">
                     <input type="hidden" name="project_id" value="<?php echo $projectId; ?>">
@@ -96,13 +120,17 @@ if (empty($tasks)): ?>
                             <option value="Đã duyệt" <?php if ($task['status'] == 'Đã duyệt') echo 'selected'; ?>>Đã duyệt</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label>Thời hạn (Deadline)</label>
+                        <input type="datetime-local" name="deadline" value="<?php echo htmlspecialchars($task['deadline'] ?? ''); ?>">
+                    </div>
                     <div class="edit-form-actions">
                         <button type="submit" class="btn-submit">Lưu thay đổi</button>
                         <button type="button" class="btn-cancel cancel-edit-btn">Hủy</button>
                     </div>
                 </form>
             </div>
-            
+
         </div>
     <?php endforeach; ?>
 <?php endif; ?>

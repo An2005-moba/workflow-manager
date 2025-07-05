@@ -64,6 +64,76 @@ function create_slug($string){
    
    return $string;
 }
+/**
+ * Trả về thông tin cảnh báo deadline với định dạng văn bản chi tiết cho mọi trường hợp.
+ *
+ * @param string $deadline_str Chuỗi ngày tháng deadline.
+ * @param int $warning_minutes Ngưỡng cảnh báo màu vàng (tính bằng phút). Mặc định là 3 ngày (4320 phút).
+ * @return array Mảng chứa 'text' và 'class' cho việc hiển thị.
+ */
+function get_deadline_info($deadline_str, $warning_minutes = 4320) {
+    if (empty($deadline_str) || $deadline_str === '0000-00-00 00:00:00') {
+        return ['text' => '', 'class' => ''];
+    }
+
+    try {
+        $deadline = new DateTime($deadline_str);
+        $now = new DateTime();
+
+        // --- BƯỚC 1: Xác định màu sắc (CSS class) ---
+        $total_seconds_left = $deadline->getTimestamp() - $now->getTimestamp();
+        $total_minutes_left = floor($total_seconds_left / 60);
+        $css_class = 'deadline-safe';
+
+        if ($total_minutes_left < 0) {
+            $css_class = 'deadline-overdue';
+        } elseif ($total_minutes_left <= 1440) { // Dưới 24 giờ -> đỏ
+            $css_class = 'deadline-due-today';
+        } elseif ($total_minutes_left <= $warning_minutes) { // Trong ngưỡng cảnh báo -> vàng
+            $css_class = 'deadline-due-soon';
+        }
+
+        // --- BƯỚC 2: Tạo chuỗi văn bản hiển thị chi tiết ---
+        $interval = $now->diff($deadline);
+        
+        // Tạo chuỗi thời gian chi tiết (ví dụ: "1 ngày 10 giờ")
+        $parts = [];
+        if ($interval->d > 0) {
+            $parts[] = $interval->d . ' ngày';
+        }
+        if ($interval->h > 0) {
+            $parts[] = $interval->h . ' giờ';
+        }
+        if ($interval->d == 0 && $interval->h == 0 && $interval->i > 0) {
+            $parts[] = $interval->i . ' phút';
+        }
+        $time_string = implode(' ', $parts);
+        if (empty($time_string) && $total_seconds_left >= 0) {
+            $time_string = 'dưới 1 phút';
+        }
+
+        // Quyết định văn bản cuối cùng dựa trên trạng thái
+        $text = '';
+        if ($css_class === 'deadline-overdue') {
+            // Áp dụng định dạng chi tiết cho cả trường hợp quá hạn
+            $text = 'Quá hạn ' . $time_string;
+        } elseif ($css_class === 'deadline-safe') {
+            $text = 'Hạn chót: ' . $deadline->format('d/m/Y H:i');
+        } else {
+            $text = 'Còn lại ' . $time_string;
+        }
+
+        return ['text' => $text, 'class' => $css_class];
+
+    } catch (Exception $e) {
+        error_log("Deadline Info Error: " . $e->getMessage());
+        return ['text' => 'Lỗi định dạng ngày', 'class' => 'deadline-overdue'];
+    }
+}
+date_default_timezone_set('Asia/Ho_Chi_Minh');
+
+// Bật báo lỗi để dễ dàng debug trong quá trình phát triển
+ini_set('display_errors', 1);
 // Bạn có thể thêm một số hàm tiện ích khác ở đây nếu muốn,
 // ví dụ: một hàm để đóng kết nối (mặc dù PDO tự động đóng khi script kết thúc)
 

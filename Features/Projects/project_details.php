@@ -77,7 +77,7 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết dự án: <?php echo htmlspecialchars($project['project_name'] ?? 'Không rõ'); ?></title>
-    <link rel="stylesheet" href="../../Assets/styles/features/projects/project_details.css?v=2">
+    <link rel="stylesheet" href="../../Assets/styles/features/projects/project_details.css?v=3">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -121,7 +121,15 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
         <main class="project-main-content">
             <section class="members-section content-box">
                 <div class="section-header">
-                    <h2>Thành viên</h2>
+                    <h2 class="header-with-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <line x1="19" x2="19" y1="8" y2="14"></line>
+                            <line x1="22" x2="16" y1="11" y2="11"></line>
+                        </svg>
+                        <span>Thành viên</span>
+                    </h2>
 
                     <div class="add-member-container">
                         <?php if ($isProjectCreator): ?>
@@ -176,9 +184,22 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
             </section>
 
             <section class="create-task-section content-box">
-                <h2>Tạo nhiệm vụ mới</h2>
+                <h2 class="header-with-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                    <span>Tạo nhiệm vụ mới</span>
+                </h2>
                 <form id="create-task-form" action="../Task/handle_create_task.php" method="POST">
                     <input type="hidden" name="project_id" value="<?php echo $projectId; ?>">
+
+
+                    <div class="form-group">
+                        <label for="deadline">Thời hạn (Deadline)</label>
+                        <<input type="datetime-local" id="deadline" name="deadline">
+                    </div>
                     <div class="form-group">
                         <label for="task_name">Tên nhiệm vụ</label>
                         <input type="text" id="task_name" name="task_name" required>
@@ -243,6 +264,16 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
                                             </svg>
                                             <span><?php echo !empty($task['assignee_names']) ? htmlspecialchars($task['assignee_names']) : 'Chưa gán'; ?></span>
                                         </div>
+                                        <?php $deadline_info = get_deadline_info($task['deadline']); ?>
+                                        <?php if (!empty($deadline_info['text'])): ?>
+                                            <div class="task-deadline <?php echo $deadline_info['class']; ?>">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                                </svg>
+                                                <span><?php echo htmlspecialchars($deadline_info['text']); ?></span>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                     <div class="task-right-panel">
                                         <div class="task-status">
@@ -264,6 +295,25 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
                                                 Xóa
                                             </button>
                                         </div>
+                                    </div>
+                                    <div class="task-comments-section">
+                                        <div class="comment-list" data-task-id="<?php echo $task['id']; ?>">
+                                            <?php
+                                            // Lấy các bình luận cho nhiệm vụ này
+                                            $comments = $taskManager->getCommentsByTaskId($task['id']);
+                                            foreach ($comments as $comment) :
+                                            ?>
+                                                <div class="comment-item">
+                                                    <strong><?php echo htmlspecialchars($comment['user_name']); ?>:</strong>
+                                                    <span><?php echo htmlspecialchars($comment['comment_text']); ?></span>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <form class="add-comment-form" action="../Task/handle_add_comment.php" method="POST">
+                                            <input type="hidden" name="task_id" value="<?php echo $task['id']; ?>">
+                                            <input type="text" name="comment_text" placeholder="Viết bình luận..." required>
+                                            <button type="submit">Gửi</button>
+                                        </form>
                                     </div>
                                 </div>
 
@@ -301,6 +351,17 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
                                                 <option value="Hoàn thành" <?php if ($task['status'] == 'Hoàn thành') echo 'selected'; ?>>Hoàn thành</option>
                                                 <option value="Đã duyệt" <?php if ($task['status'] == 'Đã duyệt') echo 'selected'; ?>>Đã duyệt</option>
                                             </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Thời hạn (Deadline)</label>
+                                            <?php
+                                            // Chuyển đổi định dạng ngày giờ để hiển thị đúng
+                                            $deadline_value = '';
+                                            if (!empty($task['deadline'])) {
+                                                $deadline_value = date('Y-m-d\TH:i', strtotime($task['deadline']));
+                                            }
+                                            ?>
+                                            <input type="datetime-local" name="deadline" value="<?php echo $deadline_value; ?>">
                                         </div>
                                         <div class="edit-form-actions">
                                             <button type="submit" class="btn-submit">Lưu thay đổi</button>
