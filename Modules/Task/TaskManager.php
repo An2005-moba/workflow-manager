@@ -230,6 +230,7 @@ class TaskManager
             return [];
         }
     }
+    
 
     /**
      * Thêm một bình luận mới vào nhiệm vụ.
@@ -271,4 +272,32 @@ class TaskManager
         $stmt->execute([':comment_id' => $commentId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+     public function getNotificationsForUser($userId, $limit = 10)
+    {
+       $sql = "SELECT 
+            t.id AS task_id,
+            t.task_name,
+            t.deadline,
+            t.created_at AS task_created_at,
+            p.id AS project_id,
+            p.project_name
+        FROM tasks t
+        JOIN task_assignments ta ON t.id = ta.task_id
+        JOIN projects p ON t.project_id = p.id
+        WHERE ta.user_id = :user_id
+        ORDER BY t.created_at DESC
+        LIMIT :limit_val";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->bindParam(':limit_val', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Get Notifications Error: " . $e->getMessage());
+            return [];
+        }
+    }
 }
+
+
