@@ -230,7 +230,7 @@ class TaskManager
             return [];
         }
     }
-    
+
 
     /**
      * Thêm một bình luận mới vào nhiệm vụ.
@@ -272,9 +272,9 @@ class TaskManager
         $stmt->execute([':comment_id' => $commentId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-     public function getNotificationsForUser($userId, $limit = 10)
+    public function getNotificationsForUser($userId, $limit = 10)
     {
-       $sql = "SELECT 
+        $sql = "SELECT 
             t.id AS task_id,
             t.task_name,
             t.deadline,
@@ -333,6 +333,48 @@ class TaskManager
             return ['status' => 'error', 'message' => 'Lỗi cơ sở dữ liệu khi xóa bình luận.'];
         }
     }
+    public function addFileToTask($taskId, $fileName, $fileMimeType, $fileContent)
+    {
+        $sql = "INSERT INTO task_files (task_id, file_name, mime_type, file_content) 
+                VALUES (:task_id, :file_name, :mime_type, :file_content)";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':task_id', $taskId, PDO::PARAM_INT);
+            $stmt->bindValue(':file_name', $fileName, PDO::PARAM_STR);
+            $stmt->bindValue(':mime_type', $fileMimeType, PDO::PARAM_STR);
+            $stmt->bindValue(':file_content', $fileContent, PDO::PARAM_LOB);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Add File To Task Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // HÀM MỚI: Lấy tất cả file của một nhiệm vụ
+    public function getFilesForTask($taskId)
+    {
+        $sql = "SELECT id, file_name, uploaded_at FROM task_files WHERE task_id = :task_id ORDER BY uploaded_at DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':task_id' => $taskId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // HÀM MỚI: Xóa một file bằng ID của file
+    public function deleteFileById($fileId)
+    {
+        $sql = "DELETE FROM task_files WHERE id = :file_id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([':file_id' => $fileId]);
+    }
+
+    // HÀM MỚI: Chỉ cập nhật mô tả của task
+    // HÀM ĐÃ SỬA: Cập nhật vào cột submitted_text_content
+    public function updateTaskSubmissionText($taskId, $submissionText)
+    {
+        $sql = "UPDATE tasks SET submitted_text_content = :submission_text WHERE id = :task_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':task_id', $taskId, PDO::PARAM_INT);
+        $stmt->bindValue(':submission_text', $submissionText, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
 }
-
-
