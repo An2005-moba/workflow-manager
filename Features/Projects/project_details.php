@@ -77,7 +77,7 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết dự án: <?php echo htmlspecialchars($project['project_name'] ?? 'Không rõ'); ?></title>
-    <link rel="stylesheet" href="../../Assets/styles/features/projects/project_details.css?v=5">
+    <link rel="stylesheet" href="../../Assets/styles/features/projects/project_details.css?v=6">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
