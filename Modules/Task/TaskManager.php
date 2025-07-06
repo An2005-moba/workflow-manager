@@ -298,6 +298,41 @@ class TaskManager
             return [];
         }
     }
+    /**
+     * Xóa một bình luận, chỉ khi người dùng là tác giả của bình luận đó.
+     *
+     * @param int $commentId ID của bình luận cần xóa.
+     * @param int $userId ID của người dùng đang thực hiện hành động.
+     * @return array Kết quả trả về dạng mảng.
+     */
+    public function deleteComment($commentId, $userId)
+    {
+        if (empty($commentId) || empty($userId)) {
+            return ['status' => 'error', 'message' => 'Dữ liệu không hợp lệ.'];
+        }
+
+        // Mệnh đề WHERE đảm bảo quy tắc phân quyền:
+        // Bình luận chỉ bị xóa nếu ID của nó khớp VÀ user_id (tác giả) khớp với người dùng đang đăng nhập.
+        $sql = "DELETE FROM task_comments WHERE id = :comment_id AND user_id = :user_id";
+
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':comment_id', $commentId, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Kiểm tra xem có dòng nào thực sự bị xóa không.
+            // Nếu không, có nghĩa là người dùng không có quyền (user_id không khớp).
+            if ($stmt->rowCount() > 0) {
+                return ['status' => 'success', 'message' => 'Đã xóa bình luận.'];
+            } else {
+                return ['status' => 'error', 'message' => 'Bạn không có quyền xóa bình luận này.'];
+            }
+        } catch (PDOException $e) {
+            error_log("Delete Comment DB Error: " . $e->getMessage());
+            return ['status' => 'error', 'message' => 'Lỗi cơ sở dữ liệu khi xóa bình luận.'];
+        }
+    }
 }
 
 

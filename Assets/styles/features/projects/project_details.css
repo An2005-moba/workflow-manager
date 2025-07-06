@@ -487,3 +487,53 @@ textarea {
     border-radius: 16px;
     cursor: pointer;
 }
+/* --- NÚT SỬA & XÓA TRONG TASK --- */
+
+/* Nút Sửa (Edit) - Chuyển sang màu xanh lá cây */
+.task-action-btn.edit-task-btn {
+    background-color: #dcfce7; /* Màu xanh lá rất nhạt */
+    color: #166534;           /* Màu chữ xanh lá đậm */
+    border-color: #bbf7d0;     /* Border màu xanh lá nhạt */
+}
+
+.task-action-btn.edit-task-btn:hover {
+    background-color: #bbf7d0; /* Nền đậm hơn khi di chuột */
+    color: #155e27;
+}
+
+/* Nút Xóa Task - Màu cảnh báo (Đỏ) */
+.task-action-btn.delete-task-btn {
+    background-color: #fee2e2; /* Màu đỏ rất nhạt */
+    color: #b91c1c; /* Màu chữ đỏ đậm */
+    border-color: #fecaca;
+}
+
+.task-action-btn.delete-task-btn:hover {
+    background-color: #fecaca;
+    color: #991b1b;
+}
+
+
+/* --- NÚT XÓA COMMENT (HÌNH CHỮ X) --- */
+.delete-comment-btn {
+    background-color: #e2e8f0;
+    color: #64748b; /* Màu xám cho chữ X */
+    border-radius: 50%; /* Bo tròn thành hình tròn */
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+/* Khi di chuột vào, nút xóa comment sẽ chuyển sang màu đỏ */
+.delete-comment-btn:hover {
+    background-color: #fee2e2; /* Nền đỏ nhạt */
+    color: #ef4444; /* Chữ X màu đỏ tươi */
+    transform: scale(1.1); /* Hiệu ứng phóng to nhẹ */
+}

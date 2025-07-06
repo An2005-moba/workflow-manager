@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const updateForm = editFormContainer ? editFormContainer.querySelector('form') : null;
         const deleteBtn = taskView ? taskView.querySelector('.delete-task-btn') : null;
         const submitBtn = taskItem.querySelector('.submit-assignment-btn');
+        const commentForm = taskItem.querySelector('.add-comment-form');
 
         if (editBtn) {
             editBtn.addEventListener('click', () => {
@@ -162,6 +163,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.location.href = `../../Features/Task/uploads_task.php?task_id=${taskId}`;
             });
         }
+        if (commentForm) {
+            attachCommentFormListener(commentForm);
+        }
+
     }
 
     // --- GÁN SỰ KIỆN KHI TẢI TRANG ---
@@ -231,6 +236,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         });
     }
+    if (taskListContainer) {
+        taskListContainer.addEventListener('click', function (event) {
+            if (event.target.classList.contains('delete-comment-btn')) {
+                const commentItem = event.target.closest('.comment-item');
+                const commentId = commentItem.dataset.commentId;
+                if (confirm('Bạn có chắc chắn muốn xóa bình luận này?')) {
+                    const formData = new FormData();
+                    formData.append('comment_id', commentId);
+                    fetch('../Task/handle_delete_comment.php', { method: 'POST', body: formData })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                commentItem.style.transition = 'opacity 0.3s ease-out';
+                                commentItem.style.opacity = '0';
+                                setTimeout(() => commentItem.remove(), 300);
+                            } else {
+                                alert(data.message || 'Không thể xóa bình luận.');
+                            }
+                        })
+                        .catch(() => alert('Lỗi kết nối khi xóa bình luận.'));
+                }
+            }
+        });
+    }
     // Thêm hàm này vào bên trong hàm attachTaskEventListeners(taskItem)
 
     function attachCommentFormListener(form) {
@@ -245,28 +274,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     if (data.status === 'success' && data.new_comment) {
                         const newComment = data.new_comment;
+
+                        // Kiểm tra và tạo nút xóa nếu đúng người dùng
+                        const deleteBtnHTML = (newComment.user_id == currentUserId) ? `<button class="delete-comment-btn" title="Xóa bình luận">&times;</button>` : '';
+
+                        // Tạo HTML cho bình luận mới.
+                        // Đảm bảo không có bất kỳ ký tự hay văn bản thừa nào bên ngoài cặp thẻ `<div>`.
                         const commentHTML = `
-                        <div class="comment-item">
-                            <strong>${newComment.user_name}:</strong>
-                            <span>${newComment.comment_text}</span>
-                        </div>
-                    `;
+                        <div class="comment-item" data-comment-id="${newComment.id}">
+                            <div class="comment-content">
+                                <strong>${newComment.user_name}:</strong>
+                                <span>${newComment.comment_text}</span>
+                            </div>
+                            ${deleteBtnHTML}
+                        </div>`;
+
                         commentList.insertAdjacentHTML('beforeend', commentHTML);
-                        commentInput.value = ''; // Xóa nội dung trong ô nhập
-                        commentList.scrollTop = commentList.scrollHeight; // Tự cuộn xuống bình luận mới nhất
+                        commentInput.value = '';
+                        commentList.scrollTop = commentList.scrollHeight;
                     } else {
                         alert(data.message || 'Lỗi khi gửi bình luận.');
                     }
                 })
-                .catch(error => alert('Lỗi kết nối.'));
+                .catch(error => alert('Lỗi kết nối khi gửi bình luận.'));
         });
     }
 
     // Trong hàm attachTaskEventListeners, tìm đến dòng cuối và thêm:
-    const commentForm = taskItem.querySelector('.add-comment-form');
-    if (commentForm) {
-        attachCommentFormListener(commentForm);
-    }
+
 
     updateProjectProgress();
 });
