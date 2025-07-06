@@ -73,12 +73,31 @@ if (empty($tasks)): ?>
                         <button class="task-action-btn edit-task-btn">Sửa</button>
                         <button class="task-action-btn delete-task-btn" data-task-id="<?php echo $task['id']; ?>" data-project-id="<?php echo $projectId; ?>">Xóa</button>
                     </div>
+                    <button class="task-action-btn submit-assignment-btn">
+                        Nộp bài
+                    </button>
                 </div>
                 <div class="task-comments-section">
-                    <div class="comment-list" data-task-id="<?php echo $newTask['id']; ?>">
+                    <div class="comment-list" data-task-id="<?php echo $task['id']; ?>">
+                        <?php
+                        // Lấy các bình luận cho nhiệm vụ này
+                        $comments = $taskManager->getCommentsByTaskId($task['id']);
+                        foreach ($comments as $comment) :
+                        ?>
+                            <div class="comment-item" data-comment-id="<?php echo $comment['id']; ?>">
+                                <div class="comment-content">
+                                    <strong><?php echo htmlspecialchars($comment['user_name']); ?>:</strong>
+                                    <span><?php echo htmlspecialchars($comment['comment_text']); ?></span>
+                                </div>
+
+                                <?php if (isset($_SESSION['user_id']) && $comment['user_id'] == $_SESSION['user_id']): ?>
+                                    <button class="delete-comment-btn" title="Xóa bình luận">&times;</button>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                     <form class="add-comment-form" action="../Task/handle_add_comment.php" method="POST">
-                        <input type="hidden" name="task_id" value="<?php echo $newTask['id']; ?>">
+                        <input type="hidden" name="task_id" value="<?php echo $task['id']; ?>">
                         <input type="text" name="comment_text" placeholder="Viết bình luận..." required>
                         <button type="submit">Gửi</button>
                     </form>

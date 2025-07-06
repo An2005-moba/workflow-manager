@@ -73,7 +73,7 @@ try {
         `project_id` INT NOT NULL,
         `task_name` VARCHAR(255) NOT NULL,
         `description` TEXT,
-        `submitted_file_path` BLOB NULL DEFAULT NULL,
+         `submitted_text_content` TEXT NULL DEFAULT NULL,
         `status` VARCHAR(50) DEFAULT 'To Do',
         `deadline` DATETIME DEFAULT NULL,
         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -81,6 +81,20 @@ try {
         FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ";
+
+$sql_create_task_files_table = "
+    CREATE TABLE IF NOT EXISTS `task_files` (
+        `id` INT AUTO_INCREMENT PRIMARY KEY,
+        `task_id` INT NOT NULL,
+        `file_name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+        `mime_type` VARCHAR(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+        `file_content` LONGBLOB NOT NULL,
+        `uploaded_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (`task_id`) REFERENCES `tasks`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+";
+
+
 
     // Thêm câu lệnh tạo bảng `task_assignments`
     $sql_create_task_assignments_table = "
@@ -125,6 +139,7 @@ try {
     echo "Table `projects` created successfully or already exists.<br>";
     $conn->exec($sql_create_tasks_table);
     echo "Table `tasks` created successfully or already exists.<br>";
+    
     // 3. Thêm dòng thực thi cho bảng mới
     $conn->exec($sql_create_task_assignments_table);
     echo "Table `task_assignments` created successfully or already exists.<br>";
@@ -134,6 +149,9 @@ try {
     // 5. Tạo bảng task_comments (MỚI)
     $conn->exec($sql_create_task_comments_table);
     echo "Table `task_comments` created successfully or already exists.<br>";
+
+     $conn->exec($sql_create_task_files_table);
+    echo "Table create_task_files_table created successfully or already exists.<br>";
 
     echo "Database setup completed successfully!";
 } catch (PDOException $e) {

@@ -79,6 +79,9 @@ try {
                         <button class="task-action-btn edit-task-btn">Sửa</button>
                         <button class="task-action-btn delete-task-btn" data-task-id="<?php echo $newTask['id']; ?>" data-project-id="<?php echo $projectId; ?>">Xóa</button>
                     </div>
+                    <button class="task-action-btn submit-assignment-btn">
+                        Nộp bài
+                    </button>
                 </div>
 
                 <div class="task-comments-section">

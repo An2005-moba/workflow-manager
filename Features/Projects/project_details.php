@@ -77,7 +77,7 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết dự án: <?php echo htmlspecialchars($project['project_name'] ?? 'Không rõ'); ?></title>
-    <link rel="stylesheet" href="../../Assets/styles/features/projects/project_details.css?v=3">
+    <link rel="stylesheet" href="../../Assets/styles/features/projects/project_details.css?v=1">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -180,8 +180,7 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
                 </div>
             </section>
 
-            <section class="members-section content-box">
-            </section>
+            
 
             <section class="create-task-section content-box">
                 <h2 class="header-with-icon">
@@ -295,6 +294,9 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
                                                 Xóa
                                             </button>
                                         </div>
+                                        <button class="task-action-btn submit-assignment-btn">
+                                            Nộp bài
+                                        </button>
                                     </div>
                                     <div class="task-comments-section">
                                         <div class="comment-list" data-task-id="<?php echo $task['id']; ?>">
@@ -303,9 +305,15 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
                                             $comments = $taskManager->getCommentsByTaskId($task['id']);
                                             foreach ($comments as $comment) :
                                             ?>
-                                                <div class="comment-item">
-                                                    <strong><?php echo htmlspecialchars($comment['user_name']); ?>:</strong>
-                                                    <span><?php echo htmlspecialchars($comment['comment_text']); ?></span>
+                                                <div class="comment-item" data-comment-id="<?php echo $comment['id']; ?>">
+                                                    <div class="comment-content">
+                                                        <strong><?php echo htmlspecialchars($comment['user_name']); ?>:</strong>
+                                                        <span><?php echo htmlspecialchars($comment['comment_text']); ?></span>
+                                                    </div>
+
+                                                    <?php if (isset($_SESSION['user_id']) && $comment['user_id'] == $_SESSION['user_id']): ?>
+                                                        <button class="delete-comment-btn" title="Xóa bình luận">&times;</button>
+                                                    <?php endif; ?>
                                                 </div>
                                             <?php endforeach; ?>
                                         </div>
@@ -379,6 +387,9 @@ $percentage = ($total_tasks > 0) ? ($completed_tasks / $total_tasks) * 100 : 0;
     </div>
 
 
+    <script>
+        const currentUserId = <?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'null'; ?>;
+    </script>
 
     <script src="../../Features/Projects/project_details.js"></script>
 </body>

@@ -1,115 +1,239 @@
-/* Thiết lập cơ bản */
+/* =================================================================== */
+/* 1. THIẾT LẬP BIẾN TOÀN CỤC (VARIABLES) & RESET CƠ BẢN              */
+/* =================================================================== */
+:root {
+    /* NÂNG CẤP: Bảng màu mới hiện đại và sống động hơn */
+    --primary-color: #6a5af9;
+    --primary-color-dark: #4c3dce;
+    --secondary-color: #9b9b9b;
+    --secondary-color-dark: #7a7a7a;
+    --success-color: #28c76f;
+    --success-color-dark: #1e9d52;
+    --warning-color: #ff9f43;
+    --warning-color-dark: #e58e26;
+    --danger-color: #ea5455;
+    --danger-color-dark: #c83c3d;
+
+    /* NÂNG CẤP: Màu nền & Chữ tinh tế hơn */
+    --bg-color: #f1f2f6;
+    --text-color: #2c3e50;
+    --text-color-muted: #6e7a8a;
+    --border-color: rgba(255, 255, 255, 0.3); /* Cần cho hiệu ứng kính */
+
+    /* NÂNG CẤP: HIỆU ỨNG GLASSMORPHISM */
+    --surface-color: rgba(255, 255, 255, 0.45); /* Nền kính mờ */
+    --backdrop-blur: 10px;
+
+    /* Màu nền nhẹ cho các trạng thái */
+    --primary-soft-bg: rgba(106, 90, 249, 0.15);
+    --success-soft-bg: rgba(40, 199, 111, 0.15);
+    --warning-soft-bg: rgba(255, 159, 67, 0.15);
+
+    /* NÂNG CẤP: Bo góc mềm mại hơn */
+    --border-radius-sm: 6px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 24px;
+
+    /* NÂNG CẤP: Đổ bóng tinh xảo hơn */
+    --box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --box-shadow-md: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --box-shadow-lg: 0 15px 30px rgba(44, 62, 80, 0.15);
+    --box-shadow-glow: 0 0 15px var(--primary-soft-bg); /* Hiệu ứng tỏa sáng */
+
+    /* Hiệu ứng chuyển động */
+    --transition-fast: all 0.2s ease-in-out;
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #f8f9fa;
-    color: #343a40;
+    background-color: var(--bg-color);
+    /* NÂNG CẤP: Gradient nền sống động tạo chiều sâu */
+    background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: var(--text-color);
     margin: 0;
     padding: 40px 20px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .page-container {
     max-width: 900px;
     margin: 0 auto;
 }
+/* THÊM ĐOẠN NÀY VÀO */
+.content-block {
+    background: var(--surface-color);
+    padding: 24px 32px;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow-md);
+    backdrop-filter: blur(var(--backdrop-blur));
+    /* Bỏ margin-bottom ở đây */
+}
 
-/* Nút quay lại */
+/* QUAN TRỌNG: Thêm quy tắc này để tạo khoảng cách phía trên */
+.content-block + .content-block {
+    margin-top: 120px;
+}
+/* =================================================================== */
+/* 2. CÁC LỚP TIỆN ÍCH & NÚT BẤM (BUTTONS) CHUẨN                      */
+/* =================================================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: var(--border-radius-md);
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-md);
+    /* CẬP NHẬT: Thêm độ sáng để nút nổi bật hơn khi hover */
+    filter: brightness(1.1);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+.btn-primary:hover {
+    background-color: var(--primary-color-dark);
+}
+
+/* MỚI: Thêm các biến thể nút khác */
+.btn-success {
+    background-color: var(--success-color);
+    color: white;
+}
+.btn-success:hover {
+    background-color: var(--success-color-dark);
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    color: var(--text-color);
+}
+.btn-warning:hover {
+    background-color: var(--warning-color-dark);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+.btn-secondary:hover {
+    background-color: var(--secondary-color-dark);
+}
+
+.btn-outline {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+.btn-outline:hover {
+    background-color: var(--bg-color);
+    border-color: #b9bfc4;
+    color: var(--primary-color);
+    filter: none; /* Bỏ filter cho nút outline để không bị quá sáng */
+}
+
+.btn-danger-outline {
+    background-color: var(--surface-color);
+    color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+.btn-danger-outline:hover {
+    background-color: var(--danger-color);
+    color: white;
+    filter: none;
+}
+
+/* =================================================================== */
+/* 3. BỐ CỤC & CÁC THÀNH PHẦN CHÍNH                                  */
+/* =================================================================== */
+
 .back-link {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    padding: 4px 8px; /* CẬP NHẬT: Thêm padding cho hover */
     text-decoration: none;
-    color: #007bff;
+    color: var(--primary-color);
     font-weight: 500;
     margin-bottom: 24px;
-    transition: color 0.2s;
+    border-radius: var(--border-radius-sm); /* CẬP NHẬT: Bo góc cho hover */
+    transition: var(--transition-fast);
 }
-
 .back-link:hover {
-    color: #0056b3;
+    color: var(--primary-color-dark);
+    /* CẬP NHẬT: Thêm nền để tăng tương tác */
+    background-color: var(--primary-soft-bg);
 }
 
-/* Header của dự án */
 .project-header {
-    background: #fff;
+    background: var(--surface-color);
     padding: 24px;
-    border-radius: 8px;
+    border-radius: var(--border-radius-md);
     margin-bottom: 32px;
-    border: 1px solid #dee2e6;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow-sm);
+    /* CẬP NHẬT: Thêm viền trên màu sắc để tạo điểm nhấn */
+    border-top: 4px solid var(--primary-color);
 }
-
 .project-header h1 {
     margin: 0 0 8px 0;
     font-size: 28px;
 }
-
 .project-header p {
     margin: 0;
-    color: #6c757d;
+    color: var(--text-color-muted);
 }
 
-/* Main content layout */
-.project-main-content {
+.task-view {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "info   info   comments"
+        "panel  panel  comments";
+    gap: 16px 32px;
+    padding: 10px;
+}
+
+.task-info { grid-area: info; }
+.task-right-panel { grid-area: panel; }
+.task-comments-section { grid-area: comments; }
+
+.task-right-panel {
     display: flex;
     flex-direction: column;
-    /* Sắp xếp các section theo chiều dọc */
-    gap: 32px;
-    /* Khoảng cách giữa các section */
+    align-items: flex-start;
+    gap: 12px;
 }
 
-/* Style chung cho các hộp nội dung */
-.content-box {
-    background: #fff;
-    padding: 24px;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
+.task-right-panel .task-action-btn {
+    width: auto;
 }
 
-.content-box h2 {
-    font-size: 22px;
-    margin-top: 0;
-    margin-bottom: 16px;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 8px;
-}
-
-/* --- Khu vực Thành viên --- */
-.member-list {
-    margin-bottom: 24px;
-}
-
-.member-item {
+.task-actions {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-radius: 6px;
+    gap: 8px;
+    margin-bottom: px; /* <<< THAY ĐỔI DUY NHẤT: Thêm khoảng cách dưới nhóm nút */
 }
 
-.member-item:nth-child(even) {
-    background-color: #f8f9fa;
-    /* Thêm màu nền xen kẽ */
-}
-
-.member-name {
-    font-weight: 500;
-}
-
-.remove-member-btn {
-    background: transparent;
-    border: none;
-    color: #dc3545;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-.add-member-form h3 {
-    font-size: 18px;
-    margin-top: 24px;
-    /* Khoảng cách với danh sách */
-    margin-bottom: 12px;
-}
-
-/* --- Khu vực Nhiệm vụ --- */
+/* =================================================================== */
+/* 4. DANH SÁCH NHIỆM VỤ (TASK LIST)                                  */
+/* =================================================================== */
 .task-list {
     display: flex;
     flex-direction: column;
@@ -117,22 +241,29 @@ body {
 }
 
 .task-item {
-    border-radius: 8px;
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius-md);
     padding: 16px;
-    border-left: 5px solid #6c757d;
-    /* 'To Do' */
+    border-left: 5px solid var(--text-color-muted);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--box-shadow-sm);
+    transition: var(--transition-fast);
+}
+.task-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-md);
 }
 
+/* CẬP NHẬT: Thêm màu nền nhạt cho các trạng thái */
 .task-item[data-status="in progress"] {
-    border-left-color: #ffc107;
+    border-left-color: var(--warning-color);
+    background-color: var(--warning-soft-bg);
 }
-
 .task-item[data-status="done"] {
-    border-left-color: #28a745;
+    border-left-color: var(--success-color);
+    background-color: var(--success-soft-bg);
 }
 
 .task-name {
@@ -143,111 +274,195 @@ body {
 .task-description {
     margin: 0;
     font-size: 14px;
-    color: #6c757d;
+    color: var(--text-color-muted);
 }
 
-.task-status {
-    padding: 6px 12px;
-    border-radius: 16px;
-    font-weight: 500;
-    font-size: 12px;
-    background-color: #e9ecef;
-    color: #495057;
+.task-deadline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin-top: 12px;
+}
+.task-deadline svg { stroke: currentColor; }
+.task-deadline.deadline-safe { color: var(--text-color-muted); }
+.task-deadline.deadline-due-soon { color: #f59e0b; font-weight: 500; }
+.task-deadline.deadline-due-today { color: #ef4444; font-weight: 600; }
+.task-deadline.deadline-overdue { color: var(--danger-color); font-weight: 600; }
+
+/* =================================================================== */
+/* 5. KHU VỰC BÌNH LUẬN                                              */
+/* =================================================================== */
+.task-comments-section {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--surface-color);
+    padding: 16px;
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border-color);
+    min-height: 300px;
 }
 
-/* Form dùng chung */
+.comment-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 8px;
+}
+
+.comment-item {
+    display: flex;
+    align-items: flex-start; /* Căn các item theo đầu dòng */
+    gap: 12px; /* Khoảng cách giữa nội dung và nút xóa */
+}
+
+/* MỚI: Thêm một lớp để bọc nội dung chữ của comment */
+.comment-details {
+    flex-grow: 1; /* QUAN TRỌNG: Làm cho phần tử này chiếm hết không gian trống */
+    font-size: 14px;
+    line-height: 1.5;
+    word-break: break-word; /* Chống tràn chữ */
+}
+
+.comment-details strong {
+    color: var(--primary-color);
+    font-weight: 600;
+    display: block; /* Hiển thị tên trên một dòng riêng */
+    margin-bottom: 4px;
+}
+.add-comment-form {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+}
+.delete-comment-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-color-muted);
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    padding: 4px;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0; /* Ngăn không cho nút bị co lại */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+}
+
+.delete-comment-btn:hover {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+
+.add-comment-form input[type="text"] {
+    flex-grow: 1;
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    transition: var(--transition-fast);
+}
+.add-comment-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-soft-bg);
+}
+
+.add-comment-form button {
+    padding: 8px 16px;
+    border: none;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: var(--border-radius-lg);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+.add-comment-form button:hover {
+    background-color: var(--primary-color-dark);
+    transform: scale(1.05);
+}
+
+/* =================================================================== */
+/* 6. CÁC BIỂU MẪU (FORMS) & POPOVER                                  */
+/* =================================================================== */
+
 .form-group {
     margin-bottom: 16px;
 }
-
 .form-group label {
     display: block;
     margin-bottom: 6px;
     font-weight: 500;
+    font-size: 14px;
 }
-
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
     font-size: 16px;
     box-sizing: border-box;
+    transition: var(--transition-fast);
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-soft-bg);
 }
 
-textarea {
-    resize: vertical;
-}
-
-.btn-submit {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.btn-submit:hover {
-    background-color: #0056b3;
-}
+textarea { resize: vertical; }
 
 .empty-list {
     font-style: italic;
-    color: #6c757d;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 6px;
+    color: var(--text-color-muted);
+    padding: 20px;
+    background-color: var(--surface-color);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--border-radius-md);
+    text-align: center;
 }
 
-/* Thêm/thay thế các đoạn CSS này vào file project_details.css */
-
-/* --- Container cho nút (+) và popover --- */
 .add-member-container {
     position: relative;
-    /* Quan trọng để định vị popover */
 }
 
-/* --- Popover Styles (THAY THẾ CHO MODAL) --- */
 .add-member-popover {
     display: none;
-    /* Mặc định ẩn đi */
     position: absolute;
     top: calc(100% + 8px);
-    /* Vị trí ngay dưới nút cộng, cách 8px */
     right: 0;
     width: 320px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-    border: 1px solid #ddd;
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow-lg);
+    border: 1px solid var(--border-color);
     z-index: 100;
 }
-
-.add-member-popover.show {
-    display: block;
-    /* Hiện ra khi có class 'show' */
-}
+.add-member-popover.show { display: block; }
 
 .popover-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
 }
-
 .popover-header h4 {
     margin: 0;
     font-size: 16px;
     font-weight: 600;
 }
-
 .close-popover-btn {
     background: none;
     border: none;
@@ -255,235 +470,152 @@ textarea {
     color: #888;
     cursor: pointer;
     line-height: 1;
+    transition: transform 0.2s, color 0.2s;
 }
-
 .close-popover-btn:hover {
-    color: #333;
+    /* CẬP NHẬT: Dùng màu đỏ cho hành động đóng/hủy */
+    color: var(--danger-color);
+    transform: rotate(90deg);
 }
 
-.popover-content {
-    padding: 16px;
-}
+.popover-content { padding: 16px; }
 
-.popover-content .form-group label {
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.popover-content .btn-submit {
-    padding: 10px;
-    font-size: 14px;
-}
-
-/* Sửa lại form thêm thành viên để không còn margin */
-.add-member-form {
-    margin-top: 0;
-}
-
-.add-member-form h3 {
-    display: none;
-    /* Ẩn thẻ h3 cũ nếu còn */
-}
-
-
-/* --- CSS CHO DANH SÁCH CHỌN THÀNH VIÊN BẰNG CHECKBOX --- */
-.assignee-checkbox-container {
-    max-height: 150px;
-    /* Giới hạn chiều cao của hộp */
-    overflow-y: auto;
-    /* Tự động hiện thanh cuộn khi cần */
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    padding: 10px;
-    background-color: #fff;
-}
-
-.assignee-checkbox-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 5px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.assignee-checkbox-item:hover {
-    background-color: #f0f2f5;
-}
-
-.assignee-checkbox-item input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-}
-
-.assignee-checkbox-item label {
-    margin-bottom: 0;
-    font-weight: normal;
-    cursor: pointer;
+.popover-content .btn {
     width: 100%;
-    /* Đảm bảo có thể click trên toàn bộ chiều rộng của label */
+    padding: 10px;
+    font-size: 14px;
 }
 
-/* --- CSS CHO NHÃN TRẠNG THÁI TĨNH (Bản sửa lỗi) --- */
+/* =================================================================== */
+/* 7. CÁC THÀNH PHẦN NHỎ KHÁC                                         */
+/* =================================================================== */
+
 .status-badge {
     padding: 6px 12px;
-    border-radius: 16px;
+    border-radius: var(--border-radius-lg);
     font-weight: 500;
     font-size: 12px;
     white-space: nowrap;
+    border: 1px solid transparent;
 }
-
-/* Sửa lại màu cho trạng thái "Cần làm" */
 .status-badge[data-status="canlam"] {
-    background-color: #f8d7da; /* Nền đỏ nhạt */
-    color: #721c24;             /* Chữ đỏ đậm */
-    border: 1px solid #f5c6cb;  /* Thêm viền để nổi bật hơn (tùy chọn) */
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
 }
-
 .status-badge[data-status="danglam"] {
-    background-color: #fff3cd; /* Vàng nhạt */
+    background-color: #fff3cd;
     color: #856404;
+    border-color: #ffeeba;
 }
-
 .status-badge[data-status="hoanthanh"] {
-    background-color: #d1ecf1; /* Xanh dương nhạt */
+    background-color: #d1ecf1;
     color: #0c5460;
+    border-color: #bee5eb;
 }
-
 .status-badge[data-status="daduyet"] {
-    background-color: #d4edda; /* Xanh lá nhạt */
+    background-color: #d4edda;
     color: #155724;
+    border-color: #c3e6cb;
 }
 
-/* --- CSS CHO FORM LỌC --- */
 .filter-form {
     display: flex;
     gap: 16px;
     align-items: flex-end;
     margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
 }
-
 .filter-group {
     display: flex;
     flex-direction: column;
 }
-
 .filter-group label {
     font-size: 14px;
     margin-bottom: 4px;
-    color: #6c757d;
+    color: var(--text-color-muted);
 }
 
-.filter-group select {
-    padding: 8px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    background-color: #fff;
+.assignee-checkbox-container {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    padding: 5px;
+    background-color: var(--surface-color);
 }
-
-.btn-filter {
-    padding: 8px 16px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-    height: 37px;
-    /* Căn cho bằng chiều cao của select */
-}
-
-.btn-filter:hover {
-    background-color: #0056b3;
-}
-
-
-/* --- CSS cho cảnh báo Deadline --- */
-.task-deadline {
+.assignee-checkbox-item {
     display: flex;
     align-items: center;
-    gap: 8px; 
-    font-size: 13px;
-    margin-top: 12px;
-    /* Mặc định màu chữ sẽ được kế thừa */
+    gap: 10px;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.2s;
+}
+.assignee-checkbox-item:hover {
+    background-color: #f0f2f5;
+}
+.assignee-checkbox-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+.assignee-checkbox-item label {
+    margin-bottom: 0;
+    font-weight: normal;
+    cursor: pointer;
+    width: 100%;
+}
+/* =================================================================== */
+/* 8. DANH SÁCH THÀNH VIÊN (MỚI)                                     */
+/* =================================================================== */
+
+.member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Khoảng cách giữa các thành viên */
 }
 
-/* An toàn (còn nhiều thời gian) */
-.task-deadline.deadline-safe,
-.task-deadline.deadline-safe span {
-    color: #6b7280; /* Màu xám */
+.member-item {
+    display: flex; /* Sắp xếp tên và nút X trên cùng một hàng */
+    justify-content: space-between; /* Đẩy tên về bên trái, nút X về bên phải */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 8px 12px;
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-fast);
 }
 
-/* Sắp đến hạn (còn 1-3 ngày) */
-.task-deadline.deadline-due-soon,
-.task-deadline.deadline-due-soon span {
-    color: #f59e0b; /* Màu cam */
+.member-item:hover {
+    background-color: var(--primary-soft-bg);
+}
+
+.member-item span {
     font-weight: 500;
 }
 
-/* Hết hạn hôm nay */
-.task-deadline.deadline-due-today,
-.task-deadline.deadline-due-today span {
-    color: #ef4444; /* Màu đỏ */
-    font-weight: 600;
-}
-
-/* Đã quá hạn */
-.task-deadline.deadline-overdue,
-.task-deadline.deadline-overdue span {
-    color: #dc2626; /* Màu đỏ đậm */
-    font-weight: 600;
-}
-
-/* Áp dụng màu cho cả icon SVG */
-.task-deadline svg {
-    stroke: currentColor;
-}
-/* --- CSS cho khu vực bình luận --- */
-.task-comments-section {
-    width: 100%;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid #eee;
-}
-
-.comment-list {
-    max-height: 200px;
-    overflow-y: auto;
-    margin-bottom: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.comment-item {
-    font-size: 14px;
-    line-height: 1.4;
-}
-
-.comment-item strong {
-    color: #007bff;
-}
-
-.add-comment-form {
-    display: flex;
-    gap: 8px;
-}
-
-.add-comment-form input[type="text"] {
-    flex-grow: 1;
-    padding: 8px 12px;
-    border: 1px solid #ced4da;
-    border-radius: 16px;
-}
-
-.add-comment-form button {
-    padding: 8px 16px;
+.delete-member-btn {
+    background: transparent;
     border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 16px;
+    color: var(--text-color-muted);
     cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    padding: 4px;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+}
+h2 {
+  margin-top: 100px;
+}
+.delete-member-btn:hover {
+    background-color: var(--danger-color);
+    color: white;
+    transform: scale(1.1);
 }

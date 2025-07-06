@@ -230,7 +230,7 @@ class TaskManager
             return [];
         }
     }
-    
+
 
     /**
      * Thêm một bình luận mới vào nhiệm vụ.
@@ -272,9 +272,9 @@ class TaskManager
         $stmt->execute([':comment_id' => $commentId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-     public function getNotificationsForUser($userId, $limit = 10)
+    public function getNotificationsForUser($userId, $limit = 10)
     {
-       $sql = "SELECT 
+        $sql = "SELECT 
             t.id AS task_id,
             t.task_name,
             t.deadline,
@@ -298,6 +298,83 @@ class TaskManager
             return [];
         }
     }
+    /**
+     * Xóa một bình luận, chỉ khi người dùng là tác giả của bình luận đó.
+     *
+     * @param int $commentId ID của bình luận cần xóa.
+     * @param int $userId ID của người dùng đang thực hiện hành động.
+     * @return array Kết quả trả về dạng mảng.
+     */
+    public function deleteComment($commentId, $userId)
+    {
+        if (empty($commentId) || empty($userId)) {
+            return ['status' => 'error', 'message' => 'Dữ liệu không hợp lệ.'];
+        }
+
+        // Mệnh đề WHERE đảm bảo quy tắc phân quyền:
+        // Bình luận chỉ bị xóa nếu ID của nó khớp VÀ user_id (tác giả) khớp với người dùng đang đăng nhập.
+        $sql = "DELETE FROM task_comments WHERE id = :comment_id AND user_id = :user_id";
+
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':comment_id', $commentId, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Kiểm tra xem có dòng nào thực sự bị xóa không.
+            // Nếu không, có nghĩa là người dùng không có quyền (user_id không khớp).
+            if ($stmt->rowCount() > 0) {
+                return ['status' => 'success', 'message' => 'Đã xóa bình luận.'];
+            } else {
+                return ['status' => 'error', 'message' => 'Bạn không có quyền xóa bình luận này.'];
+            }
+        } catch (PDOException $e) {
+            error_log("Delete Comment DB Error: " . $e->getMessage());
+            return ['status' => 'error', 'message' => 'Lỗi cơ sở dữ liệu khi xóa bình luận.'];
+        }
+    }
+    public function addFileToTask($taskId, $fileName, $fileMimeType, $fileContent)
+    {
+        $sql = "INSERT INTO task_files (task_id, file_name, mime_type, file_content) 
+                VALUES (:task_id, :file_name, :mime_type, :file_content)";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':task_id', $taskId, PDO::PARAM_INT);
+            $stmt->bindValue(':file_name', $fileName, PDO::PARAM_STR);
+            $stmt->bindValue(':mime_type', $fileMimeType, PDO::PARAM_STR);
+            $stmt->bindValue(':file_content', $fileContent, PDO::PARAM_LOB);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Add File To Task Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // HÀM MỚI: Lấy tất cả file của một nhiệm vụ
+    public function getFilesForTask($taskId)
+    {
+        $sql = "SELECT id, file_name, uploaded_at FROM task_files WHERE task_id = :task_id ORDER BY uploaded_at DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':task_id' => $taskId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // HÀM MỚI: Xóa một file bằng ID của file
+    public function deleteFileById($fileId)
+    {
+        $sql = "DELETE FROM task_files WHERE id = :file_id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([':file_id' => $fileId]);
+    }
+
+    // HÀM MỚI: Chỉ cập nhật mô tả của task
+    // HÀM ĐÃ SỬA: Cập nhật vào cột submitted_text_content
+    public function updateTaskSubmissionText($taskId, $submissionText)
+    {
+        $sql = "UPDATE tasks SET submitted_text_content = :submission_text WHERE id = :task_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':task_id', $taskId, PDO::PARAM_INT);
+        $stmt->bindValue(':submission_text', $submissionText, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
 }
-
-
