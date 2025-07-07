@@ -581,6 +581,7 @@ textarea { resize: vertical; }
 .member-item {
     display: flex; /* Sắp xếp tên và nút X trên cùng một hàng */
     justify-content: space-between; /* Đẩy tên về bên trái, nút X về bên phải */
+    background-color:white;
     align-items: center; /* Căn giữa theo chiều dọc */
     padding: 8px 12px;
     border-radius: var(--border-radius-md);
