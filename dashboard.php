@@ -53,7 +53,7 @@ if (count($name_parts) >= 2) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkFlow - Dashboard</title>
-    <link rel="stylesheet" href="Assets/styles/main.css?v=1">
+    <link rel="stylesheet" href="Assets/styles/main.css?v=2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -160,7 +160,78 @@ if (count($name_parts) >= 2) {
             </div>
         </div>
     </main>
+     <footer class="dashboard-footer-enhanced">
+        <div class="dashboard-container">
+            <div class="dashboard-footer-grid">
+                <div class="footer-column about-column">
+                    <div class="dashboard-logo">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="3" width="7" height="7" rx="1" fill="#4F46E5"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1" fill="#4F46E5"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1" fill="#4F46E5"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1" fill="#4F46E5"/>
+                        </svg>
+                        <span class="dashboard-logo-text-footer">WorkFlow</span>
+                    </div>
+                    <p class="footer-tagline">
+                        Nền tảng quản lý dự án giúp bạn và đội nhóm làm việc hiệu quả hơn.
+                    </p>
+                    <p class="footer-copyright">
+                        &copy; <?php echo date("Y"); ?> WorkFlow. All Rights Reserved.
+                    </p>
+                </div>
 
+                <div class="footer-column">
+                    <h4 class="footer-column-title">Sản phẩm</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Tính năng</a></li>
+                        <li><a href="#">Bảng giá</a></li>
+                        <li><a href="#">Demo</a></li>
+                        <li><a href="#">Tích hợp</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-column-title">Công ty</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Về chúng tôi</a></li>
+                        <li><a href="#">Tuyển dụng</a></li>
+                        <li><a href="#">Báo chí</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+    <h4 class="footer-column-title">Thông tin liên hệ</h4>
+    
+    <ul class="footer-contact-list">
+        <li>
+            <i class="fas fa-envelope icon-contact"></i>
+            <a href="mailto:your-email@gmail.com">SupportWorkflow@gmail.com</a>
+        </li>
+        <li>
+            <i class="fas fa-phone icon-contact"></i>
+            <span>083 3812 3456</span>
+        </li>
+        <li>
+            <i class="fas fa-location-dot icon-contact"></i>
+            <span>12 Đường Ngô Quyền, Quận 1, TP. Hồ Chí Minh</span>
+        </li>
+        <li>
+            <i class="fab fa-github icon-contact"></i>
+            <a href="https://an2005-moba.github.io/GiuaKi_Nhom2/" target="_blank">github.com/nhom2DuAn</a>
+        </li>
+        <li>
+            <i class="fab fa-facebook icon-contact"></i>
+            <a href="https://an2005-moba.github.io/GiuaKi_Nhom2" target="_blank">facebook.com/nhom2DuAn</a>
+        </li>
+    </ul>
+</div>
+            </div>
+        </div>
+    </footer>
+   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" integrity="sha512-fD9DI5bZwQxOi7MhYWnnNPlvXdp/2Pj3XSTRrFs5FQa4mizyGLnJcN6tuvUS6LbmgN1ut+XGSABKvjN0H6Aoow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="Assets/js/main.js"></script>
 </body>
 </html>

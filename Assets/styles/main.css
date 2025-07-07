@@ -1284,3 +1284,162 @@ button#userDropdownToggle.dashboard-user:active {
 .task-highlight {
     animation: highlight-fade 3s ease-out;
 }
+/* ======================================================= */
+/* =========== DASHBOARD FOOTER ENHANCED STYLES ========== */
+/* ======================================================= */
+
+.dashboard-footer-enhanced {
+    background-color: #122034;
+    padding: 64px 0;
+    font-size: 14px;
+    color: #9CA3AF;
+    line-height: 1.7;
+    border-top: none; 
+    margin-top: auto;
+}
+
+.dashboard-footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr; 
+    gap: 48px;
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.about-column .dashboard-logo { margin-bottom: 16px; }
+.about-column .dashboard-logo-text-footer { font-weight: 700; font-size: 20px; color: #FFFFFF; }
+.about-column .footer-tagline { margin: 0 0 16px 0; max-width: 250px; }
+.about-column .footer-copyright { margin-top: auto; font-size: 13px; color: #6B7280; }
+
+.footer-column-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin: 0 0 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-links a {
+    color: #9CA3AF;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: #FFFFFF;
+    padding-left: 4px;
+}
+
+/* ======================================================= */
+/* =========== STYLES FOR CONTACT INFO LIST (FINAL) ====== */
+/* ======================================================= */
+
+.footer-contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Khoảng cách giữa các dòng */
+}
+
+.footer-contact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px; /* Khoảng cách giữa icon và chữ */
+    line-height: 1.6;
+}
+
+.footer-contact-list .icon-contact {
+    font-size: 16px;
+    color: #9CA3AF;
+    width: 20px;
+    text-align: center;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.footer-contact-list span {
+    color: #D1D5DB;
+}
+
+/* Quy tắc này sẽ được áp dụng đúng để link có màu trắng và không gạch chân */
+.footer-contact-list a {
+    color: #FFFFFF !important;       /* !important để ép màu thành trắng */
+    text-decoration: none !important; /* !important để ép xóa gạch chân */
+    transition: opacity 0.2s ease;
+}
+
+.footer-contact-list a:hover {
+    text-decoration: none !important; /* Xóa gạch chân cả khi hover */
+    opacity: 0.8;
+}
+
+/* Responsive cho Footer */
+@media (max-width: 992px) {
+    .dashboard-footer-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+    .dashboard-footer-grid { grid-template-columns: 1fr; text-align: center; }
+    .footer-column { align-items: center; }
+    .about-column .footer-copyright { margin-top: 16px; }
+}
+body.dashboard-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 150vh; /* Chiều cao tối thiểu bằng chiều cao màn hình */
+}
+main.dashboard-main {
+    flex-grow: 1; /* Cho phép main chiếm hết không gian dọc còn lại */
+}
+.footer-contact-list li:hover .icon-contact {
+ transform: translateX(5px); /* Di chuyển icon sang phải 5px khi hover */
+ transition: transform 0.2s ease-in-out;
+}
+.footer-contact-list a {
+ /* Các thuộc tính hiện tại của bạn */
+ position: relative; /* Để tạo lớp giả absolute bên dưới */
+}
+
+.footer-contact-list a::before {
+ content: '';
+ position: absolute;
+ bottom: -2px; /* Vị trí gạch chân */
+ left: 0;
+ width: 0%;
+ height: 1px; /* Độ dày gạch chân */
+ background-color: #FFFFFF; /* Màu gạch chân */
+ visibility: hidden;
+ transition: width 0.3s ease-in-out, visibility 0s linear 0.3s;
+}
+
+.footer-contact-list a:hover::before {
+ visibility: visible;
+ width: 100%;
+ transition: width 0.3s ease-in-out;
+}
+/* Áp dụng cho TẤT CẢ các link trong footer */
+.footer-links a,
+.footer-contact-list a {
+  display: inline-block; /* Cần có để transform hoạt động tốt */
+  transition: transform 0.3s ease, color 0.2s ease; /* Thêm transform vào transition */
+}
+
+/* Hiệu ứng khi hover */
+.footer-links a:hover,
+.footer-contact-list a:hover {
+  transform: translateY(-3px); /* Di chuyển chữ lên trên 3px */
+}
